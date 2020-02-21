@@ -1,4 +1,171 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+const Playproject = require('../') 
+const theme = require('theme')
+
+const styles = csjs`
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+body {
+    font-family: var(--bodyFont);
+    color: var(--bodyColor);
+    margin: 0;
+    padding: 0;
+    background-color: var(--bodyBg);
+    overflow-x: hidden;
+}
+a {
+    text-decoration: none;
+}
+button {
+    outline: none;
+    border: none;
+    font-family: var(--titleFont);
+    font-size: var(--sectionButtonSize);
+    color: var(--titleColor);
+    border-radius: 2rem;
+    padding: 1.2rem 3.8rem;
+    cursor: pointer;
+}
+img {
+    width: 100%;
+    height: auto;
+}
+article {
+    font-size: var(--articleSize);
+    color: var(--articleColor);
+    line-height: 2.5rem;
+    padding-bottom: 4rem;
+}
+@media screen and (min-width: 2561px) {
+    article {
+        font-size: calc(var(--articleSize) * 1.5 );
+        line-height: calc(2.5rem * 1.5);
+    }
+    button {
+        font-size: calc(var(--sectionButtonSize) * 1.5 );
+    }
+}
+@media screen and (min-width: 4096px) {
+    article {
+        font-size: calc(var(--articleSize) * 2.25 );
+        line-height: calc(2.5rem * 2.25);
+    }
+    button {
+        font-size: calc(var(--sectionButtonSize) * 2.25 );
+    }
+}
+`
+
+// callback done()
+const el = (err, landingPage) => {
+    const vars = theme
+
+    if (err) {
+        document.body.style = `color: red;`
+        document.body.innerHTML = err.message
+    } else {
+        document.body.appendChild(landingPage)
+    }
+
+    updateTheme(vars)
+} 
+
+function updateTheme (vars) {
+    Object.keys(vars).forEach(name => {
+      document.body.style.setProperty(`--${name}`, vars[name])
+    })
+}
+
+Playproject({theme}, el)
+},{"../":28,"bel":4,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
+const bel = require('bel')
+const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
+const loadFont = bel`<link href=${font} rel='stylesheet' type='text/css'>`
+document.head.appendChild(loadFont)
+
+const defines = {
+    fonts: {
+        slackey         : `'Slackey', Arial, sans-serif`,
+        nunito          : `'Nunito', Arial, sans-serif`,
+    },
+    sizes: {
+        'xx-small'      : '1.2rem',
+        'x-small'       : '1.3rem',
+        small           : '1.4rem',
+        medium          : '1.6rem',
+        large           : '2rem',
+        'x-large'       : '3rem',
+        'xx-large'      : '4rem',
+        'xxx-large'     : '5rem',
+    },
+    colors: {
+        white           : '#fff',
+        skyblue         : '#b3e2ff',
+        turquoise       : '#aae6ed',
+        pink            : '#e14365',
+        grey            : '#333333',
+        lightGrey       : '#999999',
+        lightGreen      : '#a1e9da',
+        blueGreen       : '#00a6ad',
+        purple          : '#b337fb',
+        lightBluePurple : '#9db9ee',
+        bluePurple      : '#9a91ff',
+        lightPurple     : '#beb2d7',
+        lightYellow     : '#eddca4',
+        lightSky        : '#b4e4fd',
+        green           : '#4aa95b',
+        lowYellow       : '#fdfbee',
+    }
+}
+
+const theme = { 
+    bodyFont            : defines.fonts.nunito,
+    bodyColor           : defines.colors.grey,
+    bodyBg              : defines.colors.skyblue,
+    menuSize            : defines.sizes.small,
+    titleFont           : defines.fonts.slackey,
+    titleSize           : defines.sizes['xxx-large'],
+    titleSizeM          : '3.6rem',
+    titlesSizeS         : '2.8rem',
+    titleColor          : defines.colors.white,
+    playBgGStart        : defines.colors.skyblue,
+    playBgGEnd          : defines.colors.turquoise,
+    subTitleSize        : '4.2rem',
+    section1TitleColor  : defines.colors.pink,
+    section2TitleColor  : defines.colors.blueGreen,
+    section3TitleColor  : defines.colors.purple,
+    section4TitleColor  : defines.colors.green,
+    articleSize         : defines.sizes.small,
+    articleColor        : defines.colors.grey,
+    section1BgGStart    : defines.colors.turquoise,
+    section1BgGEnd      : defines.colors.lightGreen,
+    section2BgGStart    : defines.colors.lightGreen,
+    section2BgGEnd      : defines.colors.lightBluePurple,
+    section3BgGStart    : defines.colors.lightBluePurple,
+    section3BgGEnd      : defines.colors.bluePurple,
+    section4BgGStart    : defines.colors.bluePurple,
+    section4BgGEnd      : defines.colors.lightPurple,
+    section5BgGStart    : defines.colors.lightPurple,
+    section5BgGEnd      : defines.colors.lightYellow,
+    section6BgGStart    : defines.colors.lightYellow,
+    section6BgGEnd      : defines.colors.lightSky,
+    sectionButtonSize   : defines.sizes.small,
+    roadmapTitleSize    : defines.sizes.large,
+    roadmapTitleSizeM   : defines.sizes.medium,
+    roadmapTitleColor   : defines.colors.blueGreen,
+    roadmapTextSize     : defines.sizes.medium,
+    roadmapTextSizeM    : defines.sizes["x-small"],
+    teamBg              : defines.colors.lowYellow,
+    teamTextSize        : defines.sizes.small,
+    teamcareerColor     : defines.colors.lightGrey
+}
+
+module.exports = theme
+},{"bel":4}],3:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -131,7 +298,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],2:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -232,7 +399,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":1,"hyperx":23}],3:[function(require,module,exports){
+},{"./appendChild":3,"hyperx":25}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -251,12 +418,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":8,"insert-css":24}],4:[function(require,module,exports){
+},{"csjs":10,"insert-css":26}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":7}],5:[function(require,module,exports){
+},{"csjs/get-css":9}],7:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -265,17 +432,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":3,"./get-css":4}],6:[function(require,module,exports){
+},{"./csjs":5,"./get-css":6}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":12}],7:[function(require,module,exports){
+},{"./lib/csjs":14}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":16}],8:[function(require,module,exports){
+},{"./lib/get-css":18}],10:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -285,7 +452,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":6,"./get-css":7}],9:[function(require,module,exports){
+},{"./csjs":8,"./get-css":9}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -307,7 +474,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -351,7 +518,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":11}],11:[function(require,module,exports){
+},{"./composition":13}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -431,7 +598,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -509,7 +676,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":10,"./composition":11,"./css-extract-extends":13,"./css-key":14,"./extract-exports":15,"./scopeify":21}],13:[function(require,module,exports){
+},{"./build-exports":12,"./composition":13,"./css-extract-extends":15,"./css-key":16,"./extract-exports":17,"./scopeify":23}],15:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -562,7 +729,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":11}],14:[function(require,module,exports){
+},{"./composition":13}],16:[function(require,module,exports){
 'use strict';
 
 /**
@@ -572,7 +739,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -599,7 +766,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":18}],16:[function(require,module,exports){
+},{"./regex":20}],18:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -608,7 +775,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":14}],17:[function(require,module,exports){
+},{"./css-key":16}],19:[function(require,module,exports){
 'use strict';
 
 /**
@@ -626,7 +793,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -642,7 +809,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -673,7 +840,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":18}],20:[function(require,module,exports){
+},{"./regex":20}],22:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -687,7 +854,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":9,"./hash-string":17}],21:[function(require,module,exports){
+},{"./base62-encode":11,"./hash-string":19}],23:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -728,7 +895,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":18,"./replace-animations":19,"./scoped-name":20}],22:[function(require,module,exports){
+},{"./regex":20,"./replace-animations":21,"./scoped-name":22}],24:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -749,7 +916,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1046,7 +1213,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":22}],24:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":24}],26:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1070,13 +1237,2241 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
+(function (global){
+
+// ------------------------------------------
+// Rellax.js
+// Buttery smooth parallax library
+// Copyright (c) 2016 Moe Amaya (@moeamaya)
+// MIT license
+//
+// Thanks to Paraxify.js and Jaime Cabllero
+// for parallax concepts
+// ------------------------------------------
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    // Browser globals (root is window)
+    root.Rellax = factory();
+  }
+}(typeof window !== "undefined" ? window : global, function () {
+  var Rellax = function(el, options){
+    "use strict";
+
+    var self = Object.create(Rellax.prototype);
+
+    var posY = 0;
+    var screenY = 0;
+    var posX = 0;
+    var screenX = 0;
+    var blocks = [];
+    var pause = true;
+
+    // check what requestAnimationFrame to use, and if
+    // it's not supported, use the onscroll event
+    var loop = window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      function(callback){ return setTimeout(callback, 1000 / 60); };
+
+    // store the id for later use
+    var loopId = null;
+
+    // Test via a getter in the options object to see if the passive property is accessed
+    var supportsPassive = false;
+    try {
+      var opts = Object.defineProperty({}, 'passive', {
+        get: function() {
+          supportsPassive = true;
+        }
+      });
+      window.addEventListener("testPassive", null, opts);
+      window.removeEventListener("testPassive", null, opts);
+    } catch (e) {}
+
+    // check what cancelAnimation method to use
+    var clearLoop = window.cancelAnimationFrame || window.mozCancelAnimationFrame || clearTimeout;
+
+    // check which transform property to use
+    var transformProp = window.transformProp || (function(){
+        var testEl = document.createElement('div');
+        if (testEl.style.transform === null) {
+          var vendors = ['Webkit', 'Moz', 'ms'];
+          for (var vendor in vendors) {
+            if (testEl.style[ vendors[vendor] + 'Transform' ] !== undefined) {
+              return vendors[vendor] + 'Transform';
+            }
+          }
+        }
+        return 'transform';
+      })();
+
+    // Default Settings
+    self.options = {
+      speed: -2,
+	    verticalSpeed: null,
+	    horizontalSpeed: null,
+      breakpoints: [576, 768, 1201],
+      center: false,
+      wrapper: null,
+      relativeToWrapper: false,
+      round: true,
+      vertical: true,
+      horizontal: false,
+      verticalScrollAxis: "y",
+      horizontalScrollAxis: "x",
+      callback: function() {},
+    };
+
+    // User defined options (might have more in the future)
+    if (options){
+      Object.keys(options).forEach(function(key){
+        self.options[key] = options[key];
+      });
+    }
+
+    function validateCustomBreakpoints () {
+      if (self.options.breakpoints.length === 3 && Array.isArray(self.options.breakpoints)) {
+        var isAscending = true;
+        var isNumerical = true;
+        var lastVal;
+        self.options.breakpoints.forEach(function (i) {
+          if (typeof i !== 'number') isNumerical = false;
+          if (lastVal !== null) {
+            if (i < lastVal) isAscending = false;
+          }
+          lastVal = i;
+        });
+        if (isAscending && isNumerical) return;
+      }
+      // revert defaults if set incorrectly
+      self.options.breakpoints = [576, 768, 1201];
+      console.warn("Rellax: You must pass an array of 3 numbers in ascending order to the breakpoints option. Defaults reverted");
+    }
+
+    if (options.breakpoints) {
+      validateCustomBreakpoints();
+    }
+
+    // By default, rellax class
+    if (!el) {
+      el = '.rellax';
+    }
+
+    // check if el is a className or a node
+    var elements = typeof el === 'string' ? document.querySelectorAll(el) : [el];
+
+    // Now query selector
+    if (elements.length > 0) {
+      self.elems = elements;
+    }
+
+    // The elements don't exist
+    else {
+      console.warn("Rellax: The elements you're trying to select don't exist.");
+      return;
+    }
+
+    // Has a wrapper and it exists
+    if (self.options.wrapper) {
+      if (!self.options.wrapper.nodeType) {
+        var wrapper = document.querySelector(self.options.wrapper);
+
+        if (wrapper) {
+          self.options.wrapper = wrapper;
+        } else {
+          console.warn("Rellax: The wrapper you're trying to use doesn't exist.");
+          return;
+        }
+      }
+    }
+
+    // set a placeholder for the current breakpoint
+    var currentBreakpoint;
+
+    // helper to determine current breakpoint
+    var getCurrentBreakpoint = function (w) {
+      var bp = self.options.breakpoints;
+      if (w < bp[0]) return 'xs';
+      if (w >= bp[0] && w < bp[1]) return 'sm';
+      if (w >= bp[1] && w < bp[2]) return 'md';
+      return 'lg';
+    };
+
+    // Get and cache initial position of all elements
+    var cacheBlocks = function() {
+      for (var i = 0; i < self.elems.length; i++){
+        var block = createBlock(self.elems[i]);
+        blocks.push(block);
+      }
+    };
+
+
+    // Let's kick this script off
+    // Build array for cached element values
+    var init = function() {
+      for (var i = 0; i < blocks.length; i++){
+        self.elems[i].style.cssText = blocks[i].style;
+      }
+
+      blocks = [];
+
+      screenY = window.innerHeight;
+      screenX = window.innerWidth;
+      currentBreakpoint = getCurrentBreakpoint(screenX);
+
+      setPosition();
+
+      cacheBlocks();
+
+      animate();
+
+      // If paused, unpause and set listener for window resizing events
+      if (pause) {
+        window.addEventListener('resize', init);
+        pause = false;
+        // Start the loop
+        update();
+      }
+    };
+
+    // We want to cache the parallax blocks'
+    // values: base, top, height, speed
+    // el: is dom object, return: el cache values
+    var createBlock = function(el) {
+      var dataPercentage = el.getAttribute( 'data-rellax-percentage' );
+      var dataSpeed = el.getAttribute( 'data-rellax-speed' );
+      var dataXsSpeed = el.getAttribute( 'data-rellax-xs-speed' );
+      var dataMobileSpeed = el.getAttribute( 'data-rellax-mobile-speed' );
+      var dataTabletSpeed = el.getAttribute( 'data-rellax-tablet-speed' );
+      var dataDesktopSpeed = el.getAttribute( 'data-rellax-desktop-speed' );
+      var dataVerticalSpeed = el.getAttribute('data-rellax-vertical-speed');
+      var dataHorizontalSpeed = el.getAttribute('data-rellax-horizontal-speed');
+      var dataVericalScrollAxis = el.getAttribute('data-rellax-vertical-scroll-axis');
+      var dataHorizontalScrollAxis = el.getAttribute('data-rellax-horizontal-scroll-axis');
+      var dataZindex = el.getAttribute( 'data-rellax-zindex' ) || 0;
+      var dataMin = el.getAttribute( 'data-rellax-min' );
+      var dataMax = el.getAttribute( 'data-rellax-max' );
+      var dataMinX = el.getAttribute('data-rellax-min-x');
+      var dataMaxX = el.getAttribute('data-rellax-max-x');
+      var dataMinY = el.getAttribute('data-rellax-min-y');
+      var dataMaxY = el.getAttribute('data-rellax-max-y');
+      var mapBreakpoints;
+      var breakpoints = true;
+
+      if (!dataXsSpeed && !dataMobileSpeed && !dataTabletSpeed && !dataDesktopSpeed) {
+        breakpoints = false;
+      } else {
+        mapBreakpoints = {
+          'xs': dataXsSpeed,
+          'sm': dataMobileSpeed,
+          'md': dataTabletSpeed,
+          'lg': dataDesktopSpeed
+        };
+      }
+
+      // initializing at scrollY = 0 (top of browser), scrollX = 0 (left of browser)
+      // ensures elements are positioned based on HTML layout.
+      //
+      // If the element has the percentage attribute, the posY and posX needs to be
+      // the current scroll position's value, so that the elements are still positioned based on HTML layout
+      var wrapperPosY = self.options.wrapper ? self.options.wrapper.scrollTop : (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop);
+      // If the option relativeToWrapper is true, use the wrappers offset to top, subtracted from the current page scroll.
+      if (self.options.relativeToWrapper) {
+        var scrollPosY = (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop);
+        wrapperPosY = scrollPosY - self.options.wrapper.offsetTop;
+      }
+      var posY = self.options.vertical ? ( dataPercentage || self.options.center ? wrapperPosY : 0 ) : 0;
+      var posX = self.options.horizontal ? ( dataPercentage || self.options.center ? self.options.wrapper ? self.options.wrapper.scrollLeft : (window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft) : 0 ) : 0;
+
+      var blockTop = posY + el.getBoundingClientRect().top;
+      var blockHeight = el.clientHeight || el.offsetHeight || el.scrollHeight;
+
+      var blockLeft = posX + el.getBoundingClientRect().left;
+      var blockWidth = el.clientWidth || el.offsetWidth || el.scrollWidth;
+
+      // apparently parallax equation everyone uses
+      var percentageY = dataPercentage ? dataPercentage : (posY - blockTop + screenY) / (blockHeight + screenY);
+      var percentageX = dataPercentage ? dataPercentage : (posX - blockLeft + screenX) / (blockWidth + screenX);
+      if(self.options.center){ percentageX = 0.5; percentageY = 0.5; }
+
+      // Optional individual block speed as data attr, otherwise global speed
+      var speed = (breakpoints && mapBreakpoints[currentBreakpoint] !== null) ? Number(mapBreakpoints[currentBreakpoint]) : (dataSpeed ? dataSpeed : self.options.speed);
+      var verticalSpeed = dataVerticalSpeed ? dataVerticalSpeed : self.options.verticalSpeed;
+      var horizontalSpeed = dataHorizontalSpeed ? dataHorizontalSpeed : self.options.horizontalSpeed;
+
+      // Optional individual block movement axis direction as data attr, otherwise gobal movement direction
+      var verticalScrollAxis = dataVericalScrollAxis ? dataVericalScrollAxis : self.options.verticalScrollAxis;
+      var horizontalScrollAxis = dataHorizontalScrollAxis ? dataHorizontalScrollAxis : self.options.horizontalScrollAxis;
+
+      var bases = updatePosition(percentageX, percentageY, speed, verticalSpeed, horizontalSpeed);
+
+      // ~~Store non-translate3d transforms~~
+      // Store inline styles and extract transforms
+      var style = el.style.cssText;
+      var transform = '';
+
+      // Check if there's an inline styled transform
+      var searchResult = /transform\s*:/i.exec(style);
+      if (searchResult) {
+        // Get the index of the transform
+        var index = searchResult.index;
+
+        // Trim the style to the transform point and get the following semi-colon index
+        var trimmedStyle = style.slice(index);
+        var delimiter = trimmedStyle.indexOf(';');
+
+        // Remove "transform" string and save the attribute
+        if (delimiter) {
+          transform = " " + trimmedStyle.slice(11, delimiter).replace(/\s/g,'');
+        } else {
+          transform = " " + trimmedStyle.slice(11).replace(/\s/g,'');
+        }
+      }
+
+      return {
+        baseX: bases.x,
+        baseY: bases.y,
+        top: blockTop,
+        left: blockLeft,
+        height: blockHeight,
+        width: blockWidth,
+        speed: speed,
+        verticalSpeed: verticalSpeed,
+        horizontalSpeed: horizontalSpeed,
+        verticalScrollAxis: verticalScrollAxis,
+        horizontalScrollAxis: horizontalScrollAxis,
+        style: style,
+        transform: transform,
+        zindex: dataZindex,
+        min: dataMin,
+        max: dataMax,
+        minX: dataMinX,
+        maxX: dataMaxX,
+        minY: dataMinY,
+        maxY: dataMaxY
+      };
+    };
+
+    // set scroll position (posY, posX)
+    // side effect method is not ideal, but okay for now
+    // returns true if the scroll changed, false if nothing happened
+    var setPosition = function() {
+      var oldY = posY;
+      var oldX = posX;
+
+      posY = self.options.wrapper ? self.options.wrapper.scrollTop : (document.documentElement || document.body.parentNode || document.body).scrollTop || window.pageYOffset;
+      posX = self.options.wrapper ? self.options.wrapper.scrollLeft : (document.documentElement || document.body.parentNode || document.body).scrollLeft || window.pageXOffset;
+      // If option relativeToWrapper is true, use relative wrapper value instead.
+      if (self.options.relativeToWrapper) {
+        var scrollPosY = (document.documentElement || document.body.parentNode || document.body).scrollTop || window.pageYOffset;
+        posY = scrollPosY - self.options.wrapper.offsetTop;
+      }
+
+
+      if (oldY != posY && self.options.vertical) {
+        // scroll changed, return true
+        return true;
+      }
+
+      if (oldX != posX && self.options.horizontal) {
+        // scroll changed, return true
+        return true;
+      }
+
+      // scroll did not change
+      return false;
+    };
+
+    // Ahh a pure function, gets new transform value
+    // based on scrollPosition and speed
+    // Allow for decimal pixel values
+    var updatePosition = function(percentageX, percentageY, speed, verticalSpeed, horizontalSpeed) {
+      var result = {};
+      var valueX = ((horizontalSpeed ? horizontalSpeed : speed) * (100 * (1 - percentageX)));
+      var valueY = ((verticalSpeed ? verticalSpeed : speed) * (100 * (1 - percentageY)));
+
+      result.x = self.options.round ? Math.round(valueX) : Math.round(valueX * 100) / 100;
+      result.y = self.options.round ? Math.round(valueY) : Math.round(valueY * 100) / 100;
+
+      return result;
+    };
+
+    // Remove event listeners and loop again
+    var deferredUpdate = function() {
+      window.removeEventListener('resize', deferredUpdate);
+      window.removeEventListener('orientationchange', deferredUpdate);
+      (self.options.wrapper ? self.options.wrapper : window).removeEventListener('scroll', deferredUpdate);
+      (self.options.wrapper ? self.options.wrapper : document).removeEventListener('touchmove', deferredUpdate);
+
+      // loop again
+      loopId = loop(update);
+    };
+
+    // Loop
+    var update = function() {
+      if (setPosition() && pause === false) {
+        animate();
+
+        // loop again
+        loopId = loop(update);
+      } else {
+        loopId = null;
+
+        // Don't animate until we get a position updating event
+        window.addEventListener('resize', deferredUpdate);
+        window.addEventListener('orientationchange', deferredUpdate);
+        (self.options.wrapper ? self.options.wrapper : window).addEventListener('scroll', deferredUpdate, supportsPassive ? { passive: true } : false);
+        (self.options.wrapper ? self.options.wrapper : document).addEventListener('touchmove', deferredUpdate, supportsPassive ? { passive: true } : false);
+      }
+    };
+
+    // Transform3d on parallax element
+    var animate = function() {
+      var positions;
+      for (var i = 0; i < self.elems.length; i++){
+        // Determine relevant movement directions
+        var verticalScrollAxis = blocks[i].verticalScrollAxis.toLowerCase();
+        var horizontalScrollAxis = blocks[i].horizontalScrollAxis.toLowerCase();
+        var verticalScrollX = verticalScrollAxis.indexOf("x") != -1 ? posY : 0;
+        var verticalScrollY = verticalScrollAxis.indexOf("y") != -1 ? posY : 0;
+        var horizontalScrollX = horizontalScrollAxis.indexOf("x") != -1 ? posX : 0;
+        var horizontalScrollY = horizontalScrollAxis.indexOf("y") != -1 ? posX : 0;
+
+        var percentageY = ((verticalScrollY + horizontalScrollY - blocks[i].top + screenY) / (blocks[i].height + screenY));
+        var percentageX = ((verticalScrollX + horizontalScrollX - blocks[i].left + screenX) / (blocks[i].width + screenX));
+
+        // Subtracting initialize value, so element stays in same spot as HTML
+        positions = updatePosition(percentageX, percentageY, blocks[i].speed, blocks[i].verticalSpeed, blocks[i].horizontalSpeed);
+        var positionY = positions.y - blocks[i].baseY;
+        var positionX = positions.x - blocks[i].baseX;
+
+        // The next two "if" blocks go like this:
+        // Check if a limit is defined (first "min", then "max");
+        // Check if we need to change the Y or the X
+        // (Currently working only if just one of the axes is enabled)
+        // Then, check if the new position is inside the allowed limit
+        // If so, use new position. If not, set position to limit.
+
+        // Check if a min limit is defined
+        if (blocks[i].min !== null) {
+          if (self.options.vertical && !self.options.horizontal) {
+            positionY = positionY <= blocks[i].min ? blocks[i].min : positionY;
+          }
+          if (self.options.horizontal && !self.options.vertical) {
+            positionX = positionX <= blocks[i].min ? blocks[i].min : positionX;
+          }
+        }
+
+        // Check if directional min limits are defined
+        if (blocks[i].minY != null) {
+            positionY = positionY <= blocks[i].minY ? blocks[i].minY : positionY;
+        }
+        if (blocks[i].minX != null) {
+            positionX = positionX <= blocks[i].minX ? blocks[i].minX : positionX;
+        }
+
+        // Check if a max limit is defined
+        if (blocks[i].max !== null) {
+          if (self.options.vertical && !self.options.horizontal) {
+            positionY = positionY >= blocks[i].max ? blocks[i].max : positionY;
+          }
+          if (self.options.horizontal && !self.options.vertical) {
+            positionX = positionX >= blocks[i].max ? blocks[i].max : positionX;
+          }
+        }
+
+        // Check if directional max limits are defined
+        if (blocks[i].maxY != null) {
+            positionY = positionY >= blocks[i].maxY ? blocks[i].maxY : positionY;
+        }
+        if (blocks[i].maxX != null) {
+            positionX = positionX >= blocks[i].maxX ? blocks[i].maxX : positionX;
+        }
+
+        var zindex = blocks[i].zindex;
+
+        // Move that element
+        // (Set the new translation and append initial inline transforms.)
+        var translate = 'translate3d(' + (self.options.horizontal ? positionX : '0') + 'px,' + (self.options.vertical ? positionY : '0') + 'px,' + zindex + 'px) ' + blocks[i].transform;
+        self.elems[i].style[transformProp] = translate;
+      }
+      self.options.callback(positions);
+    };
+
+    self.destroy = function() {
+      for (var i = 0; i < self.elems.length; i++){
+        self.elems[i].style.cssText = blocks[i].style;
+      }
+
+      // Remove resize event listener if not pause, and pause
+      if (!pause) {
+        window.removeEventListener('resize', init);
+        pause = true;
+      }
+
+      // Clear the animation loop to prevent possible memory leak
+      clearLoop(loopId);
+      loopId = null;
+    };
+
+    // Init
+    init();
+
+    // Allow to recalculate the initial values whenever we want
+    self.refresh = init;
+
+    return self;
+  };
+  return Rellax;
+}));
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],28:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
+// pages
+const Topnav = require('Topnav')
+const Header = require('Header')
+const Datdot = require('Datdot')
+const SmartcontractUI = require('SmartcontractUI')
+const SmartcontractCodes = require('SmartcontractCodes')
+const Roadmap = require('Roadmap')
+const OurTeam = require('OurTeam')
+
+module.exports = Playproject
+
+function Playproject(opts, done) {
+    const {theme} = opts
+    const css = styles
+    const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
+    const landingPage = bel`
+        <div class=${css.wrap}>
+            ${playLogo}
+            ${Topnav()}
+            ${Header()}
+            ${Datdot()}
+            ${SmartcontractUI()}
+            ${SmartcontractCodes()}
+            ${Roadmap()}
+            ${OurTeam()}
+        </div>
+    `
+    return done(null, landingPage)
+}
+
+const styles = csjs`
+.wrap {
+    background: var(--bodyBg);
+}
+.playLogo {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 12vw;
+    max-width: calc(15 * 0.53vw);
+    min-width: calc(12 * 0.53vw);
+    z-index: 9
+}
+@media screen and (max-width: 1024px) {
+    .playLogo  {
+        width: 9vw;
+        min-width: 100px;
+    }
+}
+@media screen and (max-width: 812px) {
+    .playLogo  {
+        top: 20px;
+        min-width: 12vw;
+    }
+}
+@media screen and (max-width: 414px) {
+    .playLogo  {
+        min-width: 20vw;
+    }
+}
+`
+
+},{"Datdot":29,"Graphic":30,"Header":31,"OurTeam":32,"Roadmap":33,"SmartcontractCodes":34,"SmartcontractUI":35,"Topnav":36,"bel":4,"csjs-inject":7}],29:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
+const Rellax = require('rellax')
+
+module.exports = Datdot
+
+function Datdot() {
+    const css = styles
+    let blockchainIsland = Graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg')
+    let blossomIsland = Graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg')
+    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let button = bel`<button class=${css.button}>Get started</button>`
+
+    // Parallax effects
+    window.addEventListener('load', ()=>{
+        let contentRellax = new Rellax(`.${css.content}`, { speed: 1.5})
+        let blockchainIslandRellax = new Rellax( blockchainIsland, { speed: 1.25})
+        let blossomIslandRellax = new Rellax( blossomIsland, { speed: 1.75})
+        let cloud1Rellax = new Rellax( cloud1, { speed: 3})
+        let cloud2Rellax = new Rellax( cloud2, { speed: 4})
+        let cloud3Rellax = new Rellax( cloud3, { speed: 5})
+        let cloud4Rellax = new Rellax( cloud4, { speed: 4})
+        let cloud5Rellax = new Rellax( cloud5, { speed: 4})
+    })
+
+    button.addEventListener('click', ()=>{
+        window.open('https://playproject.io/', '_blank')
+    })
+    
+    let el = bel`
+    <section class="${css.section} datdot">
+        <div class="${css.content}">
+            <h2 class=${css.subTitle}>Dat Dot</h2>
+            <article class=${css.article}>Ethereum IDE plugin for hackable Atom editor. Compile smart contracts, deploy them to Ethereum networks. Efficient contract management interface. Integrated test suite for smart contracts.</article>
+            ${button}
+        </div>
+        ${blockchainIsland}
+        ${blossomIsland} 
+        ${cloud1}
+        ${cloud2}
+        ${cloud3}
+        ${cloud4}
+        ${cloud5}
+    </section>
+    `
+    return el
+}
+
+const styles = csjs`
+.section {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 60% 40%;
+    background-image: linear-gradient(0deg, var(--section1BgGEnd), var(--section1BgGStart));
+    padding: 0 2vw;
+}
+.content {
+    position: relative;
+    z-index: 9;
+    grid-row-start: 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    text-align: center;
+    padding: 0 5%; 
+}
+.subTitle {
+    font-family: var(--titleFont);
+    font-size: var(--subTitleSize);
+    color: var(--section1TitleColor);
+    margin-bottom: 2.5rem;
+}
+.article {
+}
+.button {
+    background-image: linear-gradient(0deg, #ed6e87, #e9627e);
+}
+.blockchainIsland {
+    position: relative;
+    z-index: 2;
+    grid-row-start: 1; 
+    grid-row-end: 3;
+    grid-column-start: 1; 
+}
+.blossomIsland {
+    position: relative;
+    z-index: 2;
+    grid-column-start: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    padding-left: 2rem;
+    align-self: end;
+    width: 90%;
+}
+.cloud1, .cloud2, .cloud3, .cloud4, .cloud5 {
+    transition: left 0.6s, bottom 0.5s, top 0.5s linear;
+}
+.cloud1 {
+    position: absolute;
+    z-index: 4;
+    width: 10vw;
+    bottom: 10vh;
+    left: 5vw;
+}
+.cloud2 {
+    position: absolute;
+    z-index: 4;
+    width: 14vw;
+    bottom: -8vh;
+    left: 42vw;
+}
+.cloud3 {
+    position: absolute;
+    z-index: 1;
+    width: 8vw;
+    bottom: 15vh;
+    left: 52vw;
+}
+.cloud4 {
+    position: absolute;
+    width: 6vw;
+    bottom: 60%;
+    right: 5vw;
+}
+.cloud5 {
+    position: absolute;
+    z-index: 1;
+    width: 18vw;
+    bottom: -10vh;
+    right: 2vw;
+}
+@media screen and (min-width: 2561px) {
+    .subTitle {
+        font-size: calc(var(--subTitleSize) * 1.5);
+    }
+}
+@media screen and (min-width: 4096px) {
+    .subTitle {
+        font-size: calc(var(--subTitleSize) * 2.25);
+    }
+}
+@media screen and (max-width: 1560px) {
+    .content {
+        padding: 0;
+    }
+    .blossomIsland {
+        margin-top: 30px;
+        width: 35vw;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .section1 {
+        grid-template-columns: 55% 45%; 
+    }
+    .content {
+        grid-column-start: 1;
+        padding: 0 15vw;
+    }
+    .blockchainIsland {
+        grid-row-start: 2;
+    }
+    .blossomIsland {
+        width: 90%;
+        margin-left: 2vw;
+        align-self: center;
+    }
+    .cloud1 {
+        bottom: 0vh;
+    }
+    .cloud2 {
+        bottom: -5vh;
+    }
+    .cloud3 {
+        bottom: 10%;
+    }
+    .cloud4 {
+        bottom: 60%;
+        width: 12vw;
+    }
+    .cloud5 {
+        bottom: -4vh;
+    }
+}
+@media screen and (max-width: 812px) { 
+    .cloud3 {
+        bottom: 10%;
+    }
+    .cloud4 {
+        bottom: 50%;
+    }
+}
+@media screen and (max-width: 768px) { 
+    .cloud3 {
+        bottom: 12%;
+    }
+}
+@media screen and (max-width: 640px) {
+    .section1 {
+        grid-template-rows: repeat(3, auto);
+        grid-template-columns: 100%;
+    }
+    .content {
+        padding-bottom: 10%;
+    }
+    .blockchainIsland {
+        grid-column-end: 3;
+    }
+    .blossomIsland {
+        grid-row-start: 3;
+        grid-column-start: 1;
+        width: 70%;
+        justify-self: end;
+        margin: 12vh 0 0 0;
+    }
+}
+@media screen and (max-width: 414px) {
+    .content {
+        padding: 0 5vw 5vh 5vw;
+    }
+    .subTitle {
+        font-size: var(--titlesSizeS);
+        margin-bottom: 1.5rem;
+    }
+    .article {
+        padding-bottom: 2rem;
+    }
+    .section1 {
+        margin-top: 0;
+    }
+    .blossomIsland {
+        width: 70vw;
+        grid-column-start: 2;
+        margin-top: 10vw;
+    }
+    .cloud3 {
+        bottom: 5vh;
+    }
+    .cloud4 {
+        bottom: 35%;
+        width: 15vw;
+    }
+}
+`
+},{"Graphic":30,"bel":4,"csjs-inject":7,"rellax":27}],30:[function(require,module,exports){
+const loadSVG = require('loadSVG')
+module.exports = Graphic
+
+function Graphic(className, url) {
+    let el = document.createElement('div')
+    el.classList.add(className)
+    loadSVG(url, (err, svg) => {
+        if (err) return console.error(err)
+        el.append(svg)
+    })
+
+    return el
+}   
+},{"loadSVG":37}],31:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
+const Rellax = require('rellax')
+
+function Header() {
+    const css = styles
+    let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
+    let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
+    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+    let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
+
+    // Parallax effects
+    let playRellax = new Rellax(playIsland, { speed: 2 })
+    let sunRellax = new Rellax(sun, { speed: 2 })
+    let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
+    let cloud2Rellax = new Rellax(cloud2, { speed: 6 })
+    let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
+    let cloud4Rellax = new Rellax(cloud4, { speed: 6 })
+    let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
+    let cloud6Rellax = new Rellax(cloud6, { speed: 5 })
+    let cloud7Rellax = new Rellax(cloud7, { speed: 5 })
+    
+    let el = bel`
+    <div class=${css.header}">
+        <h1 class=${css.title}>Infrastructure to build the future together</h1>
+        <section class=${css.scene}>
+            <div class=${css.sunCloud}>
+                ${cloud1}
+                ${sun}
+                ${cloud2}
+            </div>
+            ${cloud3}
+            ${cloud4}
+            ${cloud5}
+            ${cloud6}
+            ${cloud7}
+            ${playIsland}
+        </section>
+    </div>
+    `
+    return el
+}
+
+let styles = csjs`
+.header {
+    position: relative;
+    padding-top: 30px;
+    background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
+    overflow: hidden;
+}
+.scene {
+    position: relative;
+}
+.playIsland {
+    position: relative;
+    width: 90%;
+    margin-top: 0;
+    margin-left: 5vw;
+    z-index: 2;
+}
+.sunCloud {
+    position: absolute;
+    top: -4%;
+    width: 12%;
+    margin-left: 8vw;
+    z-index: 1;
+}
+.sun {
+    width: 100%;
+}
+.cloud1 {
+    position: absolute;
+    z-index: 2;
+    width: 7vw;
+    left: -3vw;
+    bottom: 0;
+}
+.cloud2 {
+    position: absolute;
+    z-index: 1;
+    width: 7vw;
+    left: 10vw;
+    top: 25%;
+}
+.cloud3 {
+    position: absolute;
+    z-index: 2;
+    width: 7vw;
+    height: auto;
+    top: -2.5%;
+    right: 14vw;
+}
+.cloud4 {
+    position: absolute;
+    z-index: 1;
+    width: 5vw;
+    height: auto;
+    top: 8%;
+    right: 6vw;
+}
+.cloud5 {
+    position: absolute;
+    z-index: 1;
+    width: 12vw;
+    height: auto;
+    top: 50%;
+    left: 2vw;
+}
+.cloud6 {
+    position: absolute;
+    z-index: 3;
+    width: 12vw;
+    height: auto;
+    bottom: 15%;
+    left: 15vw;
+}
+.cloud7 {
+    position: absolute;
+    z-index: 4;
+    width: 18vw;
+    height: auto;
+    bottom: 25%;
+    right: 5vw;
+}
+.title {
+    position: relative;
+    z-index: 4;
+    font-size: var(--titleSize);
+    font-family: var(--titleFont);
+    color: var(--titleColor);
+    text-align: center;
+    margin: 0 0 4rem 0;
+}
+.sun {
+    will-change: transform;
+}
+.cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
+    will-change: transform;
+}
+
+@media screen and (min-width: 2561px) {
+    .scene {
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .title {
+        font-size: calc(var(--titleSize) * 1.5);
+        margin-bottom: 6vh;
+    }
+}
+@media screen and (min-width: 4096px) {
+    .title {
+        font-size: calc(var(--titleSize) * 2.25);
+    }
+}
+@media screen and (max-width: 1024px) {
+    .header {
+        padding-top: 5vh;
+    }
+}
+@media screen and (max-width: 960px) {
+    .header {
+        padding-top: 8vh;
+    }
+}
+@media screen and (max-width: 768px) {
+    .header {
+        padding-top: 80px;
+    }
+    .title { 
+        padding: 0 5% ;
+    }
+}
+@media screen and (max-width: 736px) {
+    .header {
+        padding-top: 50px;
+    }
+    .title {
+        font-size: var(--titleSizeM);
+    }
+}
+@media screen and (max-width: 414px) {
+    .header {
+        padding-top: 30px;
+    }
+    .playIsland {
+        width: 150%;
+        margin-left: -26vw;
+    }
+    .sunCloud {
+        top: -2vh;
+        left: -3vw;
+    }
+    .cloud5 {
+        width: 12vw;
+        left: -4vw;
+        top: 64%;
+    }
+    .cloud6 {
+        width: 15vw;
+        left: 5vw;
+    }
+    .cloud7 {
+        width: 20vw;
+        right: -5vw;
+    }
+}
+`
+
+module.exports = Header
+},{"Graphic":30,"bel":4,"csjs-inject":7,"rellax":27}],32:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+const Graphic = require('Graphic')
+
+module.exports = OurTeam
+
+function OurTeam() {
+    const css = styles
+    let island = Graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg')
+    let lifeIsland1 = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let lifeIsland2 = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let lifeIsland3 = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let lifeIsland4 = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+
+    let el = bel`
+        <section class=${css.section}>
+
+            <div class=${css.content}>
+                <h2 class=${css.subTitle}>Our Team</h2>
+                <article class=${css.article}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</article>
+            </div>
+
+            <div class=${css.scene}>
+                ${island}
+            </div>
+
+            <div class=${css.groups}>
+            
+                <div class=${css.group1}>
+                    <div class=${css.team}>
+                        <img class=${css.avatar} src="./src/node_modules/assets/images/avatar-alex.png">
+                        <div class=${css.info}>
+                            <h3 class=${css.name}>Alexander Praetorius</h3>
+                            <span class=${css.career}>Co-funder</span>
+                            <span class=${css.career}>Full-stack developer</span>
+                        </div>
+                    </div>
+                    ${lifeIsland1}
+                </div>
+
+                <div class=${css.group2}>
+                    <div class=${css.team}>
+                        <img class=${css.avatar} src="./src/node_modules/assets/images/avatar-nina.png">
+                        <div class=${css.info}>
+                            <h3 class=${css.name}>Nina Breznik</h3>
+                            <span class=${css.career}>Co-funder</span>
+                            <span class=${css.career}>Full-stack developer</span>
+                        </div>
+                    </div>
+                    ${lifeIsland2}
+                </div>
+
+                <div class=${css.group3}>
+                    <div class=${css.team}>
+                        <img class=${css.avatar} src="./src/node_modules/assets/images/avatar-fiona.png">
+                        <div class=${css.info}>
+                            <h3 class=${css.name}>Fiona Ye</h3>
+                            <span class=${css.career}>UI/UX designer</span>
+                            <span class=${css.career}>Front-end developer</span>
+                        </div>
+                    </div>
+                    ${lifeIsland3}
+                </div>
+
+                <div class=${css.group4}>
+                    <div class=${css.team}>
+                        <img class=${css.avatar} src="./src/node_modules/assets/images/avatar-joshua.png">
+                        <div class=${css.info}>
+                            <h3 class=${css.name}>Joshua Mir</h3>
+                            <span class=${css.career}>backend developer</span>
+                        </div>
+                    </div>
+                    ${lifeIsland4}
+                </div>
+
+
+            </div>
+
+            ${cloud1}
+            ${cloud2}
+            ${cloud3}
+        </section>
+    `
+    return el
+}
+
+let styles = csjs`
+    .section {
+        position: relative;
+        background-image: linear-gradient(0deg, var(--section5BgGEnd), var(--section5BgGStart));
+        display: grid;
+        grid-template-rows: repeat(5, auto);
+        grid-template-columns: repeat(3, 1fr);
+        padding-left: 2vw;
+        padding-right: 2vw;
+        padding-top: 5vw;
+        padding-bottom: 10vw;
+    }
+    .content {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 3;
+        text-align: center;
+        padding: 5vw 10% 0 0;
+    }
+    .subTitle {
+        font-family: var(--titleFont);
+        font-size: var(--subTitleSize);
+        color: var(--section4TitleColor);
+        margin-bottom: 2.5rem;
+    }
+    .article {
+        
+    }
+    .scene {
+        width: 90%;
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+    .island {
+        width: 60vw;
+    }
+    .groups {
+        position: absolute;
+        right: 5vw;
+        top: 32vw;
+        display: grid;
+        grid-template: 1fr / repeat(2, 1fr);
+    }
+    .group1 {
+        position: relative;
+        z-index: 4;
+        width: 440px;
+    }
+    .group2 {
+        position: relative;
+        z-index: 4;
+        width: 440px;
+    }
+    .group3 {
+        position: relative;
+        z-index: 4;
+        width: 440px;
+    }
+    .group4 {
+        position: relative;
+        z-index: 4;
+        width: 440px;
+    }
+    .team {
+        position: absolute;
+        z-index: 1;
+        display: grid;
+        grid-template: 1fr / 40% 60%;
+        width: 70%; 
+        top: 23%;
+        left: 2%;
+    }
+    .avatar {
+        position: relative;
+        z-index: 2;
+    }
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: var(--teamTextSize);
+        text-align: center;
+        background-color: var(--teamBg);
+        padding: 0% 2% 4% 20%;
+        margin-left: -20%;
+    }
+    .name {
+        color: var(--section4TitleColor);
+        margin-top: 0;
+        margin-bottom: 3%;
+    }
+    .career {
+        display: block;
+        color: var(--teamcareerColor);
+    }
+    .lifeIsland {
+    }
+    .cloud1 {
+        position: absolute;
+        width: 6vw;
+        top: 2vw;
+        left: 5vw;
+    }
+    .cloud2 {
+        position: absolute;
+        width: 10vw;
+        top: -5vw;
+        left: 20vw;
+    }
+    .cloud3 {
+        position: absolute;
+        width: 6vw;
+        top: 2vw;
+        left: 40vw;
+    }
+`
+},{"Graphic":30,"bel":4,"csjs-inject":7}],33:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
+
+module.exports = Roadmap
+
+function Roadmap() {
+    const css = styles
+    let yellowCrystal = Graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg')
+    let purpleCrystal = Graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg')
+    let blueCrystal = Graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg')
+    let tree = Graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg')
+    let tree1 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg')
+    let tree2 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg')
+    let tree3 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg')
+    let island = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island1 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island2 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island3 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island4 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let stone = Graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg')
+    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+
+    let el = bel`
+        <section class="${css.section} roadmap">
+
+            <div class=${css.scene}>
+                <div class=${css.deco}>
+                    <div class=${css.content}>
+                        <h3>2016.1</h3>
+                        <p>Play project Established</p>
+                    </div>
+                    ${yellowCrystal}
+                    ${tree}
+                </div>
+                ${island}
+            </div>
+
+            <div class=${css.scene}>
+                <div class=${css.deco}>
+                    <div class=${css.content}>
+                        <h3>2017.6</h3>
+                        <p>Smart contarct codes and smart contract ui are published</p>
+                    </div>
+                    ${stone}
+                    ${tree1}
+                </div>
+                ${island1}
+            </div>
+            
+            <div class=${css.scene}>
+                <div class=${css.deco}>
+                    <div class=${css.content}>
+                        <h3>2018.8</h3>
+                        <p>Smart contarct codes released new theme</p>
+                    </div>
+                    ${purpleCrystal}
+                </div>
+                ${island2}
+            </div>
+
+            <div class=${css.scene}>
+                <div class=${css.deco}>
+                    <div class=${css.content}>
+                        <h3>2019</h3>
+                        <h3>Coming soon</h3>
+                    </div>
+                    ${blueCrystal}
+                    ${tree2}
+                </div>
+                ${island3}
+            </div>
+
+            <div class=${css.scene}>
+                ${tree3}
+                ${island4}
+            </div>
+
+            ${cloud1}
+            ${cloud2}
+            ${cloud3}
+            ${cloud4}
+            ${cloud5}
+            ${cloud6}
+            
+        </section>
+    `
+    return el
+}
+
+let styles = csjs`
+.section {
+    position: relative;
+    background-image: linear-gradient(0deg, var(--section4BgGEnd), var(--section4BgGStart));
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: 15% 35% 35% 15%;
+    padding-top: 10vw;
+}
+.scene {
+}
+.scene:nth-child(1) {
+    position: relative;
+    z-index: 3;
+    width: 50vw;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    margin-left: 30vw;
+}
+.scene:nth-child(2) {
+    position: relative;
+    z-index: 4;
+    width: 24vw;
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    margin-top: -15vw;
+    margin-left: 5vw;
+}
+.scene:nth-child(3) {
+    position: relative;
+    z-index: 4;
+    width: 24vw;
+    grid-row-start: 2;
+    grid-column-start: 2;
+    margin-top: 3vw;
+    margin-left: 8vw;
+}
+.scene:nth-child(4) {
+    position: relative;
+    z-index: 4;
+    width: 30vw;
+    grid-row-start: 2;
+    grid-column-start: 3;
+    margin-top: 5vw;
+    margin-left: 7vw;
+}
+.scene:nth-child(5) {
+    position: relative;
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 4;
+    width: 10vw;
+    align-self: end;
+    margin-bottom: 12vw;
+}
+.scene:nth-child(5) .tree {
+    width: 80%;
+    margin: 0 auto -1.5vw auto;
+}
+.deco {
+    position: relative;
+}
+.tree {
+    position: relative;
+    width: 50%;
+    margin: 0 0 -11% -9%;
+    z-index: 2;
+}
+.yellowCrystal {
+    position: absolute;
+    width: 25%;
+    left: 20%;
+    bottom: 1%;
+    z-index: 3;
+}
+.island {
+    
+}
+.content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
+.scene:nth-child(1) .content {
+    width: 35%;
+    left: 21vw;
+    bottom: 2%;
+    background: url('./src/node_modules/assets/svg/card1.svg') no-repeat;
+    background-size: cover;
+    padding: 8% 5% 8% 8%;
+}
+.content h3 {
+    font-family: var(--titleFont);
+    font-size: var(--roadmapTitleSize);
+    text-align: center;
+    color: var(--roadmapTitleColor);
+    margin-top: 0;
+}
+.content p {
+    font-size: var(--roadmapTextSize);
+    text-align: center;
+    margin: 0;
+}
+.scene:nth-child(2) .content {
+    width: 45%;
+    left: 35%;
+    bottom: -2vw;
+    background: url('./src/node_modules/assets/svg/card2.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.scene:nth-child(2) .tree {
+    position: absolute;
+    width: 45%;
+    left: 2vw;
+    bottom: -0.5vw;
+}
+.scene:nth-child(2) .stone {
+    position: absolute;
+    width: 24%;
+    right: 5%;
+    bottom: -2.5vw;
+    z-index: 2;
+}
+.scene:nth-child(3) .content {
+    width: 60%;
+    left: 5vw;
+    bottom: -2.2vw;
+    background: url('./src/node_modules/assets/svg/card3.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.purpleCrystal {
+    position: absolute;
+    width: 40%;
+    left: -6%;
+    bottom: -2.5vw;
+    z-index: 3;
+}
+.scene:nth-child(4) .content {
+    width: 50%;
+    left: 6vw;
+    bottom: -2.5vw;
+    background: url('./src/node_modules/assets/svg/card4.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.scene:nth-child(4) h3 {
+    margin-bottom: 10px;
+}
+.scene:nth-child(4) h3:last-child {
+    margin-bottom: 0;
+}
+.scene:nth-child(4) .tree {
+    position: absolute;
+    width: 24%;
+    right: 1.5vw;
+    bottom: 0vw;
+}
+.blueCrystal {
+    position: absolute;
+    width: 22%;
+    left: 1vw;
+    bottom: -3vw;
+    z-index: 3;
+}
+.cloud1 {
+    position: absolute;
+    width: 8vw;
+    top: 5vw;
+    left: 8vw;
+    z-index: 5;
+}
+.cloud2 {
+    position: absolute;
+    width: 15vw;
+    top: -5vw;
+    left: 50vw;
+    z-index: 6;
+}
+.cloud3 {
+    position: absolute;
+    width: 15vw;
+    top: 10vw;
+    right: 10vw;
+    z-index: 5;
+}
+.cloud4 {
+    position: absolute;
+    width: 8vw;
+    bottom: 28vw;
+    right: 5vw;
+    z-index: 4;
+}
+.cloud5 {
+    position: absolute;
+    width: 12vw;
+    bottom: -3vw;
+    right: 6vw;
+    z-index: 5;
+}
+.cloud6 {
+    position: absolute;
+    width: 8vw;
+    bottom: -10vw;
+    right: 2vw;
+    z-index: 6;
+}
+@media screen and (min-width: 3840px) {
+    .info h3 {
+        margin-bottom: 6px;
+        font-size: calc( var(--roadmapTitleSizeM) * 2);
+    }
+    .info p {
+        font-size: calc( var(--roadmapTextSizeM) * 2);
+    }
+}
+@media screen and (max-width: 1024px) {
+    .section {
+        grid-template-columns: repeat(2, 50vw);
+    }
+    .scene:nth-child(1) {
+        grid-row-start: 1;
+        width: 70vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(1) .content {
+        width: 35%;
+        left: 28vw;
+    }
+    .scene:nth-child(2) {
+        grid-row-start: 2;
+        grid-column-start: 1;
+        width: 40vw;
+        margin-top: 15vw;
+        margin-left: 5vw;
+    }
+    .scene:nth-child(2) .content {
+        bottom: -3vw;
+        left: 28%;
+    }
+    .scene:nth-child(2) .stone {
+        bottom: -4vw;
+        right: 9%;
+    }
+    .scene:nth-child(3) {
+        grid-row-start: 2;
+        grid-column-start: 2;
+        width: 40vw;
+        margin-top: 20vw;
+        margin-left: 5vw;
+    }
+    .scene:nth-child(3) .content {
+        left: 8vw;
+        bottom: -3vw;
+    }
+    .purpleCrystal {
+        bottom: -3.5vw;
+    }
+    .scene:nth-child(4) {
+        grid-row-start: 3;
+        grid-column-start: 2;
+        width: 50vw;
+        margin: 10vw 0 0 -25vw;
+    }
+    .scene:nth-child(4) .content {
+        bottom: -4.5vw;
+        width: 50%;
+        left: 8vw;
+    }
+    .blueCrystal {
+        bottom: -5vw;
+    }
+    .scene:nth-child(5) {
+        grid-row-start: 1;
+        grid-column-start: 3;
+        width: 15vw;
+        align-self: start;
+        margin-top: 15vw;
+        margin-left: -20vw;     
+    }
+    .scene:nth-child(5) .tree {
+        width: 65%;
+        margin: 0 auto -2vw auto;
+    }
+}
+@media screen and (max-width: 960px) { 
+    .scene:nth-child(2) .tree {
+        width: 30%;
+    }
+    .scene:nth-child(2) .content {
+        width: 60%;
+        left: 18%;
+    }
+}
+@media screen and (max-width: 812px) {
+    .info h3 {
+        margin-bottom: 6px;
+        font-size: var(--roadmapTitleSizeM);
+    }
+    .info p {
+        font-size: var(--roadmapTextSizeM);
+    }
+}
+@media screen and (max-width: 640px) {
+    .scene:nth-child(2) {
+        width: 50vw;
+        margin-top: 20vw;
+    }
+    .scene:nth-child(3) {
+        width: 50vw;
+        grid-row-start: 3;
+        grid-column-start: 2;
+        margin-left: 0;
+        margin-top: 5vw;
+    }
+    .scene:nth-child(4) {
+        width: 66vw;
+        grid-row-start: 4;
+        grid-column-start: 1;
+        grid-column-end: 2;
+        margin-left: 10vw;
+        margin-top: 20vw;
+    }
+    .scene:nth-child(5) {
+        margin-left: -18vw;
+    }
+}
+@media screen and (max-width: 480px) {
+    .scene:nth-child(1) {
+        width: 90vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(1) .content {
+        width: 40%;
+        left: 36%;
+    }
+    .scene:nth-child(2) {
+        width: 70vw;
+        margin-top: 20vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(2) .content {
+        width: 60%;
+        padding: 10% 5% 10% 12%;
+        bottom: -6vw;
+    }
+    .scene:nth-child(2) .stone {
+        bottom: -8vw;
+        right: 0;
+    }
+    .scene:nth-child(2) .tree {
+        left: 5vw;
+    }
+    .scene:nth-child(3) {
+        width: 70vw;
+        margin-left: 20vw;
+        margin-top: 25vw;
+        grid-column-start: 1;
+    }
+    .scene:nth-child(3) .content {
+        left: 12vw;
+        bottom: -6vw;
+    }
+    .purpleCrystal {
+        bottom: -7vw;
+    }
+    .scene:nth-child(4) {
+        width: 66vw;
+        margin-left: 10vw;
+        margin-top: 30vw;
+    }
+    .scene:nth-child(4) .content {
+        width: 56%;
+    }
+    .blueCrystal {
+        bottom: -6vw;
+    }
+    .scene:nth-child(5) {
+        grid-row-start: 4;
+        margin-top: -5vw;
+        margin-left: -22vw;
+    }
+}
+`
+},{"Graphic":30,"bel":4,"csjs-inject":7}],34:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// Widgets
+const Graphic = require('Graphic')
+const Rellax = require('rellax')
+
+module.exports = SmartcontractCodes
+
+function SmartcontractCodes () {
+    const css = styles
+    let island = Graphic(css.island, './src/node_modules/assets/svg/floating-island1.svg')
+    let islandMiddle = Graphic(css.islandMiddle, './src/node_modules/assets/svg/floating-island2.svg')
+    let islandRight = Graphic(css.islandRight, './src/node_modules/assets/svg/floating-island2.svg')
+    let blossom = Graphic(css.blossom, './src/node_modules/assets/svg/blossom-tree.svg')
+    let tree = Graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
+    let trees = Graphic(css.trees, './src/node_modules/assets/svg/two-trees.svg')
+    let stone = Graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
+    let smallStone = Graphic(css.smallStone, './src/node_modules/assets/svg/small-stone.svg')
+    let button = bel`<button class=${css.button}>Get started</button>`
+
+    button.addEventListener('click', ()=>{
+        window.open('https://smartcontract.codes/', '_blank')
+    })
+
+    let el = bel`
+    <section class="${css.section} smartcontractCodes">
+        <div class="${css.content}">
+            <h2 class=${css.subTitle}>Smart contract codes</h2>
+            <article class=${css.article}>From Parity Ethereum, the most advanced Ethereum client, to Polkadot, the next-generation interoperable blockchain network. Parity builds the cutting edge of Web 3.0.</article>
+            ${button}
+        </div>
+        <div class=${css.scene}>
+            <div class=${css.deco}>
+                <img class=${css.logo} src="https://smartcontract.codes/src/assets/images/logo-1.png" alt="Smart contract codes logo">
+                <img class=${css.screenshot} src="./src/node_modules/assets/images/smart-contract-codes.jpg" alt="Smart contract codes">
+                ${trees}
+            </div>
+            ${island}
+        </div>
+        <div class=${css.sceneMedium}>
+            <div class=${css.deco1}>
+                <div class=${css.container}>
+                    ${smallStone}
+                    ${stone}
+                    ${blossom}
+                </div>
+                ${islandMiddle}
+            </div>
+            <div class=${css.deco2}>
+                ${tree}
+                ${islandRight}
+            </div>
+        </div>
+        
+    </section>
+    `
+
+    return el
+}
+
+const styles = csjs`
+.section {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 60% 40%;
+    background-image: linear-gradient(0deg, var(--section3BgGEnd), var(--section3BgGStart));
+    padding: 6vh 2vw 0 2vw;
+}
+.content {
+    position: relative;
+    z-index: 9;
+    grid-row-start: 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    text-align: center;
+    padding: 0 5%;
+    margin-top: 2vw;
+}
+.subTitle {
+    font-family: var(--titleFont);
+    font-size: var(--subTitleSize);
+    color: var(--section3TitleColor);
+    margin-bottom: 2.5rem;
+}
+.article {
+    
+}
+.button {
+    background-image: linear-gradient(0deg, #900df8, #ac1cf6);
+}
+.scene {
+    grid-row-start: span 2;
+    grid-column-start: 1;
+}
+.deco {
+    position: relative;
+}
+.screenshot {
+    width: 65%;
+    margin-left: 15%;
+    margin-bottom: -6%;
+}
+.trees {
+    position: absolute;
+    right: 10%;
+    bottom: -20%;
+    width: 15%;
+}
+.logo {
+    position: absolute;
+    left:6%;
+    bottom: -20%;
+    width: 15%;
+}
+.island {
+}
+.sceneMedium {
+    grid-row-start: 2;
+    grid-column-start: 2;
+    display: grid;
+    grid-template: 1fr / 65% 35%;
+    align-items: center;
+}
+.container {
+    position: relative;
+}
+.deco1 {
+    position: relative;
+    width: 80%;
+    justify-self: center;
+}
+.deco2 {
+
+}
+.blossom {
+    width: 55%;
+    margin: 0  0 -10% 12%;
+}
+.islandMiddle {
+
+}
+.tree {
+    position: relative;
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: -11%;
+    z-index: 2;
+}
+.islandRight {
+    
+}
+.stone {
+    position: absolute;
+    right: 12%;
+    bottom: 3%;
+    width: 22%;
+}
+.smallStone {
+    position: absolute;
+    left: 7%;
+    bottom: 5%;
+    width: 14%;
+}
+@media screen and (min-width: 2561px) {
+    .subTitle {
+        font-size: calc(var(--subTitleSize) * 1.5);
+    }
+    .tree {
+        margin-bottom: -10.5%;
+    }
+}
+@media screen and (min-width: 4096px) {
+    .subTitle {
+        font-size: calc(var(--subTitleSize) * 2.25);
+    }
+}
+@media screen and (max-width: 1024px) {
+    .content {
+        grid-column-start: 1;
+        margin-bottom: 60px;
+    }
+}
+@media screen and (max-width: 640px) {
+    .scene {
+        grid-row-start: 2;
+        grid-column-end: 3; 
+    }
+    .sceneMedium {
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+    .deco1 {
+        width: 90%;
+    }
+    .deco2 {
+        width: 80%;
+        justify-self: center;
+        align-self: center;
+    }
+    .tree {
+        bottom: -5.5%;
+    }
+}
+@media screen and (max-width: 414px) {
+    .subTitle {
+        font-size: var(--titlesSizeS);
+        margin-bottom: 1.5rem;
+    }
+}
+`
+},{"Graphic":30,"bel":4,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// Widgets
+const Graphic = require('Graphic')
+const Rellax = require('rellax')
+
+module.exports = SmartcontractUI
+
+function SmartcontractUI () {
+    const css = styles
+    let island = Graphic(css.island, './src/node_modules/assets/svg/floating-island.svg')
+    let energyIsland = Graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg')
+    let tree = Graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
+    let stone = Graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
+    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let button = bel`<button class=${css.button}>Get started</button>`
+
+    button.addEventListener('click', ()=>{
+        window.open('https://ethereum-play.github.io/editor-solidity/', '_blank')
+    })
+
+    let el = bel`
+    <section class="${css.section} smartcontractUI">
+        <div class="${css.content}">
+            <h2 class=${css.subTitle}>Smart Contract UI</h2>
+            <article class=${css.article}>Ethereum IDE plugin for hackable Atom editor. Compile smart contracts, deploy them to Ethereum networks. Efficient contract management interface. Integrated test suite for smart contracts.</article>
+            ${button}
+        </div>
+        <div class=${css.scene}>
+            <div class=${css.objects}>
+                <img class=${css.logo} src="https://ethereum-play.github.io/editor-solidity/assets/logo.png" alt="Smart contract UI logo">
+                <img class=${css.screenshot} src="./src/node_modules/assets/images/smart-contract-ui.jpg" alt="Smart contract UI">
+                <div class=${css.deco}>
+                    ${stone}
+                    ${tree}
+                </div>
+            </div>
+            ${island}
+        </div>
+        ${energyIsland}
+        ${cloud1}
+        ${cloud2}
+        ${cloud3}
+        ${cloud4}
+        ${cloud5}
+    </section>
+    `
+    return el
+}
+
+const styles = csjs`
+.section {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 40% 60%;
+    background-image: linear-gradient(0deg, var(--section2BgGEnd), var(--section2BgGStart));
+    padding: 0 2vw;
+}
+.content {
+    position: relative;
+    z-index: 9;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    text-align: center;
+    padding: 0 5%;
+    margin-bottom: 86px;
+}
+.subTitle {
+    font-family: var(--titleFont);
+    font-size: var(--subTitleSize);
+    color: var(--section2TitleColor);
+    margin-bottom: 2.5rem;
+}
+.article {
+    
+}
+.button {
+    background-image: linear-gradient(0deg, #4dc7be, #35bdb9);
+}
+.scene {
+    position: relative;
+    grid-row-start: span 2;
+    grid-column-start: 2;
+}
+.objects {
+    position: relative;
+}
+.screenshot {
+    width: 80%;
+    margin-bottom: -5.5%;
+    margin-left: 10%;
+}
+.logo {
+    position: absolute;
+    left: 0%;
+    bottom: -20%;
+    width: 20%;
+}
+.deco {
+    position: absolute;
+    right: 0;
+    bottom: -18.5%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+.tree {
+    width: 13%;
+}
+.stone {
+    position: relative;
+    width: 10%;
+    right: -3%;
+}
+.island {
+}
+.energyIsland {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    width: 80%;
+    justify-self: center;
+}
+.cloud1 {
+    position: absolute;
+    width: 10vw;
+    left: 2vw;
+    bottom: 0;
+    z-index: 3;
+}
+.cloud2 {
+    position: absolute;
+    width: 15vw;
+    left: 38vw;
+    bottom: 3vw;
+    z-index: 2;
+}
+.cloud3 {
+    position: absolute;
+    width: 8vw;
+    right: 30vw;
+    bottom: -4vw;
+    z-index: 3;
+}
+.cloud4 {
+    position: absolute;
+    width: 14vw;
+    right: 6vw;
+    bottom: -2vw;
+    z-index: 3;
+}
+.cloud5 {
+    position: absolute;
+    width: 8vw;
+    right: 2vw;
+    bottom: 10vw;
+    z-index: 2;
+}
+@media screen and (max-width: 1024px) {
+    .content {
+        grid-row-start: 1;
+        grid-column-end: 3;
+    }
+    .scene {
+        grid-row-start: 2;
+    }
+    .energyIsland {
+        align-self: end;
+    }
+}
+@media screen and (max-width: 640px) {
+    .scene {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+    .energyIsland {
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        width: 60%;
+        justify-self: start;
+    }
+}
+@media screen and (max-width: 414px) {
+    .subTitle {
+        font-size: var(--titlesSizeS);
+        margin-bottom: 1.5rem;
+    }
+}
+`
+},{"Graphic":30,"bel":4,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
-let app = document.createElement('div')
-app.classList.add('app')
-app.innerHTML = bel`<h1>Hello world</h1>`
+module.exports = Topnav
 
-document.body.appendChild(app)
-},{"bel":2,"csjs-inject":5}]},{},[25]);
+function Topnav() {
+    return bel`
+            <div class=${css.topNav}>
+                <nav class=${css.menu}>
+                    <a href="#datdot">DATDOT</a>
+                    <a href="#">SMART CONTARCT UI</a>
+                    <a href="#">SMART CONTARCT CODES</a>
+                    <a href="#">ROADMAP</a>
+                    <a href="#">TEAM</a>
+                    <a href="#">CONTACTS</a>
+                </nav>
+            </div>
+    `
+    
+}
+
+let css = csjs`
+.topNav {
+    display: grid;
+    grid-template: 1fr / auto;
+}
+.menu {
+    padding-top: 2%;
+    padding-right: 1.5%;
+    text-align: right;
+}
+.menu a {
+    font-size: var(--menuSize);
+    margin-left: 1.75%;
+    color: #575551;
+    transition: color .6s linear;
+}
+.menu a:hover {
+    color: #00acff;
+}
+@media (min-width: 2561px) {
+    .menu a {
+        font-size: calc(var(--menuSize) * 1.5);
+    }
+}
+@media screen and (min-width: 4096px) {
+    .menu a {
+        font-size: calc(var(--menuSize) * 2);
+    }
+}
+@media screen and (max-width: 960px) {
+    .menu {
+        padding-top: 3%;
+        padding-right: 2.5vw;
+    }
+    .menu a {
+        margin-left: 1.5%;
+    }
+}
+@media screen and (max-width: 812px) {
+    .topNav {
+        display: none;
+    }
+}
+`
+},{"bel":4,"csjs-inject":7}],37:[function(require,module,exports){
+module.exports = loadSVG
+
+async function loadSVG (url, done) { 
+    const parser = document.createElement('div')
+    let response = await fetch(url)
+    if (response.status == 200) {
+      let svg = await response.text()
+      parser.innerHTML = svg
+      return done(null, parser.children[0])
+    }
+    throw new Error(response.status)
+}
+
+
+},{}]},{},[1]);
