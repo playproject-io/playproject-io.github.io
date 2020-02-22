@@ -39,6 +39,7 @@
   "dependencies": {
     "bel": "^6.0.0",
     "csjs-inject": "^1.0.1",
-    "rellax": "^1.12.0"
+    "rellax": "^1.12.0",
+    "zenscroll": "^4.0.2"
   }
 }
