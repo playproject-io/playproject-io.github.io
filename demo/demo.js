@@ -1,4 +1,3 @@
-const bel = require('bel')
 const csjs = require('csjs-inject')
 const Playproject = require('../') 
 const theme = require('theme')
