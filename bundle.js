@@ -125,7 +125,7 @@ const defines = {
 const theme = { 
     bodyFont            : defines.fonts.nunito,
     bodyColor           : defines.colors.grey,
-    bodyBg              : defines.colors.skyblue,
+    bodyBg              : defines.colors.lightSky,
     menuSize            : defines.sizes.small,
     titleFont           : defines.fonts.slackey,
     titleSize           : defines.sizes['xxx-large'],
@@ -165,7 +165,8 @@ const theme = {
     teamBg              : defines.colors.lowYellow,
     teamTextSize        : defines.sizes.small,
     teamTextSizeS       : defines.sizes["xx-small"],
-    teamcareerColor     : defines.colors.lightGrey
+    teamcareerColor     : defines.colors.lightGrey,
+    footerBg            : defines.colors.lightSky
 }
 
 module.exports = theme
@@ -2114,6 +2115,7 @@ const SmartcontractUI = require('SmartcontractUI')
 const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
 const OurTeam = require('OurTeam')
+const Footer = require('Footer')
 
 module.exports = Playproject
 
@@ -2131,6 +2133,7 @@ function Playproject(opts, done) {
             ${SmartcontractCodes()}
             ${Roadmap()}
             ${OurTeam()}
+            ${Footer()}
         </div>
     `
     return done(null, landingPage)
@@ -2148,6 +2151,9 @@ const styles = csjs`
     max-width: calc(15 * 0.53vw);
     min-width: calc(12 * 0.53vw);
     z-index: 9
+}
+[class^="cloud"] {
+    transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }
 @media screen and (max-width: 1024px) {
     .playLogo  {
@@ -2168,7 +2174,7 @@ const styles = csjs`
 }
 `
 
-},{"Datdot":30,"Graphic":31,"Header":32,"OurTeam":33,"Roadmap":34,"SmartcontractCodes":35,"SmartcontractUI":36,"Topnav":37,"bel":4,"csjs-inject":7}],30:[function(require,module,exports){
+},{"Datdot":30,"Footer":31,"Graphic":32,"Header":33,"OurTeam":34,"Roadmap":35,"SmartcontractCodes":36,"SmartcontractUI":37,"Topnav":38,"bel":4,"csjs-inject":7}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2265,9 +2271,6 @@ const styles = csjs`
     padding-left: 2rem;
     align-self: end;
     width: 90%;
-}
-.cloud1, .cloud2, .cloud3, .cloud4, .cloud5 {
-    transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }
 .cloud1 {
     position: absolute;
@@ -2428,7 +2431,81 @@ const styles = csjs`
     }
 }
 `
-},{"Graphic":31,"bel":4,"csjs-inject":7,"rellax":27}],31:[function(require,module,exports){
+},{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],31:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
+
+module.exports = Footer
+
+function Footer() {
+    const css = styles
+    let email = Graphic(css.icon, './src/node_modules/assets/svg/email.svg')
+    let twitter = Graphic(css.icon, './src/node_modules/assets/svg/twitter.svg')
+    let github = Graphic(css.icon, './src/node_modules/assets/svg/github.svg')
+    let gitter = Graphic(css.icon, './src/node_modules/assets/svg/gitter.svg')
+
+    let el = bel`
+    <footer class=${css.footer}>
+        <p class=${css.copyright}>Copyright © 2020 PlayProject. All rights reserved</p>
+        <nav id="contacts" class=${css.contacts}>
+            <a href="mailto:dev@serapath.de" title="email">${email}</a>
+            <a href="https://twitter.com/playproject_io" target="_blank" title="twitter">${twitter}</a>
+            <a href="https://github.com/playproject-io" target="_blank" title="Github">${github}</a>
+            <a href="https://gitter.im/playproject-io/community" target="_blank" title="gitter">${gitter}</a>
+        </nav>
+    </footer>
+    `
+    return el
+}
+
+let styles = csjs`
+.footer {
+    display: grid;
+    grid-template-rows: 3rem;
+    grid-template-columns: 25% auto 25%;
+    color: white;
+    padding-top: 4vw;
+    padding-bottom: 0.5%;
+    background-color: var(--footerBg);
+}
+.copyright {
+    grid-column-start: 2;
+    text-align: center;
+    align-self: center;
+    padding-right: 30px;
+}
+.contacts {
+    grid-column-start: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon {
+    width: 23px;
+    margin-left: 1vw;
+}
+@media screen and (max-width: 640px) {
+    .footer {
+        grid-template-columns: auto;
+        grid-template-rows: auto 8vh;
+    }
+    .copyright {
+        grid-row-start: 2; 
+        grid-column-start: 1;
+    }
+    .contacts {
+        grid-row-start: 1;
+        grid-column-start: 1;
+    }
+    .icon {
+        margin-left: 2vw;
+        margin-right: 2vw;
+    }
+}
+`
+},{"Graphic":32,"bel":4,"csjs-inject":7}],32:[function(require,module,exports){
 const loadSVG = require('loadSVG')
 module.exports = Graphic
 
@@ -2442,7 +2519,7 @@ function Graphic(className, url) {
 
     return el
 }   
-},{"loadSVG":38}],32:[function(require,module,exports){
+},{"loadSVG":39}],33:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2520,6 +2597,9 @@ let styles = csjs`
 }
 .sun {
     width: 100%;
+}
+[class^="cloud"] {
+    transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }
 .cloud1 {
     position: absolute;
@@ -2658,7 +2738,7 @@ let styles = csjs`
 `
 
 module.exports = Header
-},{"Graphic":31,"bel":4,"csjs-inject":7,"rellax":27}],33:[function(require,module,exports){
+},{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],34:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -2693,10 +2773,10 @@ function OurTeam() {
         let cloud1Rellax = new Rellax( cloud1, { speed: 0.3})
         let cloud2Rellax = new Rellax( cloud2, { speed: 0.3})
         let cloud3Rellax = new Rellax( cloud3, { speed: 0.5})
-        let cloud4Rellax = new Rellax( cloud4, { speed: 0.6})
-        let cloud5Rellax = new Rellax( cloud5, { speed: 0.4})
-        let cloud6Rellax = new Rellax( cloud6, { speed: 0.6})
-        let cloud7Rellax = new Rellax( cloud7, { speed: 0.4})
+        let cloud4Rellax = new Rellax( cloud4, { speed: 0.2})
+        let cloud5Rellax = new Rellax( cloud5, { speed: 0.2})
+        let cloud6Rellax = new Rellax( cloud6, { speed: 0.2})
+        let cloud7Rellax = new Rellax( cloud7, { speed: 0.2})
     })
     window.addEventListener('resize', ()=> {
         spacing()
@@ -2939,21 +3019,21 @@ let styles = csjs`
     position: absolute;
     z-index: 5;
     width: 8vw;
-    bottom: 4vw;
+    bottom: 0vw;
     left: 30vw;
 }
 .cloud6 {
     position: absolute;
     z-index: 4;
     width: 14vw;
-    bottom: -15vw;
+    bottom: -5vw;
     right: 25vw;
 }
 .cloud7 {
     position: absolute;
     z-index: 3;
     width: 6vw;
-    bottom: 5vw;
+    bottom: 0vw;
     right: 10vw;
 }
 @media screen and (min-width: 2561px) {
@@ -3055,17 +3135,19 @@ let styles = csjs`
         top: 25vw;
         left: 80vw;
     }
+}
+@media screen and (max-width: 812px) {
     .cloud4 {
-        bottom: -10vw;
+        z-index: 1;
     }
     .cloud5 {
-        bottom: -10vw;
+        z-index: 1;
     }
     .cloud6 {
-        bottom: -30vw;
+        z-index: 1;
     }
     .cloud7 {
-        bottom: -20vw;
+        z-index: 1;
     }
 }
 @media screen and (max-width: 768px) {
@@ -3112,36 +3194,33 @@ let styles = csjs`
     }
     .cloud1 {
         width: 12vw;
-        top: 38vw;
+        top: 60vw;
     }
     .cloud2 {
         top: 40vw;
     }
     .cloud3 {
         width: 12vw;
-        top: 30vw;
+        top: 90vw;
     }
     .cloud4 {
         z-index: 1;
         width: 20vw;
-        bottom: -70vw;
+        bottom: 20vw;
     }
     .cloud5 {
         width: 15vw;
         left: 10vw;
-        bottom: -75vw;
-        z-index: 1;
+        bottom: 0vw;
     }
     .cloud6 {
         width: 30vw;
-        bottom: -50vw;
+        bottom: -12vw;
         right: 35vw;
-        z-index: 1;
     }
     .cloud7 {
         width: 15vw;
-        bottom: -80vw;
-        z-index: 1;
+        bottom: -10vw;
     }
 }
 @media screen and (max-width: 414px) {
@@ -3153,9 +3232,18 @@ let styles = csjs`
         top: 5vw;
         left: -10vw;
     }
+    .cloud5 {
+        bottom: -15vw;
+    }
+    .cloud6 {
+        bottom: -20vw;
+    }
+    .cloud7 {
+        bottom: -20vw;
+    }
 }
 `
-},{"Graphic":31,"bel":4,"csjs-inject":7,"rellax":27}],34:[function(require,module,exports){
+},{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -3705,7 +3793,7 @@ let styles = csjs`
     }
 }
 `
-},{"Graphic":31,"bel":4,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
+},{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -3917,7 +4005,7 @@ const styles = csjs`
     }
 }
 `
-},{"Graphic":31,"bel":4,"csjs-inject":7}],36:[function(require,module,exports){
+},{"Graphic":32,"bel":4,"csjs-inject":7}],37:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -4147,7 +4235,7 @@ const styles = csjs`
     }
 }
 `
-},{"Graphic":31,"bel":4,"csjs-inject":7,"rellax":27}],37:[function(require,module,exports){
+},{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],38:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // plugins
@@ -4170,7 +4258,7 @@ function Topnav() {
                     <a href="#smartcontractCodes" onclick=${(e)=>click(e)}>SMART CONTARCT CODES</a>
                     <a href="#roadmap" onclick=${(e)=>click(e)}>ROADMAP</a>
                     <a href="#ourTeam" onclick=${(e)=>click(e)}>OUR TEAM</a>
-                    <a href="#contact" onclick=${(e)=>click(e)}>CONTACTS</a>
+                    <a href="#contacts" onclick=${(e)=>click(e)}>CONTACTS</a>
                 </nav>
             </div>
     `
@@ -4221,7 +4309,7 @@ let css = csjs`
     }
 }
 `
-},{"bel":4,"csjs-inject":7,"zenscroll":28}],38:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7,"zenscroll":28}],39:[function(require,module,exports){
 module.exports = loadSVG
 
 async function loadSVG (url, done) { 
