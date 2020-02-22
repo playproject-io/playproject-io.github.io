@@ -10,6 +10,7 @@ const SmartcontractUI = require('SmartcontractUI')
 const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
 const OurTeam = require('OurTeam')
+const Footer = require('Footer')
 
 module.exports = Playproject
 
@@ -27,6 +28,7 @@ function Playproject(opts, done) {
             ${SmartcontractCodes()}
             ${Roadmap()}
             ${OurTeam()}
+            ${Footer()}
         </div>
     `
     return done(null, landingPage)
@@ -44,6 +46,9 @@ const styles = csjs`
     max-width: calc(15 * 0.53vw);
     min-width: calc(12 * 0.53vw);
     z-index: 9
+}
+[class^="cloud"] {
+    transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }
 @media screen and (max-width: 1024px) {
     .playLogo  {
