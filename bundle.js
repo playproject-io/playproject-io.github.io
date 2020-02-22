@@ -3693,6 +3693,9 @@ let styles = csjs`
         width: 60%;
         left: 18%;
     }
+    .scene:nth-child(5) .tree {
+        bottom: -0.5vw;
+    }
 }
 @media screen and (max-width: 812px) {
     .info h3 {
@@ -3786,6 +3789,9 @@ let styles = csjs`
         grid-row-start: 4;
         margin-top: -5vw;
         margin-left: -22vw;
+    }
+    .scene:nth-child(5) .tree {
+        bottom: -1vw;
     }
     .title {
         bottom: 32vw;
