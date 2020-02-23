@@ -39,7 +39,7 @@ article {
     line-height: 2.5rem;
     padding-bottom: 4rem;
 }
-@media screen and (min-width: 2561px) {
+@media only screen and (min-width: 2561px) {
     article {
         font-size: calc(var(--articleSize) * 1.5 );
         line-height: calc(2.5rem * 1.5);
@@ -48,7 +48,7 @@ article {
         font-size: calc(var(--sectionButtonSize) * 1.5 );
     }
 }
-@media screen and (min-width: 4096px) {
+@media only screen and (min-width: 4096px) {
     article {
         font-size: calc(var(--articleSize) * 2.25 );
         line-height: calc(2.5rem * 2.25);
@@ -64,8 +64,8 @@ const el = (err, landingPage) => {
     const vars = theme
 
     if (err) {
-        document.body.style = `color: red;`
-        document.body.innerHTML = err.message
+        document.body.style = `color: red; font-size: 1.6rem; text-align:center; background-color: #d9d9d9;`
+        document.body.innerHTML = `<p>${err.stack}</p>`
     } else {
         document.body.appendChild(landingPage)
     }
@@ -79,7 +79,7 @@ function updateTheme (vars) {
     })
 }
 
-Playproject({theme}, el)
+Playproject({theme}, el, "en")
 },{"../":29,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
 const bel = require('bel')
 const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
@@ -2116,27 +2116,36 @@ const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
 const OurTeam = require('OurTeam')
 const Footer = require('Footer')
+const data = require('data')
 
-module.exports = Playproject
+function Playproject(opts, done, lang) {
+    let page = data(`./src/node_modules/lang/${lang}.json`)
+    page.then(result => { 
+        let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
 
-function Playproject(opts, done) {
-    const {theme} = opts
-    const css = styles
-    const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
-    const landingPage = bel`
+        const {theme} = opts
+        const css = styles
+        const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
+        const landingPage = bel`
         <div class=${css.wrap}>
             ${playLogo}
-            ${Topnav()}
-            ${Header()}
-            ${Datdot()}
-            ${SmartcontractUI()}
-            ${SmartcontractCodes()}
-            ${Roadmap()}
-            ${OurTeam()}
-            ${Footer()}
+            ${Topnav(menu)}
+            ${Header(header)}
+            ${Datdot(section1)}
+            ${SmartcontractUI(section2)}
+            ${SmartcontractCodes(section3)}
+            ${Roadmap(section4)}
+            ${OurTeam(section5)}
+            ${Footer(footer)}
         </div>
     `
     return done(null, landingPage)
+
+    }).catch( err => { 
+        return done(err, null)
+    })
+    
+    
 }
 
 const styles = csjs`
@@ -2147,43 +2156,45 @@ const styles = csjs`
     position: absolute;
     top: 10px;
     left: 0;
-    width: 12vw;
-    max-width: calc(15 * 0.53vw);
-    min-width: calc(12 * 0.53vw);
+    width: 15rem;
     z-index: 9
 }
 [class^="cloud"] {
     transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }
-@media screen and (max-width: 1024px) {
+@meida only screen and (min-width: 2561px) {
+    .playLogo {
+
+    }
+}
+@media only screen and (max-width: 1024px) {
     .playLogo  {
         width: 9vw;
         min-width: 100px;
     }
 }
-@media screen and (max-width: 812px) {
+@media only screen and (max-width: 812px) {
     .playLogo  {
         top: 20px;
         min-width: 12vw;
     }
 }
-@media screen and (max-width: 414px) {
+@media only screen and (max-width: 414px) {
     .playLogo  {
         min-width: 20vw;
     }
 }
 `
 
-},{"Datdot":30,"Footer":31,"Graphic":32,"Header":33,"OurTeam":34,"Roadmap":35,"SmartcontractCodes":36,"SmartcontractUI":37,"Topnav":38,"bel":4,"csjs-inject":7}],30:[function(require,module,exports){
+module.exports = Playproject
+},{"Datdot":30,"Footer":31,"Graphic":32,"Header":33,"OurTeam":34,"Roadmap":35,"SmartcontractCodes":36,"SmartcontractUI":37,"Topnav":38,"bel":4,"csjs-inject":7,"data":40}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
 
-module.exports = Datdot
-
-function Datdot() {
+function Datdot(data) {
     const css = styles
     let blockchainIsland = Graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg')
     let blossomIsland = Graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg')
@@ -2195,13 +2206,11 @@ function Datdot() {
     let button = bel`<button class=${css.button}>Get started</button>`
 
     // Parallax effects
-    window.addEventListener('load', ()=>{
-        let cloud1Rellax = new Rellax( cloud1, { speed: 4})
-        let cloud2Rellax = new Rellax( cloud2, { speed: 2})
-        let cloud3Rellax = new Rellax( cloud3, { speed: 5})
-        let cloud4Rellax = new Rellax( cloud4, { speed: 2})
-        let cloud5Rellax = new Rellax( cloud5, { speed: 4})
-    })
+    let cloud1Rellax = new Rellax( cloud1, { speed: 4})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 2})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 5})
+    let cloud4Rellax = new Rellax( cloud4, { speed: 2})
+    let cloud5Rellax = new Rellax( cloud5, { speed: 4})
 
     button.addEventListener('click', ()=>{
         window.open('https://playproject.io/', '_blank')
@@ -2306,17 +2315,17 @@ const styles = csjs`
     bottom: -10vh;
     right: 2vw;
 }
-@media screen and (min-width: 2561px) {
+@media only screen and (min-width: 2561px) {
     .subTitle {
         font-size: calc(var(--subTitleSize) * 1.5);
     }
 }
-@media screen and (min-width: 4096px) {
+@media only screen and (min-width: 4096px) {
     .subTitle {
         font-size: calc(var(--subTitleSize) * 2.25);
     }
 }
-@media screen and (max-width: 1560px) {
+@media only screen and (max-width: 1560px) {
     .content {
         padding: 0;
     }
@@ -2325,7 +2334,7 @@ const styles = csjs`
         width: 35vw;
     }
 }
-@media screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
     .section1 {
         grid-template-columns: 55% 45%; 
     }
@@ -2358,7 +2367,7 @@ const styles = csjs`
         bottom: -4vh;
     }
 }
-@media screen and (max-width: 812px) { 
+@media only screen and (max-width: 812px) { 
     .cloud3 {
         bottom: 10%;
     }
@@ -2366,12 +2375,12 @@ const styles = csjs`
         bottom: 50%;
     }
 }
-@media screen and (max-width: 768px) { 
+@media only screen and (max-width: 768px) { 
     .cloud3 {
         bottom: 12%;
     }
 }
-@media screen and (max-width: 640px) {
+@media only screen and (max-width: 640px) {
     .section1 {
         grid-template-rows: repeat(3, auto);
         grid-template-columns: 100%;
@@ -2404,7 +2413,7 @@ const styles = csjs`
         top: 30vw;
     }
 }
-@media screen and (max-width: 414px) {
+@media only screen and (max-width: 414px) {
     .content {
         padding: 0 5vw 5vh 5vw;
     }
@@ -2431,15 +2440,15 @@ const styles = csjs`
     }
 }
 `
+
+module.exports = Datdot
 },{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],31:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
 const Graphic = require('Graphic')
 
-module.exports = Footer
-
-function Footer() {
+function Footer(data) {
     const css = styles
     let email = Graphic(css.icon, './src/node_modules/assets/svg/email.svg')
     let twitter = Graphic(css.icon, './src/node_modules/assets/svg/twitter.svg')
@@ -2453,7 +2462,7 @@ function Footer() {
             <a href="mailto:dev@serapath.de" title="email">${email}</a>
             <a href="https://twitter.com/playproject_io" target="_blank" title="twitter">${twitter}</a>
             <a href="https://github.com/playproject-io" target="_blank" title="Github">${github}</a>
-            <a href="https://gitter.im/playproject-io/community" target="_blank" title="gitter">${gitter}</a>
+            <a href="https://gitter.im/playproject-io/community" target="_blank" title="Gitter">${gitter}</a>
         </nav>
     </footer>
     `
@@ -2505,9 +2514,10 @@ let styles = csjs`
     }
 }
 `
+
+module.exports = Footer
 },{"Graphic":32,"bel":4,"csjs-inject":7}],32:[function(require,module,exports){
 const loadSVG = require('loadSVG')
-module.exports = Graphic
 
 function Graphic(className, url) {
     let el = document.createElement('div')
@@ -2519,14 +2529,16 @@ function Graphic(className, url) {
 
     return el
 }   
-},{"loadSVG":39}],33:[function(require,module,exports){
+
+module.exports = Graphic
+},{"loadSVG":41}],33:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
 
-function Header() {
+function Header(data) {
     const css = styles
     let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
     let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
@@ -2551,7 +2563,7 @@ function Header() {
     
     let el = bel`
     <div class=${css.header}">
-        <h1 class=${css.title}>Infrastructure to build the future together</h1>
+        <h1 class=${css.title}>${data.title}</h1>
         <section class=${css.scene}>
             <div class=${css.sunCloud}>
                 ${cloud1}
@@ -2671,12 +2683,12 @@ let styles = csjs`
 .cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
     will-change: transform;
 }
-@media screen and (min-width: 1680px) {
+@media only screen and (min-width: 1680px) {
     .header {
         padding-top: 0;
     }
 }
-@media screen and (min-width: 2561px) {
+@media only screen and (min-width: 2561px) {
     .scene {
         max-width: 90%;
         margin-left: auto;
@@ -2687,17 +2699,17 @@ let styles = csjs`
         margin-bottom: 6vh;
     }
 }
-@media screen and (min-width: 4096px) {
+@media only screen and (min-width: 4096px) {
     .title {
         font-size: calc(var(--titleSize) * 2.25);
     }
 }
-@media screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
     .header {
         padding-top: 5vw;
     }
 }
-@media screen and (max-width: 812px) {
+@media only screen and (max-width: 812px) {
     .header {
         padding-top: 12vw;
     }
@@ -2706,7 +2718,7 @@ let styles = csjs`
         font-size: var(--titleSizeM);
     }
 }
-@media screen and (max-width: 414px) {
+@media only screen and (max-width: 414px) {
     .header {
         padding-top: 18vw;
     }
@@ -2745,9 +2757,7 @@ const csjs = require('csjs-inject')
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
 
-module.exports = OurTeam
-
-function OurTeam() {
+function OurTeam(data) {
     const css = styles
     let island = Graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg')
     let lifeIsland1 = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
@@ -2768,30 +2778,15 @@ function OurTeam() {
             </div>
             `
 
-    window.addEventListener('load', () => {
-        spacing()
-        let cloud1Rellax = new Rellax( cloud1, { speed: 0.3})
-        let cloud2Rellax = new Rellax( cloud2, { speed: 0.3})
-        let cloud3Rellax = new Rellax( cloud3, { speed: 0.5})
-        let cloud4Rellax = new Rellax( cloud4, { speed: 0.2})
-        let cloud5Rellax = new Rellax( cloud5, { speed: 0.2})
-        let cloud6Rellax = new Rellax( cloud6, { speed: 0.2})
-        let cloud7Rellax = new Rellax( cloud7, { speed: 0.2})
-    })
-    window.addEventListener('resize', ()=> {
-        spacing()
-    })
 
-    
+    let cloud1Rellax = new Rellax( cloud1, { speed: 0.3})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 0.4})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 0.3})
 
     let el = bel`
         <section class="${css.section}">
             ${content}
-
-            <div class=${css.scene}>
-                ${island}
-            </div>
-
+            ${island}
             <div class=${css.groups}>
             
                 <div class=${css.group1}>
@@ -2862,11 +2857,7 @@ function OurTeam() {
         let contentH = content.offsetTop + subTitle.clientHeight + article.clientHeight
         let groups = document.querySelector(`.${css.groups}`)
         let screen = window.innerWidth 
-        if (screen > 1024 && screen < 1680) {
-            groups.style.paddingTop = `${contentH}px`
-        } else {
-            groups.removeAttribute('style')
-        }
+
     }
 }
 
@@ -2896,44 +2887,42 @@ let styles = csjs`
 .article {
     
 }
-.scene {
-    width: 95%;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
-}
 .island {
-    width: 100%;
+    width: 62%;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 4;
 }
 .groups {
-    grid-row-start: 1;
-    grid-row-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
     grid-column-start: 2;
     grid-column-end: 4;
-    width: 50vw;
+    width: 100%;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: repeat(2, 50%);
-    margin-left: -2vw;
+    grid-template-columns: repeat(8, 12.5%);
+    justify-self: end;
 }
 .group1 {
     position: relative;
     z-index: 4;
     width: 100%;
     grid-row-start: 1;
-    grid-column-start: 2;
-    margin-left: -5vw;
-    
+    grid-column-start: 3;
+    grid-column-end: 6;
+    margin-left: 15%;
 }
 .group2 {
     position: relative;
     z-index: 4;
     width: 100%;
     grid-row-start: 2;
-    grid-column-start: 2;
-    margin-left: 10vw;
-    margin-top: -5vw;
+    grid-column-start: 5;
+    grid-column-end: 8;
+    margin-top: -10%;
+    margin-left: -5%;
 }
 .group3 {
     position: relative;
@@ -2941,17 +2930,19 @@ let styles = csjs`
     width: 100%;
     grid-row-start: 2;
     grid-column-start: 1;
+    grid-column-end: 4;
     margin-left: 0vw;
-    margin-top: -5vw;
+    margin-top: -10%;
 }
 .group4 {
     position: relative;
     z-index: 4;
     width: 100%;
     grid-row-start: 3;
-    grid-column-start: 2;
-    margin-left: -10vw;
-    margin-top: -5vw;
+    grid-column-start: 3;
+    grid-column-end: 6;
+    margin-top: -10%;
+    margin-left: -10%;
 }
 .team {
     position: absolute;
@@ -2991,90 +2982,118 @@ let styles = csjs`
     position: absolute;
     z-index: 2;
     width: 8vw;
-    top: 5vw;
+    top: 10vw;
     left: 5vw;
 }
 .cloud2 {
     position: absolute;
     z-index: 3;
     width: 12vw;
-    top: -5vw;
+    top: 5vw;
     left: 20vw;
 }
 .cloud3 {
     position: absolute;
     z-index: 4;
     width: 6vw;
-    top: 4vw;
+    top: 15vw;
     left: 50vw;
 }
 .cloud4 {
     position: absolute;
     z-index: 5;
     width: 12vw;
-    bottom: 6vw;
+    bottom: 12vw;
     left: 5vw;
 }
 .cloud5 {
     position: absolute;
     z-index: 5;
     width: 8vw;
-    bottom: 0vw;
+    bottom: 5vw;
     left: 30vw;
 }
 .cloud6 {
     position: absolute;
     z-index: 4;
     width: 14vw;
-    bottom: -5vw;
+    bottom: 0;
     right: 25vw;
 }
 .cloud7 {
     position: absolute;
     z-index: 3;
     width: 6vw;
-    bottom: 0vw;
+    bottom: 5vw;
     right: 10vw;
 }
-@media screen and (min-width: 2561px) {
+@media only screen and (min-width: 2561px) {
     .info {
         font-size: calc(var(--teamTextSize) * 1.35);
     }
 }
-@media screen and (min-width: 1680px) {
+@media only screen and (min-width: 1920px) {
     .groups {
-        margin-top: 25vw;
+        grid-template-columns: repeat(12, 8.33%);
+        margin-top: 2vw;
+    }
+    .group1 {
+        grid-column-start: 6;
+        grid-column-end: 10;
+    }
+    .group2 {
+        grid-column-start: 8;
+        grid-column-end: 12;
+    }
+    .group3 {
+        grid-column-start: 3;
+        grid-column-end: 7;
+    }
+    .group4 {
+        grid-column-start: 5;
+        grid-column-end: 9;
     }
 }
-@media screen and (max-width: 1550px) {
+@media only screen and (max-width: 1550px) {
     .team {
         width: 280px;
         top: 15%;
         left: -2vw;
     }
 }
-@media screen and (max-width: 1280px) {
+@media only screen and (max-width: 1280px) {
     .team {
         top: 12%;
         left: -4vw;
     }
-    .group2 {
-        margin-left: 15vw;
+}
+@media only screen and (max-width: 1200px) {
+    .lifeIsland {
+        width: 115%;
     }
-    .group4 {
+    .group1 {
+        margin-left: -2vw;
+    }
+    .group2 {
+
+    }
+    .group3 {
         margin-left: -5vw;
     }
+    .group4 {
+        margin-left: -2vw;
+    }
 }
-@media screen and (max-width: 1130px) { 
+@media only screen and (max-width: 1130px) { 
     .team {
         top: 1vw;
         left: -6vw;
     }
 }
-@media screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
     .section {
         grid-template-columns: 1fr;
-        padding-top: 10vw;
+        padding-top: 20vw;
     }
     .content {
         grid-row-start: 2;
@@ -3082,14 +3101,16 @@ let styles = csjs`
         grid-column-start: 1;
         padding: 0 5vw;
     }
-    .scene {
-        width: 100%;
+    .island {
+        width: 90%;
+        justify-self: center;
+        grid-row-end: 1;
     }
     .groups {
         grid-row-start: 3;
         grid-row-end: 4;
         grid-column-start: 1;
-        width: 90vw;
+        width: 90%;
         grid-template-columns: 1fr 1fr; 
         margin: 0 auto;
     }
@@ -3098,27 +3119,30 @@ let styles = csjs`
         top: 6vw;
         left: -2vw;
     }
+    .lifeIsland {
+        width: 100%;
+    }
     .group1 {
         grid-column-start: 1;
-        margin-left: 10vw;
+        grid-column-end: 1;
+        margin-left: 0;
     }
     .group2 {
         grid-row-start: 2;
         grid-column-start: 2;
-        margin-left: 0;
-        margin-top: -10vw;
+        margin-top: -30%;
     }
     .group3 {
         grid-row-start: 3;
         grid-column-start: 1;
-        margin-left: 10vw;
-        margin-top: -10vw;
+        grid-column-end: 1;
+        margin-top: -30%;
+        margin-left: 0;
     }
     .group4 {
         grid-row-start: 4;
         grid-column-start: 2;
-        margin-left: 0;
-        margin-top: -10vw;
+        margin-top: -30%;
     }
     .cloud1 {
         width: 10vw;
@@ -3127,16 +3151,27 @@ let styles = csjs`
     }
     .cloud2 {
         width: 20vw;
-        top :  5vw;
+        top :  18vw;
         left: 30vw;   
     }
     .cloud3 {
         width: 10vw;
-        top: 25vw;
+        top: 35vw;
         left: 80vw;
     }
 }
-@media screen and (max-width: 812px) {
+@media only screen and (max-width: 960px) {
+    .cloud1 {
+        top: 30vw;
+    }
+    .cloud2 {
+        top: 18vw;
+    }
+    .cloud3 {
+        top: 35vw;
+    }
+}
+@media only screen and (max-width: 812px) {
     .cloud4 {
         z-index: 1;
     }
@@ -3150,14 +3185,39 @@ let styles = csjs`
         z-index: 1;
     }
 }
-@media screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     .team {
         width: 85%;
         top: 5vw;
         left: -4vw;
     }
+    .cloud1 {
+        top: 35vw;
+    }
+    .cloud2 {
+        top: 25vw;
+    }
+    .cloud3 {
+        top: 40vw;
+    }
 }
-@media screen and (max-width: 640px) {
+/* For iphone6 plus */
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px)
+and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+    .section {
+        margin-top: -1px;
+    }
+    .cloud1 {
+        top: 55vw;
+    }
+    .cloud2 {
+        top: 50vw;
+    }
+    .cloud3 {
+        top: 60vw;
+    }
+}
+@media only screen and (max-width: 640px) {
     .groups {
         position: relative;
         z-index: 3;
@@ -3194,14 +3254,14 @@ let styles = csjs`
     }
     .cloud1 {
         width: 12vw;
-        top: 60vw;
+        top: 40vw;
     }
     .cloud2 {
-        top: 40vw;
+        top: 30vw;
     }
     .cloud3 {
         width: 12vw;
-        top: 90vw;
+        top: 40vw;
     }
     .cloud4 {
         z-index: 1;
@@ -3223,7 +3283,7 @@ let styles = csjs`
         bottom: -10vw;
     }
 }
-@media screen and (max-width: 414px) {
+@media only screen and (max-width: 414px) {
     .groups {
         width: 100%;
     }
@@ -3232,109 +3292,83 @@ let styles = csjs`
         top: 5vw;
         left: -10vw;
     }
+    .cloud1 {
+        top: 65vw;
+    }
+    .cloud2 {
+        top: 65vw;
+    }
+    .cloud3 {
+        top: 70vw;
+    }
+    .cloud4 {
+        bottom: 30vw;
+    }
     .cloud5 {
-        bottom: -15vw;
+        bottom: 10vw;
     }
     .cloud6 {
-        bottom: -20vw;
+        bottom: 5vw;
     }
     .cloud7 {
-        bottom: -20vw;
+        bottom: 8vw;
     }
 }
 `
+
+module.exports = OurTeam
 },{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
+const crystalIsland = require('crystalIsland')
 
-module.exports = Roadmap
-
-function Roadmap() {
+function Roadmap(data) {
     const css = styles
+    let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
+    // crystals
     let yellowCrystal = Graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg')
     let purpleCrystal = Graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg')
     let blueCrystal = Graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg')
+    // stone
+    let stone = Graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg')
+    // trees
     let tree = Graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg')
     let tree1 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg')
     let tree2 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg')
     let tree3 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg')
+    // islands
     let island = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
     let island1 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
     let island2 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
     let island3 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
     let island4 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let stone = Graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg')
+    // clouds
     let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
     let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
     let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
     let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
     let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
     let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-
-
+    
     // Parallax effects
-    window.addEventListener('load', ()=>{
-        let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
-        let cloud2Rellax = new Rellax( cloud2, { speed: 1})
-        let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
-        let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-        let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
-        let cloud6Rellax = new Rellax( cloud6, { speed: 3})
-    })
+    let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 1})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
+    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
+    let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
+    let cloud6Rellax = new Rellax( cloud6, { speed: 3})
 
     let el = bel`
         <section id="roadmap" class="${css.section}">
-            <div class=${css.scene}>
-                <div class=${css.deco}>
-                    <div class=${css.content}>
-                        <h3>2016.1</h3>
-                        <p>Play project Established</p>
-                    </div>
-                    ${yellowCrystal}
-                    ${tree}
-                </div>
-                <div class=${css.title}>Roadmap</div>
-                ${island}
-            </div>
 
-            <div class=${css.scene}>
-                <div class=${css.deco}>
-                    <div class=${css.content}>
-                        <h3>2017.6</h3>
-                        <p>Smart contarct codes and smart contract ui are published</p>
-                    </div>
-                    ${stone}
-                    ${tree1}
-                </div>
-                ${island1}
-            </div>
+            ${crystalIsland(data.roadmaps[0], [yellowCrystal, tree], island, css, pageTitle)}
+            ${crystalIsland(data.roadmaps[1], [stone, tree1], island1, css)}
+            ${crystalIsland(data.roadmaps[2], [purpleCrystal], island2, css)}
+            ${crystalIsland(data.roadmaps[3], [blueCrystal, tree2], island3, css)}
             
-            <div class=${css.scene}>
-                <div class=${css.deco}>
-                    <div class=${css.content}>
-                        <h3>2018.8</h3>
-                        <p>Smart contarct codes released new theme</p>
-                    </div>
-                    ${purpleCrystal}
-                </div>
-                ${island2}
-            </div>
-
-            <div class=${css.scene}>
-                <div class=${css.deco}>
-                    <div class=${css.content}>
-                        <h3>2019</h3>
-                        <h3>Coming soon</h3>
-                    </div>
-                    ${blueCrystal}
-                    ${tree2}
-                </div>
-                ${island3}
-            </div>
-
             <div class=${css.scene}>
                 ${tree3}
                 ${island4}
@@ -3573,7 +3607,7 @@ let styles = csjs`
     right: 2vw;
     z-index: 6;
 }
-@media screen and (min-width: 3840px) {
+@media only screen and (min-width: 3840px) {
     .info h3 {
         margin-bottom: 6px;
         font-size: calc( var(--roadmapTitleSizeM) * 2);
@@ -3582,12 +3616,12 @@ let styles = csjs`
         font-size: calc( var(--roadmapTextSizeM) * 2);
     }
 }
-@media screen and (max-width: 1366px) {
+@media only screen and (max-width: 1366px) {
     .title {
         bottom: 17vw;
     }
 }
-@media screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
     .section {
         grid-template-columns: repeat(2, 50vw);
     }
@@ -3685,7 +3719,7 @@ let styles = csjs`
         width: 10vw;
     } 
 }
-@media screen and (max-width: 960px) { 
+@media only screen and (max-width: 960px) { 
     .scene:nth-child(2) .tree {
         width: 30%;
     }
@@ -3697,7 +3731,7 @@ let styles = csjs`
         bottom: -0.5vw;
     }
 }
-@media screen and (max-width: 812px) {
+@media only screen and (max-width: 812px) {
     .info h3 {
         margin-bottom: 6px;
         font-size: var(--roadmapTitleSizeM);
@@ -3706,7 +3740,7 @@ let styles = csjs`
         font-size: var(--roadmapTextSizeM);
     }
 }
-@media screen and (max-width: 640px) {
+@media only screen and (max-width: 640px) {
     .scene:nth-child(2) {
         width: 50vw;
         margin-top: 20vw;
@@ -3735,7 +3769,7 @@ let styles = csjs`
         right: 12vw;
     }
 }
-@media screen and (max-width: 480px) {
+@media only screen and (max-width: 480px) {
     .scene:nth-child(1) {
         width: 90vw;
         margin-left: 10vw;
@@ -3799,7 +3833,9 @@ let styles = csjs`
     }
 }
 `
-},{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
+
+module.exports = Roadmap
+},{"Graphic":32,"bel":4,"crystalIsland":39,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -4018,9 +4054,7 @@ const csjs = require('csjs-inject')
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
 
-module.exports = SmartcontractUI
-
-function SmartcontractUI () {
+function SmartcontractUI (data) {
     const css = styles
     let island = Graphic(css.island, './src/node_modules/assets/svg/floating-island.svg')
     let energyIsland = Graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg')
@@ -4034,16 +4068,11 @@ function SmartcontractUI () {
     let button = bel`<button class=${css.button}>Get started</button>`
 
     // Parallax effects
-    window.addEventListener('load', ()=>{
-        // let contentRellax = new Rellax(`.${css.content}`, { speed: 3})
-        // let energyIslandRellax = new Rellax( energyIsland, { speed: 4})
-        // let sceneRellax = new Rellax( `.${css.scene}`, { speed: 3.2})
-        let cloud1Rellax = new Rellax( cloud1, { speed: 2})
-        let cloud2Rellax = new Rellax( cloud2, { speed: 3})
-        let cloud3Rellax = new Rellax( cloud3, { speed: 4})
-        let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-        let cloud5Rellax = new Rellax( cloud5, { speed: 3})
-    })
+    let cloud1Rellax = new Rellax( cloud1, { speed: 2})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 3})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 4})
+    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
+    let cloud5Rellax = new Rellax( cloud5, { speed: 3})
     
     button.addEventListener('click', ()=>{
         window.open('https://ethereum-play.github.io/editor-solidity/', '_blank')
@@ -4189,7 +4218,7 @@ const styles = csjs`
     bottom: -10vw;
     z-index: 2;
 }
-@media screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
     .content {
         grid-row-start: 1;
         grid-column-end: 3;
@@ -4201,7 +4230,8 @@ const styles = csjs`
         align-self: end;
     }
 }
-@media screen and (max-width: 640px) {
+
+@media only screen and (max-width: 640px) {
     .scene {
         grid-column-start: 1;
         grid-column-end: 3;
@@ -4227,48 +4257,51 @@ const styles = csjs`
     }
     .cloud4 {
         width: 25vw;
-        bottom: -15vw;
+        bottom: -85vw;
     }
     .cloud5 {
         width: 15vw;
         bottom: 30vw;
     }
 }
-@media screen and (max-width: 414px) {
+@media only screen and (max-width: 414px) {
     .subTitle {
         font-size: var(--titlesSizeS);
         margin-bottom: 1.5rem;
     }
 }
 `
+
+module.exports = SmartcontractUI
 },{"Graphic":32,"bel":4,"csjs-inject":7,"rellax":27}],38:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // plugins
 const zenscroll = require('zenscroll')
 
-module.exports = Topnav
+function Topnav(data) {
 
-function Topnav() {
-
-    function click(e) {
-        let id = document.querySelector(e.target.getAttribute('href'))
+    function click(url) {
+        let id = document.querySelector(`#${url}`)
         zenscroll.to(id, 20000)
     }
-
+    
     return bel`
             <div class=${css.topNav}>
                 <nav class=${css.menu}>
-                    <a href="#datdot" onclick=${(e)=>click(e)}>DATDOT</a>
-                    <a href="#smartcontractUI" onclick=${(e)=>click(e)}>SMART CONTARCT UI</a>
-                    <a href="#smartcontractCodes" onclick=${(e)=>click(e)}>SMART CONTARCT CODES</a>
-                    <a href="#roadmap" onclick=${(e)=>click(e)}>ROADMAP</a>
-                    <a href="#ourTeam" onclick=${(e)=>click(e)}>OUR TEAM</a>
-                    <a href="#contacts" onclick=${(e)=>click(e)}>CONTACTS</a>
+                    ${ data.map( menu =>  
+                        { 
+                            if (menu.url.includes('http')) {
+                                return bel`<a href="${menu.url}" target="_blank">${menu.text}</a>` 
+                            } else {
+                                return bel`<a href="#${menu.url}" onclick=${() => click(menu.url)}>${menu.text}</a>` 
+                            }
+                            
+                        }
+                    )}
                 </nav>
             </div>
     `
-    
 }
 
 let css = csjs`
@@ -4277,7 +4310,7 @@ let css = csjs`
     grid-template: 1fr / auto;
 }
 .menu {
-    padding-top: 2%;
+    padding-top: 4.5rem;
     padding-right: 1.5%;
     text-align: right;
 }
@@ -4285,22 +4318,18 @@ let css = csjs`
     font-size: var(--menuSize);
     margin-left: 1.75%;
     color: #575551;
+    text-transform: uppercase;
     transition: color .6s linear;
 }
 .menu a:hover {
     color: #00acff;
 }
-@media (min-width: 2561px) {
+@media only screen and (min-width: 4096px) {
     .menu a {
         font-size: calc(var(--menuSize) * 1.5);
     }
 }
-@media screen and (min-width: 4096px) {
-    .menu a {
-        font-size: calc(var(--menuSize) * 2);
-    }
-}
-@media screen and (max-width: 960px) {
+@media only screen and (max-width: 960px) {
     .menu {
         padding-top: 3%;
         padding-right: 2.5vw;
@@ -4309,15 +4338,48 @@ let css = csjs`
         margin-left: 1.5%;
     }
 }
-@media screen and (max-width: 812px) {
+@media only screen and (max-width: 812px) {
     .topNav {
         display: none;
     }
 }
 `
-},{"bel":4,"csjs-inject":7,"zenscroll":28}],39:[function(require,module,exports){
-module.exports = loadSVG
 
+module.exports = Topnav
+},{"bel":4,"csjs-inject":7,"zenscroll":28}],39:[function(require,module,exports){
+const bel = require('bel')
+
+function crystalIsland({date, info}, deco, island, css, title) {
+    console.log(info);
+    let el = bel`
+                <div class=${css.scene}>
+                    <div class=${css.deco}>
+                        <div class=${css.content}>
+                            <h3>${date}</h3>
+                            ${ info === 'Coming soon' ? bel`<h3>${info}</h3>` : bel`<p>${info}</p>` }
+                        </div>
+                        ${deco.map(item => item)}
+                    </div>
+                    ${title ? title : null}
+                    ${island}
+                </div>
+                `
+    return el
+}
+
+module.exports = crystalIsland
+},{"bel":4}],40:[function(require,module,exports){
+module.exports = data
+
+async function data(path) {
+    let response = await fetch(path)
+    if (response.status == 200) {
+        let texts = await response.json()
+        return texts
+    }
+    throw new Error(response.status)
+}
+},{}],41:[function(require,module,exports){
 async function loadSVG (url, done) { 
     const parser = document.createElement('div')
     let response = await fetch(url)
@@ -4329,5 +4391,5 @@ async function loadSVG (url, done) {
     throw new Error(response.status)
 }
 
-
+module.exports = loadSVG
 },{}]},{},[1]);
