@@ -11,27 +11,36 @@ const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
 const OurTeam = require('OurTeam')
 const Footer = require('Footer')
+const data = require('data')
 
-module.exports = Playproject
+function Playproject(opts, done, lang) {
+    let page = data(`./src/node_modules/lang/${lang}.json`)
+    page.then(result => { 
+        let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
 
-function Playproject(opts, done) {
-    const {theme} = opts
-    const css = styles
-    const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
-    const landingPage = bel`
+        const {theme} = opts
+        const css = styles
+        const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
+        const landingPage = bel`
         <div class=${css.wrap}>
             ${playLogo}
-            ${Topnav()}
-            ${Header()}
-            ${Datdot()}
-            ${SmartcontractUI()}
-            ${SmartcontractCodes()}
-            ${Roadmap()}
-            ${OurTeam()}
-            ${Footer()}
+            ${Topnav(menu)}
+            ${Header(header)}
+            ${Datdot(section1)}
+            ${SmartcontractUI(section2)}
+            ${SmartcontractCodes(section3)}
+            ${Roadmap(section4)}
+            ${OurTeam(section5)}
+            ${Footer(footer)}
         </div>
     `
     return done(null, landingPage)
+
+    }).catch( err => { 
+        return done(err, null)
+    })
+    
+    
 }
 
 const styles = csjs`
@@ -42,29 +51,34 @@ const styles = csjs`
     position: absolute;
     top: 10px;
     left: 0;
-    width: 12vw;
-    max-width: calc(15 * 0.53vw);
-    min-width: calc(12 * 0.53vw);
+    width: 15rem;
     z-index: 9
 }
 [class^="cloud"] {
     transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }
-@media screen and (max-width: 1024px) {
+@meida only screen and (min-width: 2561px) {
+    .playLogo {
+
+    }
+}
+@media only screen and (max-width: 1024px) {
     .playLogo  {
         width: 9vw;
         min-width: 100px;
     }
 }
-@media screen and (max-width: 812px) {
+@media only screen and (max-width: 812px) {
     .playLogo  {
         top: 20px;
         min-width: 12vw;
     }
 }
-@media screen and (max-width: 414px) {
+@media only screen and (max-width: 414px) {
     .playLogo  {
         min-width: 20vw;
     }
 }
 `
+
+module.exports = Playproject

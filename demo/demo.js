@@ -38,7 +38,7 @@ article {
     line-height: 2.5rem;
     padding-bottom: 4rem;
 }
-@media screen and (min-width: 2561px) {
+@media only screen and (min-width: 2561px) {
     article {
         font-size: calc(var(--articleSize) * 1.5 );
         line-height: calc(2.5rem * 1.5);
@@ -47,7 +47,7 @@ article {
         font-size: calc(var(--sectionButtonSize) * 1.5 );
     }
 }
-@media screen and (min-width: 4096px) {
+@media only screen and (min-width: 4096px) {
     article {
         font-size: calc(var(--articleSize) * 2.25 );
         line-height: calc(2.5rem * 2.25);
@@ -63,8 +63,8 @@ const el = (err, landingPage) => {
     const vars = theme
 
     if (err) {
-        document.body.style = `color: red;`
-        document.body.innerHTML = err.message
+        document.body.style = `color: red; font-size: 1.6rem; text-align:center; background-color: #d9d9d9;`
+        document.body.innerHTML = `<p>${err.stack}</p>`
     } else {
         document.body.appendChild(landingPage)
     }
@@ -78,4 +78,4 @@ function updateTheme (vars) {
     })
 }
 
-Playproject({theme}, el)
+Playproject({theme}, el, "en")
