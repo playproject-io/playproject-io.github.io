@@ -11,6 +11,10 @@ document.head.appendChild(icon32)
 document.head.appendChild(icon16)
 document.head.appendChild(webmanifest)
 
+const lang = navigator.language || navigator.userLanguage
+
+console.log(`%c Browser language: ${lang}`, 'color: pink; font-size: 1.4rem; background: #333; padding: 6px;')
+
 const styles = csjs`
 html {
     font-size: 62.5%;
@@ -88,4 +92,4 @@ function updateTheme (vars) {
     })
 }
 
-Playproject({theme}, el, "en")
+Playproject({theme}, el, lang)

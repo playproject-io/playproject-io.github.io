@@ -12,6 +12,10 @@ document.head.appendChild(icon32)
 document.head.appendChild(icon16)
 document.head.appendChild(webmanifest)
 
+const lang = navigator.language || navigator.userLanguage
+
+console.log(`%c Browser language: ${lang}`, 'color: pink; font-size: 1.4rem; background: #333; padding: 6px;')
+
 const styles = csjs`
 html {
     font-size: 62.5%;
@@ -89,7 +93,7 @@ function updateTheme (vars) {
     })
 }
 
-Playproject({theme}, el, "en")
+Playproject({theme}, el, lang)
 },{"../":29,"bel":4,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
 const bel = require('bel')
 const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
@@ -2129,7 +2133,24 @@ const Footer = require('Footer')
 const data = require('data')
 
 function Playproject(opts, done, lang) {
-    let page = data(`./src/node_modules/lang/${lang}.json`)
+    switch(lang) {
+        case 'zh-TW':
+        case    'zh':
+            var page = data(`./src/node_modules/lang/zh-tw.json`)
+            break
+        case 'ja':
+            var page = data(`./src/node_modules/lang/ja.json`)
+            break
+        case 'th':
+            var page = data(`./src/node_modules/lang/th.json`)
+            break
+        case 'fr-FR':
+        case    'fr':
+            var page = data(`./src/node_modules/lang/fr.json`)
+            break
+        default:
+            var page = data(`./src/node_modules/lang/en-us.json`)
+    }
     page.then(result => { 
         let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
 
@@ -2495,7 +2516,7 @@ const csjs = require('csjs-inject')
 // widgets
 const Graphic = require('Graphic')
 
-function Footer(data) {
+function Footer(footer) {
     const css = styles
     let email = Graphic(css.icon, './src/node_modules/assets/svg/email.svg')
     let twitter = Graphic(css.icon, './src/node_modules/assets/svg/twitter.svg')
@@ -2504,12 +2525,15 @@ function Footer(data) {
 
     let el = bel`
     <footer class=${css.footer}>
-        <p class=${css.copyright}>Copyright © 2020 PlayProject. All rights reserved</p>
+        <p class=${css.copyright}>${footer.copyright}</p>
         <nav id="contacts" class=${css.contacts}>
-            <a href="mailto:dev@serapath.de" title="email">${email}</a>
-            <a href="https://twitter.com/playproject_io" target="_blank" title="twitter">${twitter}</a>
-            <a href="https://github.com/playproject-io" target="_blank" title="Github">${github}</a>
-            <a href="https://gitter.im/playproject-io/community" target="_blank" title="Gitter">${gitter}</a>
+            ${footer.icons.map(icon => 
+                bel`
+                <a href=${icon.url} 
+                   title=${icon.name} 
+                   target="${icon.url.includes('http') ? "_blank" : null}"
+                >${Graphic(css.icon, icon.imgURL)}</a>`
+            )}
         </nav>
     </footer>
     `
