@@ -14,7 +14,24 @@ const Footer = require('Footer')
 const data = require('data')
 
 function Playproject(opts, done, lang) {
-    let page = data(`./src/node_modules/lang/${lang}.json`)
+    switch(lang) {
+        case 'zh-TW':
+        case    'zh':
+            var page = data(`./src/node_modules/lang/zh-tw.json`)
+            break
+        case 'ja':
+            var page = data(`./src/node_modules/lang/ja.json`)
+            break
+        case 'th':
+            var page = data(`./src/node_modules/lang/th.json`)
+            break
+        case 'fr-FR':
+        case    'fr':
+            var page = data(`./src/node_modules/lang/fr.json`)
+            break
+        default:
+            var page = data(`./src/node_modules/lang/en-us.json`)
+    }
     page.then(result => { 
         let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
 
