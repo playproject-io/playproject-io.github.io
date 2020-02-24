@@ -3132,25 +3132,7 @@ let styles = csjs`
         left: 70vw;
     }
 }
-/* For iphone6 plus */
-@media only screen
-  and (min-device-width: 414px)
-  and (max-device-width: 736px)
-  and (orientation: landscape)
-  and (-webkit-min-device-pixel-ratio: 3){
-    .section {
-        margin-top: -1px;
-    }
-    .cloud1 {
-        top: 55vw;
-    }
-    .cloud2 {
-        top: 50vw;
-    }
-    .cloud3 {
-        top: 60vw;
-    }
-}
+
 @media only screen and (max-width: 960px) {
     .cloud1 {
         top: 22vw;
@@ -3252,6 +3234,21 @@ let styles = csjs`
     }
     .cloud7 {
         bottom: 8vw;
+    }
+}
+@media only screen and (min-width: 414px) 
+and (max-width: 736px) and (orientation: landscape) {
+    .section {
+        margin-top: -1px;
+    }
+    .cloud1 {
+        top: 50vw;
+    }
+    .cloud2 {
+        top: 48vw;
+    }
+    .cloud3 {
+        top: 55vw;
     }
 }
 `
