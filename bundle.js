@@ -2896,6 +2896,8 @@ let styles = csjs`
     width: 62%;
 }
 .groups {
+    position: relative;
+    z-index: 9;
     grid-row-start: 2;
     grid-row-end: 3;
     grid-column-start: 2;
