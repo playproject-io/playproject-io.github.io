@@ -3,10 +3,10 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const Playproject = require('../') 
 const theme = require('theme')
-const appleTouch = bel`<link rel="apple-touch-icon" sizes="180x180" href="/src/node_modules/assets/images/favicon/apple-touch-icon.png">`
-const icon32 = bel`<link rel="icon" type="image/png" sizes="32x32" href="/src/node_modules/assets/images/favicon/favicon-32x32.png">`
-const icon16 = bel`<link rel="icon" type="image/png" sizes="16x16" href="/src/node_modules/assets/images/favicon/favicon-16x16.png">`
-const webmanifest = bel`<link rel="manifest" href="/src/node_modules/assets/images/favicon/site.webmanifest"></link>`
+const appleTouch = bel`<link rel="apple-touch-icon" sizes="180x180" href="./src/node_modules/assets/images/favicon/apple-touch-icon.png">`
+const icon32 = bel`<link rel="icon" type="image/png" sizes="32x32" href="./src/node_modules/assets/images/favicon/favicon-32x32.png">`
+const icon16 = bel`<link rel="icon" type="image/png" sizes="16x16" href="./src/node_modules/assets/images/favicon/favicon-16x16.png">`
+const webmanifest = bel`<link rel="manifest" href="./src/node_modules/assets/images/favicon/site.webmanifest"></link>`
 document.head.appendChild(appleTouch)
 document.head.appendChild(icon32)
 document.head.appendChild(icon16)
