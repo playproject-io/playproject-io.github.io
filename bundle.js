@@ -1,7 +1,16 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const bel = require('bel')
 const csjs = require('csjs-inject')
 const Playproject = require('../') 
 const theme = require('theme')
+const appleTouch = bel`<link rel="apple-touch-icon" sizes="180x180" href="/src/node_modules/assets/images/favicon/apple-touch-icon.png">`
+const icon32 = bel`<link rel="icon" type="image/png" sizes="32x32" href="/src/node_modules/assets/images/favicon/favicon-32x32.png">`
+const icon16 = bel`<link rel="icon" type="image/png" sizes="16x16" href="/src/node_modules/assets/images/favicon/favicon-16x16.png">`
+const webmanifest = bel`<link rel="manifest" href="/src/node_modules/assets/images/favicon/site.webmanifest"></link>`
+document.head.appendChild(appleTouch)
+document.head.appendChild(icon32)
+document.head.appendChild(icon16)
+document.head.appendChild(webmanifest)
 
 const styles = csjs`
 html {
@@ -81,7 +90,7 @@ function updateTheme (vars) {
 }
 
 Playproject({theme}, el, "en")
-},{"../":29,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
+},{"../":29,"bel":4,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
 const bel = require('bel')
 const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
 const loadFont = bel`<link href=${font} rel='stylesheet' type='text/css'>`
