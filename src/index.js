@@ -15,19 +15,17 @@ const data = require('data')
 
 function Playproject(opts, done, lang) {
     switch(lang) {
-        case 'zh-TW':
-        case    'zh':
-            var page = data(`./src/node_modules/lang/zh-tw.json`)
+        case 'zh-tw':
+            var page = data(`./src/node_modules/lang/${lang}.json`)
             break
         case 'ja':
-            var page = data(`./src/node_modules/lang/ja.json`)
+            var page = data(`./src/node_modules/lang/${lang}.json`)
             break
         case 'th':
-            var page = data(`./src/node_modules/lang/th.json`)
+            var page = data(`./src/node_modules/lang/${lang}.json`)
             break
-        case 'fr-FR':
-        case    'fr':
-            var page = data(`./src/node_modules/lang/fr.json`)
+        case 'fr':
+            var page = data(`./src/node_modules/lang/${lang}.json`)
             break
         default:
             var page = data(`./src/node_modules/lang/en-us.json`)

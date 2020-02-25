@@ -12,9 +12,8 @@ document.head.appendChild(icon32)
 document.head.appendChild(icon16)
 document.head.appendChild(webmanifest)
 
-const lang = navigator.language || navigator.userLanguage
-
-console.log(`%c Browser language: ${lang}`, 'color: pink; font-size: 1.4rem; background: #333; padding: 6px;')
+const params = new URL(location.href).searchParams
+const lang = params.get('lang')
 
 const styles = csjs`
 html {
@@ -2134,7 +2133,7 @@ const data = require('data')
 
 function Playproject(opts, done, lang) {
     switch(lang) {
-        case 'zh-TW':
+        case 'zh-tw':
         case    'zh':
             var page = data(`./src/node_modules/lang/zh-tw.json`)
             break
@@ -2144,8 +2143,7 @@ function Playproject(opts, done, lang) {
         case 'th':
             var page = data(`./src/node_modules/lang/th.json`)
             break
-        case 'fr-FR':
-        case    'fr':
+        case 'fr':
             var page = data(`./src/node_modules/lang/fr.json`)
             break
         default:
@@ -2518,10 +2516,6 @@ const Graphic = require('Graphic')
 
 function Footer(footer) {
     const css = styles
-    let email = Graphic(css.icon, './src/node_modules/assets/svg/email.svg')
-    let twitter = Graphic(css.icon, './src/node_modules/assets/svg/twitter.svg')
-    let github = Graphic(css.icon, './src/node_modules/assets/svg/github.svg')
-    let gitter = Graphic(css.icon, './src/node_modules/assets/svg/gitter.svg')
 
     let el = bel`
     <footer class=${css.footer}>

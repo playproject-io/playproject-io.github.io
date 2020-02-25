@@ -11,9 +11,13 @@ document.head.appendChild(icon32)
 document.head.appendChild(icon16)
 document.head.appendChild(webmanifest)
 
-const lang = navigator.language || navigator.userLanguage
+const params = new URL(location.href).searchParams
+const lang = params.get('lang')
 
-console.log(`%c Browser language: ${lang}`, 'color: pink; font-size: 1.4rem; background: #333; padding: 6px;')
+if (lang === 'en') {
+    params.delete('lang')
+    location.search = params
+}
 
 const styles = csjs`
 html {
