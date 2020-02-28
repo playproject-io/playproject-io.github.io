@@ -15,6 +15,11 @@ document.head.appendChild(webmanifest)
 const params = new URL(location.href).searchParams
 const lang = params.get('lang')
 
+if (lang === 'en') {
+    params.delete('lang')
+    location.search = params
+}
+
 const styles = csjs`
 html {
     font-size: 62.5%;
@@ -2118,8 +2123,7 @@ module.exports = function (css, options) {
 },{}],29:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
-// widgets
-const Graphic = require('Graphic')
+
 // pages
 const Topnav = require('Topnav')
 const Header = require('Header')
@@ -2134,30 +2138,20 @@ const data = require('data')
 function Playproject(opts, done, lang) {
     switch(lang) {
         case 'zh-tw':
-        case    'zh':
-            var page = data(`./src/node_modules/lang/zh-tw.json`)
-            break
         case 'ja':
-            var page = data(`./src/node_modules/lang/ja.json`)
-            break
         case 'th':
-            var page = data(`./src/node_modules/lang/th.json`)
-            break
         case 'fr':
-            var page = data(`./src/node_modules/lang/fr.json`)
+            var page = data(`./src/node_modules/lang/${lang}.json`)
             break
         default:
             var page = data(`./src/node_modules/lang/en-us.json`)
     }
     page.then(result => { 
         let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
-
         const {theme} = opts
         const css = styles
-        const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
         const landingPage = bel`
-        <div class=${css.wrap}>
-            ${playLogo}
+        <div id="top" class=${css.wrap}>
             ${Topnav(menu)}
             ${Header(header)}
             ${Datdot(section1)}
@@ -2181,42 +2175,13 @@ const styles = csjs`
 .wrap {
     background: var(--bodyBg);
 }
-.playLogo {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    width: 15rem;
-    z-index: 9
-}
 [class^="cloud"] {
     transition: left 0.6s, bottom 0.5s, top 0.5s linear;
-}
-@meida only screen and (min-width: 2561px) {
-    .playLogo {
-
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .playLogo  {
-        width: 9vw;
-        min-width: 100px;
-    }
-}
-@media only screen and (max-width: 812px) {
-    .playLogo  {
-        top: 20px;
-        min-width: 12vw;
-    }
-}
-@media only screen and (max-width: 414px) {
-    .playLogo  {
-        min-width: 20vw;
-    }
 }
 `
 
 module.exports = Playproject
-},{"Datdot":31,"Footer":32,"Graphic":33,"Header":34,"OurTeam":35,"Roadmap":36,"SmartcontractCodes":37,"SmartcontractUI":38,"Topnav":40,"bel":4,"csjs-inject":7,"data":42}],30:[function(require,module,exports){
+},{"Datdot":31,"Footer":32,"Header":34,"OurTeam":35,"Roadmap":36,"SmartcontractCodes":37,"SmartcontractUI":38,"Topnav":40,"bel":4,"csjs-inject":7,"data":42}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -2663,7 +2628,7 @@ function Header(data) {
 let styles = csjs`
 .header {
     position: relative;
-    padding-top: 1.5vw;
+    padding-top: 5.5%;
     background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
     overflow: hidden;
 }
@@ -2763,7 +2728,7 @@ let styles = csjs`
 }
 @media only screen and (min-width: 1680px) {
     .header {
-        padding-top: 0;
+        padding-top: 2.5%;
     }
 }
 @media only screen and (min-width: 2561px) {
@@ -2902,7 +2867,7 @@ let styles = csjs`
     grid-row-end: 2;
     grid-column-start: 3;
     text-align: center;
-    padding: 5vw 0% 0 0;
+    padding: 0;
 }
 .subTitleColor {
     color: var(--section5TitleColor);
@@ -2915,7 +2880,6 @@ let styles = csjs`
     grid-row-end: 3;
     grid-column-start: 1;
     grid-column-end: 4;
-    padding-top: 10%;
 }
 .island {
     position: relative;
@@ -3096,7 +3060,6 @@ let styles = csjs`
 @media only screen and (max-width: 1024px) {
     .section {
         grid-template-columns: 1fr;
-        padding-top: 10vw;
     }
     .content {
         grid-row-start: 1;
@@ -3108,6 +3071,7 @@ let styles = csjs`
         justify-content: center;
         grid-row-start: 2;
         grid-row-end: 3;
+        padding-top: 10%;
     }
     .island {
         width: 90%;
@@ -3149,17 +3113,17 @@ let styles = csjs`
     }
     .cloud1 {
         width: 10vw;
-        top: 25vw;
+        top: 35vw;
         left: 8vw;
     }
     .cloud2 {
         width: 20vw;
-        top :  12vw;
+        top : 22vw;
         left: 30vw;   
     }
     .cloud3 {
         width: 10vw;
-        top: 28vw;
+        top: 38vw;
         left: 70vw;
     }
 }
@@ -4324,18 +4288,46 @@ module.exports = Team
 },{"Graphic":33,"bel":4,"csjs-inject":7}],40:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
 // plugins
 const zenscroll = require('zenscroll')
 
 function Topnav(data) {
+    const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
 
     function click(url) {
         let id = document.querySelector(`#${url}`)
         zenscroll.to(id, 20000)
     }
+
+    const body = document.body
+    const scrollUp = css.scrollUp
+    const scrollDown = css.scrollDown
+    let lastScroll = 0
+    
+    window.addEventListener('scroll', ()=> {
+        if (window.innerWidth >= 1024) {
+            let currentScroll = window.pageYOffset
+            if (currentScroll < 1) {
+                body.classList.remove(scrollUp)
+                body.classList.remove(scrollDown)
+                return
+            }
+            if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
+                body.classList.add(scrollDown)
+                body.classList.remove(scrollUp)
+            } else if (currentScroll < lastScroll) {
+                body.classList.add(scrollUp)
+                body.classList.remove(scrollDown)
+            }
+            lastScroll = currentScroll
+        }
+    })
     
     return bel`
             <div class=${css.topNav}>
+                <a href="#top">${playLogo}</a>
                 <nav class=${css.menu}>
                     ${ data.map( menu =>  
                         { 
@@ -4354,12 +4346,27 @@ function Topnav(data) {
 
 let css = csjs`
 .topNav {
+    position: fixed;
+    width: 100%;
+    z-index: 20;
     display: grid;
     grid-template: 1fr / auto;
+    background-color: var(--playBgGStart);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    transition: background-color .6s, -webkit-transform .4s, transform .4s, opacity .3s linear;
+}
+.playLogo {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 15rem;
+    z-index: 99;
+    transition: width .6s ease-in-out;
 }
 .menu {
-    padding-top: 4.5rem;
-    padding-right: 1.5%;
+    padding: 2.5rem;
     text-align: right;
 }
 .menu a {
@@ -4372,12 +4379,38 @@ let css = csjs`
 .menu a:hover {
     color: #00acff;
 }
+.scrollUp .topNav {
+    background-color: white;
+    -webkit-transform: none;
+    transform: none;
+}
+.scrollDown .topNav {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+}
+.scrollUp .playLogo {
+    width: 10rem;
+}
+ .scrollDown .playLogo {
+    width: 10rem;
+    top: 0;
+}
 @media only screen and (min-width: 4096px) {
     .menu a {
         font-size: calc(var(--menuSize) * 1.5);
     }
 }
+@media only screen and (max-width: 1024px) {
+    .playLogo  {
+        width: 9vw;
+        min-width: 100px;
+    }
+}
 @media only screen and (max-width: 960px) {
+    .topNav {
+        position: relative;
+    }
     .menu {
         padding-top: 3%;
         padding-right: 2.5vw;
@@ -4387,14 +4420,23 @@ let css = csjs`
     }
 }
 @media only screen and (max-width: 812px) {
-    .topNav {
+    .menu {
         display: none;
+    }
+    .playLogo  {
+        top: 20px;
+        min-width: 12vw;
+    }
+}
+@media only screen and (max-width: 414px) {
+    .playLogo  {
+        min-width: 20vw;
     }
 }
 `
 
 module.exports = Topnav
-},{"bel":4,"csjs-inject":7,"zenscroll":28}],41:[function(require,module,exports){
+},{"Graphic":33,"bel":4,"csjs-inject":7,"zenscroll":28}],41:[function(require,module,exports){
 const bel = require('bel')
 
 function crystalIsland({date, info}, deco, island, css, title) {
