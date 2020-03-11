@@ -140,7 +140,7 @@ const defines = {
     }
 }
 
-const theme = { 
+const theme = {
     bodyFont            : defines.fonts.nunito,
     bodyColor           : defines.colors.grey,
     bodyBg              : defines.colors.lightSky,
@@ -180,15 +180,16 @@ const theme = {
     roadmapTitleColor   : defines.colors.blueGreen,
     roadmapTextSize     : defines.sizes.medium,
     roadmapTextSizeM    : defines.sizes["x-small"],
-    teamBg              : defines.colors.lowYellow,
-    teamTextSize        : defines.sizes.small,
-    teamTextSizeS       : defines.sizes["xx-small"],
-    teamcareerColor     : defines.colors.lightGrey,
+    contributorsBg              : defines.colors.lowYellow,
+    contributorsTextSize        : defines.sizes.small,
+    contributorsTextSizeS       : defines.sizes["xx-small"],
+    contributorscareerColor     : defines.colors.lightGrey,
     footerTextColor     : defines.colors.grey,
     footerBg            : defines.colors.lightSky
 }
 
 module.exports = theme
+
 },{"bel":4}],3:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
@@ -2132,7 +2133,7 @@ const Datdot = require('Datdot')
 const SmartcontractUI = require('SmartcontractUI')
 const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
-const OurTeam = require('OurTeam')
+const OurContributors = require('OurContributors')
 const Footer = require('Footer')
 const data = require('data')
 
@@ -2147,7 +2148,7 @@ function Playproject(opts, done, lang) {
         default:
             var page = data(`./src/node_modules/lang/en-us.json`)
     }
-    page.then(result => { 
+    page.then(result => {
         let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
         const {theme} = opts
         const css = styles
@@ -2159,17 +2160,17 @@ function Playproject(opts, done, lang) {
             ${SmartcontractUI(section2)}
             ${SmartcontractCodes(section3)}
             ${Roadmap(section4)}
-            ${OurTeam(section5)}
+            ${OurContributors(section5)}
             ${Footer(footer)}
         </div>
     `
     return done(null, landingPage)
 
-    }).catch( err => { 
+    }).catch( err => {
         return done(err, null)
     })
-    
-    
+
+
 }
 
 const styles = csjs`
@@ -2182,7 +2183,8 @@ const styles = csjs`
 `
 
 module.exports = Playproject
-},{"Datdot":31,"Footer":32,"Header":34,"OurTeam":35,"Roadmap":36,"SmartcontractCodes":37,"SmartcontractUI":38,"Topnav":40,"bel":4,"csjs-inject":7,"data":42}],30:[function(require,module,exports){
+
+},{"Datdot":32,"Footer":33,"Header":35,"OurContributors":36,"Roadmap":37,"SmartcontractCodes":38,"SmartcontractUI":39,"Topnav":40,"bel":4,"csjs-inject":7,"data":42}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -2247,6 +2249,128 @@ let styles = csjs`
 `
 module.exports = Content
 },{"bel":4,"csjs-inject":7}],31:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// Widgets
+const Graphic = require('Graphic')
+
+function Contributor(person, className, theme) {
+    let css = Object.assign({}, styles, theme)
+    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let el = bel`
+                <div class=${className}>
+                    <div class=${css.member}>
+                        <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
+                        <div class=${css.info}>
+                            <h3 class=${css.name}>${person.name}</h3>
+                            ${person.careers &&
+                                person.careers.map( career =>
+                                    bel`<span class=${css.career}>${career}</span>`
+                                )
+                            }
+                        </div>
+                    </div>
+                    ${lifeIsland}
+                </div>
+            `
+    return el
+}
+
+const styles = csjs`
+.member {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    grid-template: 1fr / 40% 60%;
+    width: 70%;
+    top: 20%;
+}
+.avatar {
+    position: relative;
+    z-index: 2;
+}
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: var(--contributorsTextSize);
+    text-align: center;
+    background-color: var(--contributorsBg);
+    padding: 0% 2% 4% 20%;
+    margin-left: -20%;
+}
+.name {
+    color: var(--section5TitleColor);
+    margin-top: 0;
+    margin-bottom: 3%;
+}
+.career {
+    display: block;
+    color: var(--contributorscareerColor);
+}
+.lifeIsland {
+    width: 100%;
+}
+@media only screen and (max-width: 1550px) {
+    .member {
+        width: 280px;
+        top: 15%;
+        left: -2vw;
+    }
+}
+@media only screen and (max-width: 1200px) {
+    .lifeIsland {
+        width: 115%;
+    }
+}
+@media only screen and (max-width: 1280px) {
+    .member {
+        top: 12%;
+        left: -4vw;
+    }
+}
+
+@media only screen and (max-width: 1130px) {
+    .member {
+        top: 1vw;
+        left: -6vw;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .lifeIsland {
+        width: 100%;
+    }
+    .member {
+        width: 32vw;
+        top: 6vw;
+        left: -2vw;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .member {
+        width: 85%;
+        top: 5vw;
+        left: -4vw;
+    }
+}
+@media only screen and (max-width: 640px) {
+    .member {
+        width: 75%;
+        top: 9vw;
+    }
+}
+@media only screen and (max-width: 414px) {
+    .member {
+        width: 90%;
+        top: 5vw;
+        left: -10vw;
+    }
+}
+`
+
+module.exports = Contributor
+
+},{"Graphic":34,"bel":4,"csjs-inject":7}],32:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2474,7 +2598,7 @@ const styles = csjs`
 `
 
 module.exports = Datdot
-},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],32:[function(require,module,exports){
+},{"Content":30,"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],33:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2562,7 +2686,7 @@ let styles = csjs`
 `
 
 module.exports = Footer
-},{"Graphic":33,"bel":4,"csjs-inject":7}],33:[function(require,module,exports){
+},{"Graphic":34,"bel":4,"csjs-inject":7}],34:[function(require,module,exports){
 const loadSVG = require('loadSVG')
 
 function Graphic(className, url) {
@@ -2577,7 +2701,7 @@ function Graphic(className, url) {
 }   
 
 module.exports = Graphic
-},{"loadSVG":43}],34:[function(require,module,exports){
+},{"loadSVG":43}],35:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2796,16 +2920,16 @@ let styles = csjs`
 `
 
 module.exports = Header
-},{"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
+},{"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
 const Content = require('Content')
-const Team = require('Team')
+const Contributor = require('Contributor')
 
-function OurTeam(data) {
+function OurContributors(data) {
     const css = styles
     let island = Graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg')
     let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
@@ -2821,7 +2945,7 @@ function OurTeam(data) {
     let cloud3Rellax = new Rellax( cloud3, { speed: 0.3})
 
     let el = bel`
-        <section id="ourTeam" class="${css.section}">
+        <section id="ourContributors" class="${css.section}">
             ${Content(data, css)}
 
             <div class=${css.inner}>
@@ -2832,7 +2956,7 @@ function OurTeam(data) {
             </div>
 
             <div class=${css.groups}>
-                ${data.team.map( person => Team( person, css.group, css))}
+                ${data.contributors.map( person => Contributor( person, css.group, css))}
             </div>
 
             ${cloud4}
@@ -2849,7 +2973,7 @@ function OurTeam(data) {
         let article = content.querySelector(`.${css.article}`)
         let contentH = content.offsetTop + subTitle.clientHeight + article.clientHeight
         let groups = document.querySelector(`.${css.groups}`)
-        let screen = window.innerWidth 
+        let screen = window.innerWidth
 
     }
 }
@@ -2941,9 +3065,9 @@ let styles = csjs`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: var(--teamTextSize);
+    font-size: var(--contributorsTextSize);
     text-align: center;
-    background-color: var(--teamBg);
+    background-color: var(--contributorsBg);
     padding: 0% 2% 4% 20%;
     margin-left: -20%;
 }
@@ -2954,7 +3078,7 @@ let styles = csjs`
 }
 .career {
     display: block;
-    color: var(--teamcareerColor);
+    color: var(--contributorscareerColor);
 }
 .cloud1 {
     position: absolute;
@@ -3007,7 +3131,7 @@ let styles = csjs`
 }
 @media only screen and (min-width: 2561px) {
     .info {
-        font-size: calc(var(--teamTextSize) * 1.35);
+        font-size: calc(var(--contributorsTextSize) * 1.35);
     }
 }
 @media only screen and (min-width: 1920px) {
@@ -3084,7 +3208,7 @@ let styles = csjs`
         grid-row-end: 4;
         grid-column-start: 1;
         width: 90%;
-        grid-template-columns: 1fr 1fr; 
+        grid-template-columns: 1fr 1fr;
         margin: 0 auto;
     }
     .group:nth-child(1) {
@@ -3122,7 +3246,7 @@ let styles = csjs`
     .cloud2 {
         width: 20vw;
         top : 22vw;
-        left: 30vw;   
+        left: 30vw;
     }
     .cloud3 {
         width: 10vw;
@@ -3164,14 +3288,14 @@ let styles = csjs`
         grid-column-end: 1;
         margin-left: 8vw;
         margin-top: -3vw;
-    }   
+    }
     .group:nth-child(4) {
         grid-column-end: 1;
         margin-left: 20vw;
         margin-top: -5vw;
     }
     .info {
-        font-size: var(--teamTextSizeS);
+        font-size: var(--contributorsTextSizeS);
     }
     .island {
         width: 98%;
@@ -3234,7 +3358,7 @@ let styles = csjs`
         bottom: 8vw;
     }
 }
-@media only screen and (min-width: 414px) 
+@media only screen and (min-width: 414px)
 and (max-width: 736px) and (orientation: landscape) {
     .section {
         margin-top: -1px;
@@ -3251,8 +3375,9 @@ and (max-width: 736px) and (orientation: landscape) {
 }
 `
 
-module.exports = OurTeam
-},{"Content":30,"Graphic":33,"Team":39,"bel":4,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
+module.exports = OurContributors
+
+},{"Content":30,"Contributor":31,"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],37:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -3770,7 +3895,7 @@ let styles = csjs`
 `
 
 module.exports = Roadmap
-},{"Graphic":33,"bel":4,"crystalIsland":41,"csjs-inject":7,"rellax":27}],37:[function(require,module,exports){
+},{"Graphic":34,"bel":4,"crystalIsland":41,"csjs-inject":7,"rellax":27}],38:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -3960,7 +4085,7 @@ const styles = csjs`
     }
 }
 `
-},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7}],38:[function(require,module,exports){
+},{"Content":30,"Graphic":34,"bel":4,"csjs-inject":7}],39:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -4167,128 +4292,7 @@ const styles = csjs`
 `
 
 module.exports = SmartcontractUI
-},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],39:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const Graphic = require('Graphic')
-
-function Team(person, className, theme) {
-    let css = Object.assign({}, styles, theme)
-    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
-    let el = bel`
-                <div class=${className}>
-                    <div class=${css.member}>
-                        <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
-                        <div class=${css.info}>
-                            <h3 class=${css.name}>${person.name}</h3>
-                            ${person.careers &&  
-                                person.careers.map( career => 
-                                    bel`<span class=${css.career}>${career}</span>` 
-                                )
-                            }
-                        </div>
-                    </div>
-                    ${lifeIsland}
-                </div>
-            `
-    return el
-}
-
-const styles = csjs`
-.member {
-    position: absolute;
-    z-index: 1;
-    display: grid;
-    grid-template: 1fr / 40% 60%;
-    width: 70%; 
-    top: 20%;
-}
-.avatar {
-    position: relative;
-    z-index: 2;
-}
-.info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: var(--teamTextSize);
-    text-align: center;
-    background-color: var(--teamBg);
-    padding: 0% 2% 4% 20%;
-    margin-left: -20%;
-}
-.name {
-    color: var(--section5TitleColor);
-    margin-top: 0;
-    margin-bottom: 3%;
-}
-.career {
-    display: block;
-    color: var(--teamcareerColor);
-}
-.lifeIsland {
-    width: 100%;
-}
-@media only screen and (max-width: 1550px) {
-    .member {
-        width: 280px;
-        top: 15%;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 1200px) {
-    .lifeIsland {
-        width: 115%;
-    }
-}
-@media only screen and (max-width: 1280px) {
-    .member {
-        top: 12%;
-        left: -4vw;
-    }
-}
-
-@media only screen and (max-width: 1130px) { 
-    .member {
-        top: 1vw;
-        left: -6vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .lifeIsland {
-        width: 100%;
-    }
-    .member {
-        width: 32vw;
-        top: 6vw;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 768px) {
-    .member {
-        width: 85%;
-        top: 5vw;
-        left: -4vw;
-    }
-}
-@media only screen and (max-width: 640px) {
-    .member {
-        width: 75%;
-        top: 9vw;
-    }
-}
-@media only screen and (max-width: 414px) {
-    .member {
-        width: 90%;
-        top: 5vw;
-        left: -10vw;
-    }
-}
-`
-
-module.exports = Team
-},{"Graphic":33,"bel":4,"csjs-inject":7}],40:[function(require,module,exports){
+},{"Content":30,"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],40:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -4439,7 +4443,7 @@ let css = csjs`
 `
 
 module.exports = Topnav
-},{"Graphic":33,"bel":4,"csjs-inject":7,"zenscroll":28}],41:[function(require,module,exports){
+},{"Graphic":34,"bel":4,"csjs-inject":7,"zenscroll":28}],41:[function(require,module,exports){
 const bel = require('bel')
 
 function crystalIsland({date, info}, deco, island, css, title) {

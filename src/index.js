@@ -8,7 +8,7 @@ const Datdot = require('Datdot')
 const SmartcontractUI = require('SmartcontractUI')
 const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
-const OurTeam = require('OurTeam')
+const OurContributors = require('OurContributors')
 const Footer = require('Footer')
 const data = require('data')
 
@@ -23,7 +23,7 @@ function Playproject(opts, done, lang) {
         default:
             var page = data(`./src/node_modules/lang/en-us.json`)
     }
-    page.then(result => { 
+    page.then(result => {
         let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
         const {theme} = opts
         const css = styles
@@ -35,17 +35,17 @@ function Playproject(opts, done, lang) {
             ${SmartcontractUI(section2)}
             ${SmartcontractCodes(section3)}
             ${Roadmap(section4)}
-            ${OurTeam(section5)}
+            ${OurContributors(section5)}
             ${Footer(footer)}
         </div>
     `
     return done(null, landingPage)
 
-    }).catch( err => { 
+    }).catch( err => {
         return done(err, null)
     })
-    
-    
+
+
 }
 
 const styles = csjs`
