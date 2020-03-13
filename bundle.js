@@ -183,7 +183,7 @@ const theme = {
     contributorsBg              : defines.colors.lowYellow,
     contributorsTextSize        : defines.sizes.small,
     contributorsTextSizeS       : defines.sizes["xx-small"],
-    contributorscareerColor     : defines.colors.lightGrey,
+    contributorsCareerColor     : defines.colors.lightGrey,
     footerTextColor     : defines.colors.grey,
     footerBg            : defines.colors.lightSky
 }
@@ -1385,7 +1385,7 @@ module.exports = function (css, options) {
       console.warn("Rellax: You must pass an array of 3 numbers in ascending order to the breakpoints option. Defaults reverted");
     }
 
-    if (options && options.breakpoints) {
+    if (options.breakpoints) {
       validateCustomBreakpoints();
     }
 
@@ -2306,7 +2306,7 @@ const styles = csjs`
 }
 .career {
     display: block;
-    color: var(--contributorscareerColor);
+    color: var(--contributorsCareerColor);
 }
 .lifeIsland {
     width: 100%;
@@ -2645,7 +2645,7 @@ let styles = csjs`
 }
 .scene {
     position: relative;
-    width: 75%;
+    width: 60%;
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
@@ -2665,7 +2665,7 @@ let styles = csjs`
     margin: 0 2rem;
 }
 .icon {
-    width: 7vw;
+    width: 6vw;
 }
 .island {
     grid-row-start: 1;
@@ -2675,12 +2675,20 @@ let styles = csjs`
 }
 @media only screen and (min-width: 1440px) {
     .icon {
-        max-width: 12rem;
+        max-width: 10rem;
     }
 }
 @media only screen and (max-width: 1200px) {
     .contacts a {
         margin: 0 1.5vw;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .scene {
+        width: 80%;
+    }
+    .icon {
+        width: 8vw;
     }
 }
 `
@@ -2755,7 +2763,7 @@ function Header(data) {
 let styles = csjs`
 .header {
     position: relative;
-    padding-top: 5.5%;
+    padding-top: 0vw;
     background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
     overflow: hidden;
 }
@@ -2854,7 +2862,7 @@ let styles = csjs`
     will-change: transform;
 }
 @media only screen and (min-width: 1680px) {
-    .header {
+    .scrollUp .header {
         padding-top: 2.5%;
     }
 }
@@ -2874,14 +2882,27 @@ let styles = csjs`
         font-size: calc(var(--titleSize) * 2.25);
     }
 }
+@media only screen and (max-width: 1680px) {
+    .header {
+        padding-top: 2vw;
+    }
+}
+@media only screen and (max-width: 1280px) {
+    .header {
+        padding-top: 3vw;
+    }
+    .scrollUp .header {
+        padding-top: 6.5vh;
+    }
+}
 @media only screen and (max-width: 1024px) {
     .header {
-        padding-top: 5vw;
+        padding-top: 0%;
     }
 }
 @media only screen and (max-width: 812px) {
     .header {
-        padding-top: 12vw;
+        padding-top: 5vh;
     }
     .title { 
         padding: 0 5%;
@@ -2890,7 +2911,7 @@ let styles = csjs`
 }
 @media only screen and (max-width: 414px) {
     .header {
-        padding-top: 18vw;
+        padding-top: 8vh;
     }
     .title {
         font-size: var(--titlesSizeS);
@@ -3052,10 +3073,15 @@ let styles = csjs`
 }
 .group:nth-child(4) {
     grid-row-start: 3;
-    grid-column-start: 4;
-    grid-column-end: 7;
-    margin-top: -10%;
+    grid-column-start: 1;
+    grid-column-end: 4;
     margin-left: -10%;
+}
+.group:nth-child(5) {
+    grid-row-start: 3;
+    grid-column-start: 5;
+    grid-column-end: 8;
+    margin-left: -20%;
 }
 .avatar {
     position: relative;
@@ -3078,7 +3104,7 @@ let styles = csjs`
 }
 .career {
     display: block;
-    color: var(--contributorscareerColor);
+    color: var(--contributorsCareerColor);
 }
 .cloud1 {
     position: absolute;
@@ -3153,8 +3179,13 @@ let styles = csjs`
         grid-column-end: 8;
     }
     .group:nth-child(4) {
-        grid-column-start: 6;
-        grid-column-end: 10;
+        grid-column-start: 3;
+        grid-column-end: 7;
+        margin-left: 0;
+    }
+    .group:nth-child(5) {
+        grid-column-start: 8;
+        grid-column-end: 12;
         margin-left: 0;
     }
 }
@@ -3165,13 +3196,14 @@ let styles = csjs`
 }
 @media only screen and (max-width: 1200px) {
     .group:nth-child(1) {
-        margin-left: -2vw;
+        margin-left: 10vw;
         grid-column-start: 3;
         grid-column-end: 6;
     }
     .group:nth-child(2) {
         grid-column-start: 5;
         grid-column-end: 8;
+        margin-top: 0;
     }
     .group:nth-child(3) {
         margin-left: -5vw;
@@ -3180,8 +3212,14 @@ let styles = csjs`
     }
     .group:nth-child(4) {
         margin-left: -2vw;
-        grid-column-start: 3;
-        grid-column-end: 6;
+        grid-column-start: 1;
+        grid-column-end: 4;
+        margin-top: -5%;
+    }
+    .group:nth-child(5) {
+        margin-left: 0vw;
+        grid-column-start: 5;
+        grid-column-end: 8;
     }
 }
 @media only screen and (max-width: 1024px) {
@@ -3236,7 +3274,8 @@ let styles = csjs`
     .group:nth-child(5) {
         grid-row-start: 5;
         grid-column-start: 1;
-        margin-top: 0%;
+        grid-column-end: 1;
+        margin-top: -30%;
     }
     .cloud1 {
         width: 10vw;
@@ -3292,6 +3331,11 @@ let styles = csjs`
     .group:nth-child(4) {
         grid-column-end: 1;
         margin-left: 20vw;
+        margin-top: -5vw;
+    }
+    .group:nth-child(5) {
+        grid-column-end: 1;
+        margin-left: 8vw;
         margin-top: -5vw;
     }
     .info {
@@ -4331,6 +4375,13 @@ function Topnav(data) {
             lastScroll = currentScroll
         }
     })
+
+    window.addEventListener('resize', ()=> {
+        if (window.innerWidth <= 1024) {
+            body.classList.remove(scrollUp)
+            body.classList.remove(scrollDown)
+        }
+    })
     
     return bel`
             <div class=${css.topNav}>
@@ -4353,7 +4404,7 @@ function Topnav(data) {
 
 let css = csjs`
 .topNav {
-    position: fixed;
+    position: relative;
     width: 100%;
     z-index: 20;
     display: grid;
@@ -4387,11 +4438,13 @@ let css = csjs`
     color: #00acff;
 }
 .scrollUp .topNav {
+    position: fixed;
     background-color: white;
     -webkit-transform: none;
     transform: none;
 }
 .scrollDown .topNav {
+    position: fixed;
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
     opacity: 0;
