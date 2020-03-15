@@ -1,4 +1,4 @@
 # playproject-io.github.io
-playproject website
+Playproject website
 
-https://fionataeyang.github.io/playproject-io.github.io/
+https://playproject.io/
