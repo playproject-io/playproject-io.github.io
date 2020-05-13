@@ -1385,7 +1385,7 @@ module.exports = function (css, options) {
       console.warn("Rellax: You must pass an array of 3 numbers in ascending order to the breakpoints option. Defaults reverted");
     }
 
-    if (options.breakpoints) {
+    if (options && options.breakpoints) {
       validateCustomBreakpoints();
     }
 
