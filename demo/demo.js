@@ -21,7 +21,7 @@ if (lang === 'en') {
 
 const styles = csjs`
 html {
-    font-size: 62.5%;
+    font-size: 82.5%;
     scroll-behavior: smooth;
 }
 body {
