@@ -1,103 +1,101 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
-const Playproject = require('../') 
+const make_page = require('../') 
 const theme = require('theme')
+
 const appleTouch = bel`<link rel="apple-touch-icon" sizes="180x180" href="./src/node_modules/assets/images/favicon/apple-touch-icon.png">`
 const icon32 = bel`<link rel="icon" type="image/png" sizes="32x32" href="./src/node_modules/assets/images/favicon/favicon-32x32.png">`
 const icon16 = bel`<link rel="icon" type="image/png" sizes="16x16" href="./src/node_modules/assets/images/favicon/favicon-16x16.png">`
 const webmanifest = bel`<link rel="manifest" href="./src/node_modules/assets/images/favicon/site.webmanifest"></link>`
-document.head.appendChild(appleTouch)
-document.head.appendChild(icon32)
-document.head.appendChild(icon16)
-document.head.appendChild(webmanifest)
+document.head.append(appleTouch, icon32, icon16, webmanifest)
 
 const params = new URL(location.href).searchParams
 const lang = params.get('lang')
 
 if (lang === 'en') {
-    params.delete('lang')
-    location.search = params
+	params.delete('lang')
+	location.search = params
 }
 
 const styles = csjs`
 html {
-    font-size: 82.5%;
-    scroll-behavior: smooth;
+	font-size: 82.5%;
+	scroll-behavior: smooth;
 }
 body {
-    font-family: var(--bodyFont);
-    font-size: 1.4rem;
-    color: var(--bodyColor);
-    margin: 0;
-    padding: 0;
-    background-color: var(--bodyBg);
-    overflow-x: hidden;
+	font-family: var(--bodyFont);
+	font-size: 1.4rem;
+	color: var(--bodyColor);
+	margin: 0;
+	padding: 0;
+	background-color: var(--bodyBg);
+	overflow-x: hidden;
 }
 a {
-    text-decoration: none;
+	text-decoration: none;
 }
 button {
-    outline: none;
-    border: none;
-    font-family: var(--titleFont);
-    font-size: var(--sectionButtonSize);
-    color: var(--titleColor);
-    border-radius: 2rem;
-    padding: 1.2rem 3.8rem;
-    cursor: pointer;
+	outline: none;
+	border: none;
+	font-family: var(--titleFont);
+	font-size: var(--sectionButtonSize);
+	color: var(--titleColor);
+	border-radius: 2rem;
+	padding: 1.2rem 3.8rem;
+	cursor: pointer;
 }
 img {
-    width: 100%;
-    height: auto;
+	width: 100%;
+	height: auto;
 }
 article {
-    font-size: var(--articleSize);
-    color: var(--articleColor);
-    line-height: 2.5rem;
-    padding-bottom: 4rem;
+	font-size: var(--articleSize);
+	color: var(--articleColor);
+	line-height: 2.5rem;
+	padding-bottom: 4rem;
 }
 @media only screen and (min-width: 2561px) {
-    article {
-        font-size: calc(var(--articleSize) * 1.5 );
-        line-height: calc(2.5rem * 1.5);
-    }
-    button {
-        font-size: calc(var(--sectionButtonSize) * 1.5 );
-    }
+	article {
+		font-size: calc(var(--articleSize) * 1.5 );
+		line-height: calc(2.5rem * 1.5);
+	}
+	button {
+		font-size: calc(var(--sectionButtonSize) * 1.5 );
+}
 }
 @media only screen and (min-width: 4096px) {
-    article {
-        font-size: calc(var(--articleSize) * 2.25 );
-        line-height: calc(2.5rem * 2.25);
-    }
-    button {
-        font-size: calc(var(--sectionButtonSize) * 2.25 );
-    }
+	article {
+		font-size: calc(var(--articleSize) * 2.25 );
+		line-height: calc(2.5rem * 2.25);
+	}
+	button {
+		font-size: calc(var(--sectionButtonSize) * 2.25 );
+	}
 }
 `
 
 // callback done()
 const el = (err, landingPage) => {
-    const vars = theme
+	const vars = theme
 
-    if (err) {
-        document.body.style = `color: red; font-size: 1.6rem; text-align:center; background-color: #d9d9d9;`
-        document.body.innerHTML = `<p>${err.stack}</p>`
-    } else {
-        document.body.appendChild(landingPage)
-    }
+	if (err) {
+		document.body.style = `color: red; font-size: 1.6rem; text-align:center; background-color: #d9d9d9;`
+		document.body.innerHTML = `<p>${err.stack}</p>`
+	} else {
+		document.body.appendChild(landingPage)
+	}
 
-    updateTheme(vars)
+	updateTheme(vars)
 } 
 
 function updateTheme (vars) {
-    Object.keys(vars).forEach(name => {
-      document.body.style.setProperty(`--${name}`, vars[name])
-    })
+	Object.keys(vars).forEach(name => {
+		document.body.style.setProperty(`--${name}`, vars[name])
+	})
 }
 
-Playproject({theme}, el, lang)
+make_page({theme}, el, lang)
 },{"../":29,"bel":4,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
 const bel = require('bel')
 const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
@@ -2127,50 +2125,49 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 
 // pages
-const Topnav = require('Topnav')
-const Header = require('Header')
+const topnav = require('topnav')
+const header = require('header')
 const Datdot = require('Datdot')
 const SmartcontractUI = require('SmartcontractUI')
 const SmartcontractCodes = require('SmartcontractCodes')
 const Roadmap = require('Roadmap')
 const OurContributors = require('OurContributors')
 const Footer = require('Footer')
-const data = require('data')
+const fetch_data = require('fetch-data')
 
-function Playproject(opts, done, lang) {
-    switch(lang) {
-        case 'zh-tw':
-        case 'ja':
-        case 'th':
-        case 'fr':
-            var page = data(`./src/node_modules/lang/${lang}.json`)
-            break
-        default:
-            var page = data(`./src/node_modules/lang/en-us.json`)
-    }
-    page.then(result => {
-        let { menu, header, section1, section2, section3, section4, section5, footer } = result.pages
-        const {theme} = opts
-        const css = styles
-        const landingPage = bel`
-        <div id="top" class=${css.wrap}>
-            ${Topnav(menu)}
-            ${Header(header)}
-            ${Datdot(section1)}
-            ${SmartcontractUI(section2)}
-            ${SmartcontractCodes(section3)}
-            ${Roadmap(section4)}
-            ${OurContributors(section5)}
-            ${Footer(footer)}
-        </div>
-    `
-    return done(null, landingPage)
+module.exports = make_page
 
-    }).catch( err => {
-        return done(err, null)
-    })
+function make_page(opts, done, lang) {
+  switch(lang) {
+    case 'zh-tw':
+    case 'ja':
+    case 'th':
+    case 'fr':
+      var path = `./src/node_modules/lang/${lang}.json`
+      break
+    default:
+      var path = `./src/node_modules/lang/en-us.json`
+  }
+  fetch_data(path).then(text => {
+    let { menu, header: h, section1, section2, section3, section4, section5, footer } = text.pages
+    const {theme} = opts
+    const css = styles
+    const landingPage = bel`
+    <div id="top" class=${css.wrap}>
+      ${topnav(menu)}
+      ${header(h)}
+      ${Datdot(section1)}
+      ${SmartcontractUI(section2)}
+      ${SmartcontractCodes(section3)}
+      ${Roadmap(section4)}
+      ${OurContributors(section5)}
+      ${Footer(footer)}
+    </div>`
+  return done(null, landingPage)
 
-
+  }).catch( err => {
+    return done(err, null)
+  })
 }
 
 const styles = csjs`
@@ -2179,12 +2176,9 @@ const styles = csjs`
 }
 [class^="cloud"] {
     transition: left 0.6s, bottom 0.5s, top 0.5s linear;
-}
-`
+}`
 
-module.exports = Playproject
-
-},{"Datdot":32,"Footer":33,"Header":35,"OurContributors":36,"Roadmap":37,"SmartcontractCodes":38,"SmartcontractUI":39,"Topnav":40,"bel":4,"csjs-inject":7,"data":42}],30:[function(require,module,exports){
+},{"Datdot":31,"Footer":32,"OurContributors":34,"Roadmap":35,"SmartcontractCodes":36,"SmartcontractUI":37,"bel":4,"csjs-inject":7,"fetch-data":40,"header":41,"topnav":43}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -2249,128 +2243,6 @@ let styles = csjs`
 `
 module.exports = Content
 },{"bel":4,"csjs-inject":7}],31:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const Graphic = require('Graphic')
-
-function Contributor(person, className, theme) {
-    let css = Object.assign({}, styles, theme)
-    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
-    let el = bel`
-                <div class=${className}>
-                    <div class=${css.member}>
-                        <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
-                        <div class=${css.info}>
-                            <h3 class=${css.name}>${person.name}</h3>
-                            ${person.careers &&
-                                person.careers.map( career =>
-                                    bel`<span class=${css.career}>${career}</span>`
-                                )
-                            }
-                        </div>
-                    </div>
-                    ${lifeIsland}
-                </div>
-            `
-    return el
-}
-
-const styles = csjs`
-.member {
-    position: absolute;
-    z-index: 1;
-    display: grid;
-    grid-template: 1fr / 40% 60%;
-    width: 70%;
-    top: 20%;
-}
-.avatar {
-    position: relative;
-    z-index: 2;
-}
-.info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: var(--contributorsTextSize);
-    text-align: center;
-    background-color: var(--contributorsBg);
-    padding: 0% 2% 4% 20%;
-    margin-left: -20%;
-}
-.name {
-    color: var(--section5TitleColor);
-    margin-top: 0;
-    margin-bottom: 3%;
-}
-.career {
-    display: block;
-    color: var(--contributorsCareerColor);
-}
-.lifeIsland {
-    width: 100%;
-}
-@media only screen and (max-width: 1550px) {
-    .member {
-        width: 280px;
-        top: 15%;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 1200px) {
-    .lifeIsland {
-        width: 115%;
-    }
-}
-@media only screen and (max-width: 1280px) {
-    .member {
-        top: 12%;
-        left: -4vw;
-    }
-}
-
-@media only screen and (max-width: 1130px) {
-    .member {
-        top: 1vw;
-        left: -6vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .lifeIsland {
-        width: 100%;
-    }
-    .member {
-        width: 32vw;
-        top: 6vw;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 768px) {
-    .member {
-        width: 85%;
-        top: 5vw;
-        left: -4vw;
-    }
-}
-@media only screen and (max-width: 640px) {
-    .member {
-        width: 75%;
-        top: 9vw;
-    }
-}
-@media only screen and (max-width: 414px) {
-    .member {
-        width: 90%;
-        top: 5vw;
-        left: -10vw;
-    }
-}
-`
-
-module.exports = Contributor
-
-},{"Graphic":34,"bel":4,"csjs-inject":7}],32:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2598,7 +2470,7 @@ const styles = csjs`
 `
 
 module.exports = Datdot
-},{"Content":30,"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],33:[function(require,module,exports){
+},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],32:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2694,7 +2566,7 @@ let styles = csjs`
 `
 
 module.exports = Footer
-},{"Graphic":34,"bel":4,"csjs-inject":7}],34:[function(require,module,exports){
+},{"Graphic":33,"bel":4,"csjs-inject":7}],33:[function(require,module,exports){
 const loadSVG = require('loadSVG')
 
 function Graphic(className, url) {
@@ -2709,246 +2581,14 @@ function Graphic(className, url) {
 }   
 
 module.exports = Graphic
-},{"loadSVG":43}],35:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const Graphic = require('Graphic')
-const Rellax = require('rellax')
-
-function Header(data) {
-		const css = styles
-		let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
-		let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
-		let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-		let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-		let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-		let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-		let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-		let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-		let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
-
-		// Parallax effects
-		// let playRellax = new Rellax(playIsland, { speed: 2 })
-		let sunRellax = new Rellax(sun, { speed: 2 })
-		let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
-		let cloud2Rellax = new Rellax(cloud2, { speed: 2 })
-		let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
-		let cloud4Rellax = new Rellax(cloud4, { speed: 2 })
-		let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
-		let cloud6Rellax = new Rellax(cloud6, { speed: 3 })
-		let cloud7Rellax = new Rellax(cloud7, { speed: 3 })
-		
-		let el = bel`
-		<div class=${css.header}">
-				<h1 class=${css.title}>${data.title}</h1>
-				<section class=${css.scene}>
-						<div class=${css.sunCloud}>
-								${cloud1}
-								${sun}
-								${cloud2}
-						</div>
-						${cloud3}
-						${cloud4}
-						${cloud5}
-						${cloud6}
-						${cloud7}
-						${playIsland}
-				</section>
-		</div>
-		`
-		return el
-}
-
-let styles = csjs`
-.header {
-		position: relative;
-		padding-top: 0vw;
-		background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
-		overflow: hidden;
-}
-.scene {
-		position: relative;
-		margin-top: 5vw;
-}
-.playIsland {
-		position: relative;
-		width: 90%;
-		margin-top: 0;
-		margin-left: 5vw;
-		z-index: 2;
-}
-.sunCloud {
-		position: absolute;
-		top: -4%;
-		width: 12%;
-		margin-left: 8vw;
-		z-index: 1;
-}
-.sun {
-		width: 100%;
-}
-[class^="cloud"] {
-		transition: left 0.6s, bottom 0.5s, top 0.5s linear;
-}
-.cloud1 {
-		position: absolute;
-		z-index: 2;
-		width: 7vw;
-		left: -3vw;
-		bottom: 0;
-}
-.cloud2 {
-		position: absolute;
-		z-index: 1;
-		width: 7vw;
-		left: 10vw;
-		top: 25%;
-}
-.cloud3 {
-		position: absolute;
-		z-index: 2;
-		width: 7vw;
-		height: auto;
-		top: -2.5%;
-		right: 14vw;
-}
-.cloud4 {
-		position: absolute;
-		z-index: 1;
-		width: 5vw;
-		height: auto;
-		top: 8%;
-		right: 6vw;
-}
-.cloud5 {
-		position: absolute;
-		z-index: 1;
-		width: 12vw;
-		height: auto;
-		top: 50%;
-		left: 2vw;
-}
-.cloud6 {
-		position: absolute;
-		z-index: 3;
-		width: 12vw;
-		height: auto;
-		bottom: 15%;
-		left: 15vw;
-}
-.cloud7 {
-		position: absolute;
-		z-index: 4;
-		width: 18vw;
-		height: auto;
-		bottom: 25%;
-		right: 5vw;
-}
-.title {
-		position: relative;
-		z-index: 4;
-		font-size: var(--titleSize);
-		font-family: var(--titleFont);
-		color: var(--titleColor);
-		text-align: center;
-		margin: 0;
-		padding: 2% 2%;
-}
-.sun {
-		will-change: transform;
-}
-.cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
-		will-change: transform;
-}
-@media only screen and (min-width: 1680px) {
-		.scrollUp .header {
-				padding-top: 2.5%;
-		}
-}
-@media only screen and (min-width: 2561px) {
-		.scene {
-				max-width: 90%;
-				margin-left: auto;
-				margin-right: auto;
-		}
-		.title {
-				font-size: calc(var(--titleSize) * 1.5);
-				margin-bottom: 6vh;
-		}
-}
-@media only screen and (min-width: 4096px) {
-		.title {
-				font-size: calc(var(--titleSize) * 2.25);
-		}
-}
-@media only screen and (max-width: 1680px) {
-		.header {
-				padding-top: 2vw;
-		}
-}
-@media only screen and (max-width: 1280px) {
-		.header {
-				padding-top: 3vw;
-		}
-		.scrollUp .header {
-				padding-top: 6.5vh;
-		}
-}
-@media only screen and (max-width: 1024px) {
-		.header {
-				padding-top: 0%;
-		}
-}
-@media only screen and (max-width: 812px) {
-		.header {
-				padding-top: 5vh;
-		}
-		.title { 
-				padding: 0 5%;
-				font-size: var(--titleSizeM);
-		}
-}
-@media only screen and (max-width: 414px) {
-		.header {
-				padding-top: 8vh;
-		}
-		.title {
-				font-size: var(--titlesSizeS);
-		}
-		.playIsland {
-				width: 150%;
-				margin-left: -26vw;
-		}
-		.sunCloud {
-				top: -2vh;
-				left: -3vw;
-		}
-		.cloud5 {
-				width: 12vw;
-				left: -4vw;
-				top: 64%;
-		}
-		.cloud6 {
-				width: 15vw;
-				left: 5vw;
-		}
-		.cloud7 {
-				width: 20vw;
-				right: -5vw;
-		}
-}
-`
-
-module.exports = Header
-},{"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
+},{"loadSVG":42}],34:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
 const Graphic = require('Graphic')
 const Rellax = require('rellax')
 const Content = require('Content')
-const Contributor = require('Contributor')
+const Contributor = require('contributor')
 
 function OurContributors(data) {
     const css = styles
@@ -3044,7 +2684,7 @@ let styles = csjs`
     width: 100%;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: repeat(8, 12.5%);
+    grid-template-columns: repeat(12, 12.5%);
     justify-self: end;
 }
 .group {
@@ -3059,15 +2699,15 @@ let styles = csjs`
 }
 .group:nth-child(2) {
     grid-row-start: 2;
-    grid-column-start: 6;
-    grid-column-end: 9;
+    grid-column-start: 2;
+    grid-column-end: 5;
     margin-top: -10%;
     margin-left: -5%;
 }
 .group:nth-child(3) {
     grid-row-start: 2;
-    grid-column-start: 2;
-    grid-column-end: 5;
+    grid-column-start: 6;
+    grid-column-end: 9;
     margin-left: 0vw;
     margin-top: -10%;
 }
@@ -3082,6 +2722,51 @@ let styles = csjs`
     grid-column-start: 5;
     grid-column-end: 8;
     margin-left: -20%;
+}
+.group:nth-child(6) {
+    grid-row-start: 4;
+    grid-column-start: 3;
+    grid-column-end: 6;
+}
+.group:nth-child(7) {
+    grid-row-start: 4;
+    grid-column-start: 8;
+    grid-column-end: 11;
+}
+.group:nth-child(8) {
+    grid-row-start: 5;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+.group:nth-child(9) {
+    grid-row-start: 5;
+    grid-column-start: 5;
+    grid-column-end: 8;
+}
+.group:nth-child(10) {
+    grid-row-start: 5;
+    grid-column-start: 9;
+    grid-column-end: 12;
+}
+.group:nth-child(11) {
+    grid-row-start: 6;
+    grid-column-start: 2;
+    grid-column-end:5;
+}
+.group:nth-child(12) {
+    grid-row-start: 6;
+    grid-column-start: 7;
+    grid-column-end: 10;
+}
+.group:nth-child(13) {
+    grid-row-start: 7;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+.group:nth-child(14) {
+    grid-row-start: 7;
+    grid-column-start: 5;
+    grid-column-end: 8;
 }
 .avatar {
     position: relative;
@@ -3162,65 +2847,173 @@ let styles = csjs`
 }
 @media only screen and (min-width: 1920px) {
     .groups {
-        grid-template-columns: repeat(12, 8.33%);
-        margin-top: 2vw;
+      grid-template-columns: repeat(12, 8.33%);
+      margin-top: 2vw;
     }
     .group:nth-child(1) {
-        grid-column-start: 7;
-        grid-column-end: 11;
-        margin-left: 0;
+      grid-row-start: 1;
+      grid-column-start: 7;
+      grid-column-end: 11;
+      margin-left: 0;
     }
     .group:nth-child(2) {
-        grid-column-start: 9;
-        grid-column-end: 13;
+      grid-row-start: 2;
+      grid-column-start: 4;
+      grid-column-end: 8;
     }
     .group:nth-child(3) {
-        grid-column-start: 4;
-        grid-column-end: 8;
+      grid-row-start: 2;
+      grid-column-start: 9;
+      grid-column-end: 13;
     }
     .group:nth-child(4) {
-        grid-column-start: 3;
-        grid-column-end: 7;
-        margin-left: 0;
+      grid-row-start: 3;
+      grid-column-start: 3;
+      grid-column-end: 7;
+      margin-left: 0;
     }
     .group:nth-child(5) {
-        grid-column-start: 8;
-        grid-column-end: 12;
-        margin-left: 0;
+      grid-row-start: 3;
+      grid-column-start: 8;
+      grid-column-end: 12;
+      margin-left: 0;
+    }
+    .group:nth-child(6) {
+      grid-row-start: 4;
+      grid-column-start: 4;
+      grid-column-end: 8;
+      margin-left: 0;
+    }
+    .group:nth-child(7) {
+      grid-row-start: 4;
+      grid-column-start: 9;
+      grid-column-end: 13;
+      margin-left: 0;
+    }
+    .group:nth-child(8) {
+      grid-row-start: 5;
+      grid-column-start: 3;
+      grid-column-end: 7;
+      margin-left: 0;
+    }
+    .group:nth-child(9) {
+      grid-row-start: 5;
+      grid-column-start: 8;
+      grid-column-end: 12;
+      margin-left: 0;
+    }
+    .group:nth-child(8) {
+      grid-row-start: 5;
+      grid-column-start: 3;
+      grid-column-end: 7;
+      margin-left: 0;
+    }
+    .group:nth-child(9) {
+      grid-row-start: 5;
+      grid-column-start: 8;
+      grid-column-end: 12;
+      margin-left: 0;
+    }
+    .group:nth-child(10) {
+      grid-row-start: 6;
+      grid-column-start: 4;
+      grid-column-end: 8;
+      margin-left: 0;
+    }
+    .group:nth-child(11) {
+      grid-row-start: 6;
+      grid-column-start: 9;
+      grid-column-end: 13;
+      margin-left: 0;
+    }
+    .group:nth-child(12) {
+      grid-row-start: 7;
+      grid-column-start: 3;
+      grid-column-end: 7;
+      margin-left: 0;
+    }
+    .group:nth-child(13) {
+      grid-row-start: 7;
+      grid-column-start: 8;
+      grid-column-end: 12;
+      margin-left: 0;
+    }
+    .group:nth-child(14) {
+      grid-row-start: 8;
+      grid-column-start: 4;
+      grid-column-end: 8;
+    }
+    .group:nth-child(15) {
+      grid-row-start: 8;
+      grid-column-start: 9;
+      grid-column-end: 13;
     }
 }
-@media only screen and (min-width: 1441px) {
-    .group:nth-child(1) {
-        margin-left: 15%;
-    }
-}
-@media only screen and (max-width: 1200px) {
-    .group:nth-child(1) {
-        margin-left: 10vw;
-        grid-column-start: 3;
-        grid-column-end: 6;
-    }
-    .group:nth-child(2) {
-        grid-column-start: 5;
-        grid-column-end: 8;
-        margin-top: 0;
-    }
-    .group:nth-child(3) {
-        margin-left: -5vw;
-        grid-column-start: 1;
-        grid-column-end: 4;
-    }
-    .group:nth-child(4) {
-        margin-left: -2vw;
-        grid-column-start: 1;
-        grid-column-end: 4;
-        margin-top: -5%;
-    }
-    .group:nth-child(5) {
-        margin-left: 0vw;
-        grid-column-start: 5;
-        grid-column-end: 8;
-    }
+@media only screen and (max-width: 1900px) {
+  .group:nth-child(1) {
+    margin-left: 15%;
+  }
+  .group:nth-child(2) {
+    grid-column-start: 2;
+    grid-column-end: 5;
+  }
+  .group:nth-child(3) {
+    grid-column-start: 6;
+    grid-column-end: 9;
+  }
+  .group:nth-child(4) {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+  .group:nth-child(5) {
+    grid-column-start: 5;
+    grid-column-end: 8;
+  }
+  .group:nth-child(6) {
+    grid-row-start: 4;
+    grid-column-start: 3;
+    grid-column-end: 6;
+  }
+  .group:nth-child(7) {
+      grid-row-start: 5;
+      grid-column-start: 1;
+      grid-column-end: 4;
+  }
+  .group:nth-child(8) {
+      grid-row-start: 5;
+      grid-column-start: 5;
+      grid-column-end: 8;
+  }
+  .group:nth-child(9) {
+      grid-row-start: 6;
+      grid-column-start: 2;
+      grid-column-end: 5;
+  }
+  .group:nth-child(10) {
+    grid-row-start: 6;
+    grid-column-start: 6;
+    grid-column-end: 9;
+  }
+  .group:nth-child(11) {
+    grid-row-start: 7;
+    grid-column-start: 3;
+    grid-column-end: 6;
+  }
+  .group:nth-child(12) {
+    grid-row-start: 8;
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+  .group:nth-child(13) {
+    grid-row-start: 8;
+    grid-column-start: 5;
+    grid-column-end: 8;
+  }
+  .group:nth-child(14) {
+    grid-row-start: 9;
+    grid-column-start: 2;
+    grid-column-end: 5;
+  }
 }
 @media only screen and (max-width: 1024px) {
     .section {
@@ -3276,6 +3069,60 @@ let styles = csjs`
         grid-column-start: 1;
         grid-column-end: 1;
         margin-top: -30%;
+        margin-left: 0;
+    }
+    .group:nth-child(6) {
+        grid-row-start: 6;
+        grid-column-start: 2;
+        margin-top: -30%;
+    }
+    .group:nth-child(7) {
+      grid-row-start: 7;
+      grid-column-start: 1;
+      grid-column-end: 1;
+      margin-top: -30%;
+      margin-left: 0;
+    }
+    .group:nth-child(8) {
+      grid-row-start: 8;
+      grid-column-start: 2;
+      margin-top: -30%;
+    }
+    .group:nth-child(9) {
+      grid-row-start: 9;
+      grid-column-start: 1;
+      grid-column-end: 1;
+      margin-top: -30%;
+      margin-left: 0;
+    }
+    .group:nth-child(10) {
+      grid-row-start: 10;
+      grid-column-start: 2;
+      margin-top: -30%;
+    }
+    .group:nth-child(11) {
+      grid-row-start: 11;
+      grid-column-start: 1;
+      grid-column-end: 1;
+      margin-top: -30%;
+      margin-left: 0;
+    }
+    .group:nth-child(12) {
+      grid-row-start: 12;
+      grid-column-start: 2;
+      margin-top: -30%;
+    }
+    .group:nth-child(13) {
+      grid-row-start: 13;
+      grid-column-start: 1;
+      grid-column-end: 1;
+      margin-top: -30%;
+      margin-left: 0;
+    }
+    .group:nth-child(14) {
+      grid-row-start: 14;
+      grid-column-start: 2;
+      margin-top: -30%;
     }
     .cloud1 {
         width: 10vw;
@@ -3421,7 +3268,7 @@ and (max-width: 736px) and (orientation: landscape) {
 
 module.exports = OurContributors
 
-},{"Content":30,"Contributor":31,"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],37:[function(require,module,exports){
+},{"Content":30,"Graphic":33,"bel":4,"contributor":38,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -3939,7 +3786,7 @@ let styles = csjs`
 `
 
 module.exports = Roadmap
-},{"Graphic":34,"bel":4,"crystalIsland":41,"csjs-inject":7,"rellax":27}],38:[function(require,module,exports){
+},{"Graphic":33,"bel":4,"crystalIsland":39,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -4129,7 +3976,7 @@ const styles = csjs`
     }
 }
 `
-},{"Content":30,"Graphic":34,"bel":4,"csjs-inject":7}],39:[function(require,module,exports){
+},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7}],37:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -4336,7 +4183,409 @@ const styles = csjs`
 `
 
 module.exports = SmartcontractUI
-},{"Content":30,"Graphic":34,"bel":4,"csjs-inject":7,"rellax":27}],40:[function(require,module,exports){
+},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],38:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// Widgets
+const Graphic = require('Graphic')
+
+module.exports = contributor
+
+function contributor(person, className, theme) {
+    let css = Object.assign({}, styles, theme)
+    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let el = bel`
+      <div class=${className}>
+        <div class=${css.member}>
+          <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
+          <div class=${css.info}>
+            <h3 class=${css.name}>${person.name}</h3>
+            ${person.careers &&
+                person.careers.map( career =>
+                    bel`<span class=${css.career}>${career}</span>`
+                )
+            }
+          </div>
+        </div>
+        ${lifeIsland}
+      </div>
+  `
+    return el
+}
+
+const styles = csjs`
+.member {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    grid-template: 1fr / 40% 60%;
+    width: 70%;
+    top: 20%;
+}
+.avatar {
+    position: relative;
+    z-index: 2;
+}
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: var(--contributorsTextSize);
+    text-align: center;
+    background-color: var(--contributorsBg);
+    padding: 0% 2% 4% 20%;
+    margin-left: -20%;
+}
+.name {
+    color: var(--section5TitleColor);
+    margin-top: 0;
+    margin-bottom: 3%;
+}
+.career {
+    display: block;
+    color: var(--contributorsCareerColor);
+}
+.lifeIsland {
+    width: 100%;
+}
+@media only screen and (max-width: 1550px) {
+    .member {
+        width: 280px;
+        top: 15%;
+        left: -2vw;
+    }
+}
+@media only screen and (max-width: 1200px) {
+    .lifeIsland {
+        width: 115%;
+    }
+}
+@media only screen and (max-width: 1280px) {
+    .member {
+        top: 12%;
+        left: -4vw;
+    }
+}
+
+@media only screen and (max-width: 1130px) {
+    .member {
+        top: 1vw;
+        left: -6vw;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .lifeIsland {
+        width: 100%;
+    }
+    .member {
+        width: 32vw;
+        top: 6vw;
+        left: -2vw;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .member {
+        width: 85%;
+        top: 5vw;
+        left: -4vw;
+    }
+}
+@media only screen and (max-width: 640px) {
+    .member {
+        width: 75%;
+        top: 9vw;
+    }
+}
+@media only screen and (max-width: 414px) {
+    .member {
+        width: 90%;
+        top: 5vw;
+        left: -10vw;
+    }
+}
+`
+
+
+
+},{"Graphic":33,"bel":4,"csjs-inject":7}],39:[function(require,module,exports){
+const bel = require('bel')
+
+function crystalIsland({date, info}, deco, island, css, title) {
+    let el = bel`
+                <div class=${css.scene}>
+                    <div class=${css.deco}>
+                        <div class=${css.content}>
+                            <h3>${date}</h3>
+                            ${ info === 'Coming soon' ? bel`<h3>${info}</h3>` : bel`<p>${info}</p>` }
+                        </div>
+                        ${deco.map(item => item)}
+                    </div>
+                    ${title}
+                    ${island}
+                </div>
+                `
+    return el
+}
+
+module.exports = crystalIsland
+},{"bel":4}],40:[function(require,module,exports){
+module.exports = fetch_data
+
+async function fetch_data(path) {
+    let response = await fetch(path)
+    if (response.status == 200) {
+        let texts = await response.json()
+        return texts
+    }
+    throw new Error(response.status)
+}
+},{}],41:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('Graphic')
+const Rellax = require('rellax')
+
+module.exports = header
+
+function header(data) {
+		const css = styles
+		let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
+		let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
+		let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+		let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+		let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+		let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+		let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+		let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+		let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
+
+		// Parallax effects
+		// let playRellax = new Rellax(playIsland, { speed: 2 })
+		let sunRellax = new Rellax(sun, { speed: 2 })
+		let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
+		let cloud2Rellax = new Rellax(cloud2, { speed: 2 })
+		let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
+		let cloud4Rellax = new Rellax(cloud4, { speed: 2 })
+		let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
+		let cloud6Rellax = new Rellax(cloud6, { speed: 3 })
+		let cloud7Rellax = new Rellax(cloud7, { speed: 3 })
+		
+		let el = bel`
+		<div class=${css.header}">
+				<h1 class=${css.title}>${data.title}</h1>
+				<section class=${css.scene}>
+						<div class=${css.sunCloud}>
+								${cloud1}
+								${sun}
+								${cloud2}
+						</div>
+						${cloud3}
+						${cloud4}
+						${cloud5}
+						${cloud6}
+						${cloud7}
+						${playIsland}
+				</section>
+		</div>
+		`
+		return el
+}
+
+let styles = csjs`
+.header {
+		position: relative;
+		padding-top: 0vw;
+		background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
+		overflow: hidden;
+}
+.scene {
+		position: relative;
+		margin-top: 5vw;
+}
+.playIsland {
+		position: relative;
+		width: 90%;
+		margin-top: 0;
+		margin-left: 5vw;
+		z-index: 2;
+}
+.sunCloud {
+		position: absolute;
+		top: -4%;
+		width: 12%;
+		margin-left: 8vw;
+		z-index: 1;
+}
+.sun {
+		width: 100%;
+}
+[class^="cloud"] {
+		transition: left 0.6s, bottom 0.5s, top 0.5s linear;
+}
+.cloud1 {
+		position: absolute;
+		z-index: 2;
+		width: 7vw;
+		left: -3vw;
+		bottom: 0;
+}
+.cloud2 {
+		position: absolute;
+		z-index: 1;
+		width: 7vw;
+		left: 10vw;
+		top: 25%;
+}
+.cloud3 {
+		position: absolute;
+		z-index: 2;
+		width: 7vw;
+		height: auto;
+		top: -2.5%;
+		right: 14vw;
+}
+.cloud4 {
+		position: absolute;
+		z-index: 1;
+		width: 5vw;
+		height: auto;
+		top: 8%;
+		right: 6vw;
+}
+.cloud5 {
+		position: absolute;
+		z-index: 1;
+		width: 12vw;
+		height: auto;
+		top: 50%;
+		left: 2vw;
+}
+.cloud6 {
+		position: absolute;
+		z-index: 3;
+		width: 12vw;
+		height: auto;
+		bottom: 15%;
+		left: 15vw;
+}
+.cloud7 {
+		position: absolute;
+		z-index: 4;
+		width: 18vw;
+		height: auto;
+		bottom: 25%;
+		right: 5vw;
+}
+.title {
+		position: relative;
+		z-index: 4;
+		font-size: var(--titleSize);
+		font-family: var(--titleFont);
+		color: var(--titleColor);
+		text-align: center;
+		margin: 0;
+		padding: 2% 2%;
+}
+.sun {
+		will-change: transform;
+}
+.cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
+		will-change: transform;
+}
+@media only screen and (min-width: 1680px) {
+		.scrollUp .header {
+				padding-top: 2.5%;
+		}
+}
+@media only screen and (min-width: 2561px) {
+		.scene {
+				max-width: 90%;
+				margin-left: auto;
+				margin-right: auto;
+		}
+		.title {
+				font-size: calc(var(--titleSize) * 1.5);
+				margin-bottom: 6vh;
+		}
+}
+@media only screen and (min-width: 4096px) {
+		.title {
+				font-size: calc(var(--titleSize) * 2.25);
+		}
+}
+@media only screen and (max-width: 1680px) {
+		.header {
+				padding-top: 2vw;
+		}
+}
+@media only screen and (max-width: 1280px) {
+		.header {
+				padding-top: 3vw;
+		}
+		.scrollUp .header {
+				padding-top: 6.5vh;
+		}
+}
+@media only screen and (max-width: 1024px) {
+		.header {
+				padding-top: 0%;
+		}
+}
+@media only screen and (max-width: 812px) {
+		.header {
+				padding-top: 5vh;
+		}
+		.title { 
+				padding: 0 5%;
+				font-size: var(--titleSizeM);
+		}
+}
+@media only screen and (max-width: 414px) {
+		.header {
+				padding-top: 8vh;
+		}
+		.title {
+				font-size: var(--titlesSizeS);
+		}
+		.playIsland {
+				width: 150%;
+				margin-left: -26vw;
+		}
+		.sunCloud {
+				top: -2vh;
+				left: -3vw;
+		}
+		.cloud5 {
+				width: 12vw;
+				left: -4vw;
+				top: 64%;
+		}
+		.cloud6 {
+				width: 15vw;
+				left: 5vw;
+		}
+		.cloud7 {
+				width: 20vw;
+				right: -5vw;
+		}
+}
+`
+
+},{"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],42:[function(require,module,exports){
+async function loadSVG (url, done) { 
+    const parser = document.createElement('div')
+    let response = await fetch(url)
+    if (response.status == 200) {
+      let svg = await response.text()
+      parser.innerHTML = svg
+      return done(null, parser.children[0])
+    }
+    throw new Error(response.status)
+}
+
+module.exports = loadSVG
+},{}],43:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -4344,7 +4593,9 @@ const Graphic = require('Graphic')
 // plugins
 const zenscroll = require('zenscroll')
 
-function Topnav(data) {
+module.exports = topnav
+
+function topnav(data) {
     const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
 
     function click(url) {
@@ -4384,7 +4635,7 @@ function Topnav(data) {
     })
     
     return bel`
-            <div class=${css.topNav}>
+            <div class=${css.topnav}>
                 <a href="#top">${playLogo}</a>
                 <nav class=${css.menu}>
                     ${ data.map( menu =>  
@@ -4403,7 +4654,7 @@ function Topnav(data) {
 }
 
 let css = csjs`
-.topNav {
+.topnav {
     position: relative;
     width: 100%;
     z-index: 20;
@@ -4437,13 +4688,13 @@ let css = csjs`
 .menu a:hover {
     color: #00acff;
 }
-.scrollUp .topNav {
+.scrollUp .topnav {
     position: fixed;
     background-color: white;
     -webkit-transform: none;
     transform: none;
 }
-.scrollDown .topNav {
+.scrollDown .topnav {
     position: fixed;
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
@@ -4468,7 +4719,7 @@ let css = csjs`
     }
 }
 @media only screen and (max-width: 960px) {
-    .topNav {
+    .topnav {
         position: relative;
     }
     .menu {
@@ -4494,51 +4745,4 @@ let css = csjs`
     }
 }
 `
-
-module.exports = Topnav
-},{"Graphic":34,"bel":4,"csjs-inject":7,"zenscroll":28}],41:[function(require,module,exports){
-const bel = require('bel')
-
-function crystalIsland({date, info}, deco, island, css, title) {
-    let el = bel`
-                <div class=${css.scene}>
-                    <div class=${css.deco}>
-                        <div class=${css.content}>
-                            <h3>${date}</h3>
-                            ${ info === 'Coming soon' ? bel`<h3>${info}</h3>` : bel`<p>${info}</p>` }
-                        </div>
-                        ${deco.map(item => item)}
-                    </div>
-                    ${title}
-                    ${island}
-                </div>
-                `
-    return el
-}
-
-module.exports = crystalIsland
-},{"bel":4}],42:[function(require,module,exports){
-module.exports = data
-
-async function data(path) {
-    let response = await fetch(path)
-    if (response.status == 200) {
-        let texts = await response.json()
-        return texts
-    }
-    throw new Error(response.status)
-}
-},{}],43:[function(require,module,exports){
-async function loadSVG (url, done) { 
-    const parser = document.createElement('div')
-    let response = await fetch(url)
-    if (response.status == 200) {
-      let svg = await response.text()
-      parser.innerHTML = svg
-      return done(null, parser.children[0])
-    }
-    throw new Error(response.status)
-}
-
-module.exports = loadSVG
-},{}]},{},[1]);
+},{"Graphic":33,"bel":4,"csjs-inject":7,"zenscroll":28}]},{},[1]);
