@@ -2126,13 +2126,13 @@ const csjs = require('csjs-inject')
 
 // pages
 const topnav = require('topnav')
-const header = require('header')
-const Datdot = require('Datdot')
-const SmartcontractUI = require('SmartcontractUI')
-const SmartcontractCodes = require('SmartcontractCodes')
-const Roadmap = require('Roadmap')
-const OurContributors = require('OurContributors')
-const Footer = require('Footer')
+const Header = require('header')
+const datdot = require('datdot')
+const editor = require('editor')
+const smartcontract_codes = require('smartcontract-codes')
+const supporters = require('supporters')
+const our_contributors = require('our-contributors')
+const Footer = require('footer')
 const fetch_data = require('fetch-data')
 
 module.exports = make_page
@@ -2149,20 +2149,20 @@ function make_page(opts, done, lang) {
       var path = `./src/node_modules/lang/en-us.json`
   }
   fetch_data(path).then(text => {
-    let { menu, header: h, section1, section2, section3, section4, section5, footer } = text.pages
+    let { menu, header, section1, section2, section3, section4, section5, footer } = text.pages
     const {theme} = opts
     const css = styles
     const landingPage = bel`
-    <div id="top" class=${css.wrap}>
-      ${topnav(menu)}
-      ${header(h)}
-      ${Datdot(section1)}
-      ${SmartcontractUI(section2)}
-      ${SmartcontractCodes(section3)}
-      ${Roadmap(section4)}
-      ${OurContributors(section5)}
-      ${Footer(footer)}
-    </div>`
+      <div id="top" class=${css.wrap}>
+        ${topnav(menu)}
+        ${Header(header)}
+        ${datdot(section1)}
+        ${editor(section2)}
+        ${smartcontract_codes(section3)}
+        ${supporters(section4)}
+        ${our_contributors(section5)}
+        ${Footer(footer)}
+      </div>`
   return done(null, landingPage)
 
   }).catch( err => {
@@ -2178,11 +2178,11 @@ const styles = csjs`
     transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }`
 
-},{"Datdot":31,"Footer":32,"OurContributors":34,"Roadmap":35,"SmartcontractCodes":36,"SmartcontractUI":37,"bel":4,"csjs-inject":7,"fetch-data":40,"header":41,"topnav":43}],30:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7,"datdot":33,"editor":34,"fetch-data":35,"footer":36,"header":38,"our-contributors":40,"smartcontract-codes":41,"supporters":42,"topnav":43}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
-function Content(data, theme) {
+function content(data, theme) {
     const css = Object.assign({}, styles, theme)
     let el = bel`
     <div class="${css.content}">
@@ -2241,24 +2241,169 @@ let styles = csjs`
     }
 }
 `
-module.exports = Content
+module.exports = content
 },{"bel":4,"csjs-inject":7}],31:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
-// widgets
-const Graphic = require('Graphic')
-const Rellax = require('rellax')
-const Content = require('Content')
+// Widgets
+const Graphic = require('graphic')
 
-function Datdot(data) {
+module.exports = contributor
+
+function contributor(person, className, theme) {
+    let css = Object.assign({}, styles, theme)
+    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let el = bel`
+      <div class=${className}>
+        <div class=${css.member}>
+          <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
+          <div class=${css.info}>
+            <h3 class=${css.name}>${person.name}</h3>
+            ${person.careers &&
+                person.careers.map( career =>
+                    bel`<span class=${css.career}>${career}</span>`
+                )
+            }
+          </div>
+        </div>
+        ${lifeIsland}
+      </div>
+  `
+    return el
+}
+
+const styles = csjs`
+.member {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    grid-template: 1fr / 40% 60%;
+    width: 70%;
+    top: 20%;
+}
+.avatar {
+    position: relative;
+    z-index: 2;
+}
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: var(--contributorsTextSize);
+    text-align: center;
+    background-color: var(--contributorsBg);
+    padding: 0% 2% 4% 20%;
+    margin-left: -20%;
+}
+.name {
+    color: var(--section5TitleColor);
+    margin-top: 0;
+    margin-bottom: 3%;
+}
+.career {
+    display: block;
+    color: var(--contributorsCareerColor);
+}
+.lifeIsland {
+    width: 100%;
+}
+@media only screen and (max-width: 1550px) {
+    .member {
+        width: 280px;
+        top: 15%;
+        left: -2vw;
+    }
+}
+@media only screen and (max-width: 1200px) {
+    .lifeIsland {
+        width: 115%;
+    }
+}
+@media only screen and (max-width: 1280px) {
+    .member {
+        top: 12%;
+        left: -4vw;
+    }
+}
+
+@media only screen and (max-width: 1130px) {
+    .member {
+        top: 1vw;
+        left: -6vw;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .lifeIsland {
+        width: 100%;
+    }
+    .member {
+        width: 32vw;
+        top: 6vw;
+        left: -2vw;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .member {
+        width: 85%;
+        top: 5vw;
+        left: -4vw;
+    }
+}
+@media only screen and (max-width: 640px) {
+    .member {
+        width: 75%;
+        top: 9vw;
+    }
+}
+@media only screen and (max-width: 414px) {
+    .member {
+        width: 90%;
+        top: 5vw;
+        left: -10vw;
+    }
+}
+`
+
+
+
+},{"bel":4,"csjs-inject":7,"graphic":37}],32:[function(require,module,exports){
+const bel = require('bel')
+
+function crystalIsland({date, info}, deco, island, css, title) {
+    let el = bel`
+                <div class=${css.scene}>
+                    <div class=${css.deco}>
+                        <div class=${css.content}>
+                            <h3>${date}</h3>
+                            ${ info === 'Coming soon' ? bel`<h3>${info}</h3>` : bel`<p>${info}</p>` }
+                        </div>
+                        ${deco.map(item => item)}
+                    </div>
+                    ${title}
+                    ${island}
+                </div>
+                `
+    return el
+}
+
+module.exports = crystalIsland
+},{"bel":4}],33:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const graphic = require('graphic')
+const Rellax = require('rellax')
+const content = require('content')
+
+function datdot(data) {
     const css = styles
-    let blockchainIsland = Graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg')
-    let blossomIsland = Graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg')
-    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let blockchainIsland = graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg')
+    let blossomIsland = graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg')
+    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
 
     // Parallax effects
     let cloud1Rellax = new Rellax( cloud1, { speed: 4})
@@ -2269,7 +2414,7 @@ function Datdot(data) {
     
     let el = bel`
     <section id="datdot" class="${css.section}">
-        ${Content(data, css)}
+        ${content(data, css)}
         ${blockchainIsland}
         ${blossomIsland} 
         ${cloud1}
@@ -2469,16 +2614,234 @@ const styles = csjs`
 }
 `
 
-module.exports = Datdot
-},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],32:[function(require,module,exports){
+module.exports = datdot
+},{"bel":4,"content":30,"csjs-inject":7,"graphic":37,"rellax":27}],34:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// Widgets
+const graphic = require('graphic')
+const Rellax = require('rellax')
+const Content = require('content')
+
+function editor (data) {
+    const css = styles
+    let island = graphic(css.island, './src/node_modules/assets/svg/floating-island.svg')
+    let energyIsland = graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg')
+    let tree = graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
+    let stone = graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
+    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+
+    // Parallax effects
+    let cloud1Rellax = new Rellax( cloud1, { speed: 2})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 3})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 4})
+    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
+    let cloud5Rellax = new Rellax( cloud5, { speed: 3})
+
+    let el = bel`
+    <section id="smartcontractUI" class="${css.section}">
+        ${Content(data, css)}
+        
+        <div class=${css.scene}>
+            <div class=${css.objects}>
+                <img class=${css.logo} src=${data.logo} alt="${data.title} logo">
+                <img class=${css.screenshot} src=${data.image} alt=${data.title}>
+                <div class=${css.deco}>
+                    ${stone}
+                    ${tree}
+                </div>
+            </div>
+            ${island}
+        </div>
+        ${energyIsland}
+        ${cloud1}
+        ${cloud2}
+        ${cloud3}
+        ${cloud4}
+        ${cloud5}
+    </section>
+    `
+    return el
+}
+
+const styles = csjs`
+.section {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 40% 60%;
+    background-image: linear-gradient(0deg, var(--section2BgGEnd), var(--section2BgGStart));
+    padding: 5vw 2vw;
+}
+.content {
+    position: relative;
+    z-index: 9;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    text-align: center;
+    padding: 0 5%;
+    margin-bottom: 86px;
+}
+.subTitleColor {
+    color: var(--section2TitleColor);
+}
+.buttonBg {
+    background-image: linear-gradient(0deg, #4dc7be, #35bdb9);
+}
+.scene {
+    position: relative;
+    grid-row-start: span 2;
+    grid-column-start: 2;
+}
+.objects {
+    position: relative;
+}
+.screenshot {
+    width: 80%;
+    margin-bottom: -5.5%;
+    margin-left: 10%;
+}
+.logo {
+    position: absolute;
+    left: 0%;
+    bottom: -20%;
+    width: 20%;
+}
+.deco {
+    position: absolute;
+    right: 0;
+    bottom: -18.5%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+.tree {
+    width: 13%;
+}
+.stone {
+    position: relative;
+    width: 10%;
+    right: -3%;
+}
+.island {
+}
+.energyIsland {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    width: 80%;
+    justify-self: center;
+}
+.cloud1 {
+    position: absolute;
+    width: 10vw;
+    left: 2vw;
+    bottom: 0;
+    z-index: 3;
+}
+.cloud2 {
+    position: absolute;
+    width: 15vw;
+    left: 38vw;
+    bottom: -35vw;
+    z-index: 2;
+}
+.cloud3 {
+    position: absolute;
+    width: 8vw;
+    right: 30vw;
+    bottom: -34vw;
+    z-index: 3;
+}
+.cloud4 {
+    position: absolute;
+    width: 14vw;
+    right: 6vw;
+    bottom: -40vw;
+    z-index: 3;
+}
+.cloud5 {
+    position: absolute;
+    width: 8vw;
+    right: 2vw;
+    bottom: -10vw;
+    z-index: 2;
+}
+@media only screen and (max-width: 1024px) {
+    .content {
+        grid-row-start: 1;
+        grid-column-end: 3;
+    }
+    .scene {
+        grid-row-start: 2;
+    }
+    .energyIsland {
+        align-self: end;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .scene {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+    .energyIsland {
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        width: 60%;
+        justify-self: start;
+    }
+    .cloud1 {
+        width: 16vw;
+    }
+    .cloud2 {
+        width: 20vw;
+        left: 50vw;
+        bottom: 10vw;
+    }
+    .cloud3 {
+        width: 15vw;
+        bottom: 50vw;
+    }
+    .cloud4 {
+        width: 25vw;
+        bottom: -85vw;
+    }
+    .cloud5 {
+        width: 15vw;
+        bottom: 30vw;
+    }
+}
+`
+
+module.exports = editor
+},{"bel":4,"content":30,"csjs-inject":7,"graphic":37,"rellax":27}],35:[function(require,module,exports){
+module.exports = fetch_data
+
+async function fetch_data(path) {
+    let response = await fetch(path)
+    if (response.status == 200) {
+        let texts = await response.json()
+        return texts
+    }
+    throw new Error(response.status)
+}
+},{}],36:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
-const Graphic = require('Graphic')
+const graphic = require('graphic')
 
-function Footer(footer) {
+function footer(footer) {
     const css = styles
-    let island = Graphic(css.island, './src/node_modules/assets/svg/deco-island.svg')
+    let island = graphic(css.island, './src/node_modules/assets/svg/deco-island.svg')
 
     let el = bel`
     <footer class=${css.footer}>
@@ -2490,7 +2853,7 @@ function Footer(footer) {
                     <a href=${icon.url} 
                     title=${icon.name} 
                     target="${icon.url.includes('http') ? "_blank" : null}"
-                    >${Graphic(css.icon, icon.imgURL)}</a>`
+                    >${graphic(css.icon, icon.imgURL)}</a>`
                 )}
             </nav>
         </div>
@@ -2565,11 +2928,11 @@ let styles = csjs`
 }
 `
 
-module.exports = Footer
-},{"Graphic":33,"bel":4,"csjs-inject":7}],33:[function(require,module,exports){
+module.exports = footer
+},{"bel":4,"csjs-inject":7,"graphic":37}],37:[function(require,module,exports){
 const loadSVG = require('loadSVG')
 
-function Graphic(className, url) {
+function graphic(className, url) {
     let el = document.createElement('div')
     el.classList.add(className)
     loadSVG(url, (err, svg) => {
@@ -2580,26 +2943,272 @@ function Graphic(className, url) {
     return el
 }   
 
-module.exports = Graphic
-},{"loadSVG":42}],34:[function(require,module,exports){
+module.exports = graphic
+},{"loadSVG":39}],38:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const Graphic = require('graphic')
+const Rellax = require('rellax')
+
+module.exports = header
+
+function header(data) {
+		const css = styles
+		let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
+		let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
+		let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+		let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+		let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+		let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+		let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+		let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+		let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
+
+		// Parallax effects
+		// let playRellax = new Rellax(playIsland, { speed: 2 })
+		let sunRellax = new Rellax(sun, { speed: 2 })
+		let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
+		let cloud2Rellax = new Rellax(cloud2, { speed: 2 })
+		let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
+		let cloud4Rellax = new Rellax(cloud4, { speed: 2 })
+		let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
+		let cloud6Rellax = new Rellax(cloud6, { speed: 3 })
+		let cloud7Rellax = new Rellax(cloud7, { speed: 3 })
+		
+		let el = bel`
+		<div class=${css.header}">
+				<h1 class=${css.title}>${data.title}</h1>
+				<section class=${css.scene}>
+						<div class=${css.sunCloud}>
+								${cloud1}
+								${sun}
+								${cloud2}
+						</div>
+						${cloud3}
+						${cloud4}
+						${cloud5}
+						${cloud6}
+						${cloud7}
+						${playIsland}
+				</section>
+		</div>
+		`
+		return el
+}
+
+let styles = csjs`
+.header {
+		position: relative;
+		padding-top: 0vw;
+		background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
+		overflow: hidden;
+}
+.scene {
+		position: relative;
+		margin-top: 5vw;
+}
+.playIsland {
+		position: relative;
+		width: 90%;
+		margin-top: 0;
+		margin-left: 5vw;
+		z-index: 2;
+}
+.sunCloud {
+		position: absolute;
+		top: -4%;
+		width: 12%;
+		margin-left: 8vw;
+		z-index: 1;
+}
+.sun {
+		width: 100%;
+}
+[class^="cloud"] {
+		transition: left 0.6s, bottom 0.5s, top 0.5s linear;
+}
+.cloud1 {
+		position: absolute;
+		z-index: 2;
+		width: 7vw;
+		left: -3vw;
+		bottom: 0;
+}
+.cloud2 {
+		position: absolute;
+		z-index: 1;
+		width: 7vw;
+		left: 10vw;
+		top: 25%;
+}
+.cloud3 {
+		position: absolute;
+		z-index: 2;
+		width: 7vw;
+		height: auto;
+		top: -2.5%;
+		right: 14vw;
+}
+.cloud4 {
+		position: absolute;
+		z-index: 1;
+		width: 5vw;
+		height: auto;
+		top: 8%;
+		right: 6vw;
+}
+.cloud5 {
+		position: absolute;
+		z-index: 1;
+		width: 12vw;
+		height: auto;
+		top: 50%;
+		left: 2vw;
+}
+.cloud6 {
+		position: absolute;
+		z-index: 3;
+		width: 12vw;
+		height: auto;
+		bottom: 15%;
+		left: 15vw;
+}
+.cloud7 {
+		position: absolute;
+		z-index: 4;
+		width: 18vw;
+		height: auto;
+		bottom: 25%;
+		right: 5vw;
+}
+.title {
+		position: relative;
+		z-index: 4;
+		font-size: var(--titleSize);
+		font-family: var(--titleFont);
+		color: var(--titleColor);
+		text-align: center;
+		margin: 0;
+		padding: 2% 2%;
+}
+.sun {
+		will-change: transform;
+}
+.cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
+		will-change: transform;
+}
+@media only screen and (min-width: 1680px) {
+		.scrollUp .header {
+				padding-top: 2.5%;
+		}
+}
+@media only screen and (min-width: 2561px) {
+		.scene {
+				max-width: 90%;
+				margin-left: auto;
+				margin-right: auto;
+		}
+		.title {
+				font-size: calc(var(--titleSize) * 1.5);
+				margin-bottom: 6vh;
+		}
+}
+@media only screen and (min-width: 4096px) {
+		.title {
+				font-size: calc(var(--titleSize) * 2.25);
+		}
+}
+@media only screen and (max-width: 1680px) {
+		.header {
+				padding-top: 2vw;
+		}
+}
+@media only screen and (max-width: 1280px) {
+		.header {
+				padding-top: 3vw;
+		}
+		.scrollUp .header {
+				padding-top: 6.5vh;
+		}
+}
+@media only screen and (max-width: 1024px) {
+		.header {
+				padding-top: 0%;
+		}
+}
+@media only screen and (max-width: 812px) {
+		.header {
+				padding-top: 5vh;
+		}
+		.title { 
+				padding: 0 5%;
+				font-size: var(--titleSizeM);
+		}
+}
+@media only screen and (max-width: 414px) {
+		.header {
+				padding-top: 8vh;
+		}
+		.title {
+				font-size: var(--titlesSizeS);
+		}
+		.playIsland {
+				width: 150%;
+				margin-left: -26vw;
+		}
+		.sunCloud {
+				top: -2vh;
+				left: -3vw;
+		}
+		.cloud5 {
+				width: 12vw;
+				left: -4vw;
+				top: 64%;
+		}
+		.cloud6 {
+				width: 15vw;
+				left: 5vw;
+		}
+		.cloud7 {
+				width: 20vw;
+				right: -5vw;
+		}
+}
+`
+
+},{"bel":4,"csjs-inject":7,"graphic":37,"rellax":27}],39:[function(require,module,exports){
+async function loadSVG (url, done) { 
+    const parser = document.createElement('div')
+    let response = await fetch(url)
+    if (response.status == 200) {
+      let svg = await response.text()
+      parser.innerHTML = svg
+      return done(null, parser.children[0])
+    }
+    throw new Error(response.status)
+}
+
+module.exports = loadSVG
+},{}],40:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
-const Graphic = require('Graphic')
+const graphic = require('graphic')
 const Rellax = require('rellax')
-const Content = require('Content')
+const Content = require('content')
 const Contributor = require('contributor')
 
-function OurContributors(data) {
+function our_contributors (data) {
     const css = styles
-    let island = Graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg')
-    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-    let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-    let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
+    let island = graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg')
+    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let cloud6 = graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+    let cloud7 = graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
 
     let cloud1Rellax = new Rellax( cloud1, { speed: 0.3})
     let cloud2Rellax = new Rellax( cloud2, { speed: 0.4})
@@ -2617,7 +3226,7 @@ function OurContributors(data) {
             </div>
 
             <div class=${css.groups}>
-                ${data.contributors.map( person => Contributor( person, css.group, css))}
+                ${data.contributors.map(person => Contributor( person, css.group, css))}
             </div>
 
             ${cloud4}
@@ -3266,545 +3875,27 @@ and (max-width: 736px) and (orientation: landscape) {
 }
 `
 
-module.exports = OurContributors
+module.exports = our_contributors
 
-},{"Content":30,"Graphic":33,"bel":4,"contributor":38,"csjs-inject":7,"rellax":27}],35:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const Graphic = require('Graphic')
-const Rellax = require('rellax')
-const crystalIsland = require('crystalIsland')
-
-function Roadmap(data) {
-    const css = styles
-    let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
-    // crystals
-    let yellowCrystal = Graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg')
-    let purpleCrystal = Graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg')
-    let blueCrystal = Graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg')
-    // stone
-    let stone = Graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg')
-    // trees
-    let tree = Graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg')
-    let tree1 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg')
-    let tree2 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg')
-    let tree3 = Graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg')
-    // islands
-    let island = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island1 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island2 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island3 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island4 = Graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    // clouds
-    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-    let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-    
-    // Parallax effects
-    let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 1})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
-    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-    let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
-    let cloud6Rellax = new Rellax( cloud6, { speed: 3})
-
-    let el = bel`
-        <section id="roadmap" class="${css.section}">
-
-            ${crystalIsland(data.roadmaps[0], [yellowCrystal, tree], island, css, pageTitle)}
-            ${crystalIsland(data.roadmaps[1], [stone, tree1], island1, css)}
-            ${crystalIsland(data.roadmaps[2], [purpleCrystal], island2, css)}
-            ${crystalIsland(data.roadmaps[3], [blueCrystal, tree2], island3, css)}
-            
-            <div class=${css.scene}>
-                ${tree3}
-                ${island4}
-            </div>
-
-            ${cloud1}
-            ${cloud2}
-            ${cloud3}
-            ${cloud4}
-            ${cloud5}
-            ${cloud6}
-            
-        </section>
-    `
-    return el
-}
-
-let styles = csjs`
-.section {
-    position: relative;
-    background-image: linear-gradient(0deg, var(--section4BgGEnd), var(--section4BgGStart));
-    display: grid;
-    grid-template-rows: repeat(2, auto);
-    grid-template-columns: 15% 35% 35% 15%;
-    padding-top: 10vw;
-}
-.scene {
-}
-.scene:nth-child(1) {
-    position: relative;
-    z-index: 3;
-    width: 50vw;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 1;
-    grid-column-end: 4;
-    margin-left: 30vw;
-}
-.scene:nth-child(2) {
-    position: relative;
-    z-index: 4;
-    width: 24vw;
-    grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
-    margin-top: -15vw;
-    margin-left: 5vw;
-}
-.scene:nth-child(3) {
-    position: relative;
-    z-index: 4;
-    width: 24vw;
-    grid-row-start: 2;
-    grid-column-start: 2;
-    margin-top: 3vw;
-    margin-left: 8vw;
-}
-.scene:nth-child(4) {
-    position: relative;
-    z-index: 4;
-    width: 30vw;
-    grid-row-start: 2;
-    grid-column-start: 3;
-    margin-top: 5vw;
-    margin-left: 7vw;
-}
-.scene:nth-child(5) {
-    position: relative;
-    z-index: 2;
-    grid-row-start: 1;
-    grid-column-start: 4;
-    width: 10vw;
-    align-self: end;
-    margin-bottom: 12vw;
-}
-.scene:nth-child(5) .tree {
-    width: 80%;
-    margin: 0 auto -1.5vw auto;
-}
-.deco {
-    position: relative;
-}
-.tree {
-    position: relative;
-    width: 50%;
-    margin: 0 0 -11% -9%;
-    z-index: 2;
-}
-.yellowCrystal {
-    position: absolute;
-    width: 25%;
-    left: 20%;
-    bottom: 1%;
-    z-index: 3;
-}
-.title {
-    position: absolute;
-    bottom: 35%;
-    right: 18%;
-    z-index: 5;
-    font-family: var(--titleFont);
-    font-size: var(--roadmapHeadlline);
-    color: var(--section4TitleColor);
-}
-.island {
-    
-}
-.content {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center
-}
-.scene:nth-child(1) .content {
-    width: 35%;
-    left: 21vw;
-    bottom: 2%;
-    background: url('./src/node_modules/assets/svg/card1.svg') no-repeat;
-    background-size: cover;
-    padding: 8% 5% 8% 8%;
-}
-.content h3 {
-    font-family: var(--titleFont);
-    font-size: var(--roadmapTitleSize);
-    text-align: center;
-    color: var(--roadmapTitleColor);
-    margin-top: 0;
-}
-.content p {
-    font-size: var(--roadmapTextSize);
-    text-align: center;
-    margin: 0;
-}
-.scene:nth-child(2) .content {
-    width: 45%;
-    left: 35%;
-    bottom: -2vw;
-    background: url('./src/node_modules/assets/svg/card2.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.scene:nth-child(2) .tree {
-    position: absolute;
-    width: 45%;
-    left: 2vw;
-    bottom: -0.5vw;
-}
-.scene:nth-child(2) .stone {
-    position: absolute;
-    width: 24%;
-    right: 5%;
-    bottom: -2.5vw;
-    z-index: 2;
-}
-.scene:nth-child(3) .content {
-    width: 60%;
-    left: 5vw;
-    bottom: -2.2vw;
-    background: url('./src/node_modules/assets/svg/card3.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.purpleCrystal {
-    position: absolute;
-    width: 40%;
-    left: -6%;
-    bottom: -2.5vw;
-    z-index: 3;
-}
-.scene:nth-child(4) .content {
-    width: 50%;
-    left: 6vw;
-    bottom: -2.5vw;
-    background: url('./src/node_modules/assets/svg/card4.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.scene:nth-child(4) h3 {
-    margin-bottom: 10px;
-}
-.scene:nth-child(4) h3:last-child {
-    margin-bottom: 0;
-}
-.scene:nth-child(4) .tree {
-    position: absolute;
-    width: 24%;
-    right: 1.5vw;
-    bottom: 0vw;
-}
-.blueCrystal {
-    position: absolute;
-    width: 22%;
-    left: 1vw;
-    bottom: -3vw;
-    z-index: 3;
-}
-.cloud1 {
-    position: absolute;
-    width: 8vw;
-    top: 25vw;
-    left: 8vw;
-    z-index: 5;
-}
-.cloud2 {
-    position: absolute;
-    width: 15vw;
-    top: 10vw;
-    left: 50vw;
-    z-index: 6;
-}
-.cloud3 {
-    position: absolute;
-    width: 15vw;
-    top: 30vw;
-    right: 10vw;
-    z-index: 5;
-}
-.cloud4 {
-    position: absolute;
-    width: 8vw;
-    bottom: 28vw;
-    right: 5vw;
-    z-index: 4;
-}
-.cloud5 {
-    position: absolute;
-    width: 12vw;
-    bottom: -3vw;
-    right: 6vw;
-    z-index: 5;
-}
-.cloud6 {
-    position: absolute;
-    width: 8vw;
-    bottom: -10vw;
-    right: 2vw;
-    z-index: 6;
-}
-@media only screen and (min-width: 3840px) {
-    .info h3 {
-        margin-bottom: 6px;
-        font-size: calc( var(--roadmapTitleSizeM) * 2);
-    }
-    .info p {
-        font-size: calc( var(--roadmapTextSizeM) * 2);
-    }
-}
-@media only screen and (max-width: 1366px) {
-    .title {
-        bottom: 17vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .section {
-        grid-template-columns: repeat(2, 50vw);
-    }
-    .scene:nth-child(1) {
-        grid-row-start: 1;
-        width: 70vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(1) .content {
-        width: 35%;
-        left: 28vw;
-    }
-    .scene:nth-child(2) {
-        grid-row-start: 2;
-        grid-column-start: 1;
-        width: 40vw;
-        margin-top: 15vw;
-        margin-left: 5vw;
-    }
-    .scene:nth-child(2) .content {
-        bottom: -3vw;
-        left: 28%;
-    }
-    .scene:nth-child(2) .stone {
-        bottom: -4vw;
-        right: 9%;
-    }
-    .scene:nth-child(3) {
-        grid-row-start: 2;
-        grid-column-start: 2;
-        width: 40vw;
-        margin-top: 20vw;
-        margin-left: 5vw;
-    }
-    .scene:nth-child(3) .content {
-        left: 8vw;
-        bottom: -3vw;
-    }
-    .purpleCrystal {
-        bottom: -3.5vw;
-    }
-    .scene:nth-child(4) {
-        grid-row-start: 3;
-        grid-column-start: 2;
-        width: 50vw;
-        margin: 10vw 0 0 -25vw;
-    }
-    .scene:nth-child(4) .content {
-        bottom: -4.5vw;
-        width: 50%;
-        left: 8vw;
-    }
-    .blueCrystal {
-        bottom: -5vw;
-    }
-    .scene:nth-child(5) {
-        grid-row-start: 1;
-        grid-column-start: 3;
-        width: 15vw;
-        align-self: start;
-        margin-top: 15vw;
-        margin-left: -20vw;     
-    }
-    .scene:nth-child(5) .tree {
-        width: 65%;
-        margin: 0 auto -2vw auto;
-    }
-    .title {
-        font-size: var(--roadmapHeadllineM);
-        bottom: 25vw;
-        right: 11vw;
-    }
-    .cloud1 {
-        width: 15vw;
-        top: 30vw;
-    }
-    .cloud2 {
-        width: 25vw;
-    }
-    .cloud3 {
-        width: 18vw;
-        top: 40vw;
-        right: 5vw;
-    }
-    .cloud4 {
-        width: 15vw;
-        bottom: -10vw;
-    }
-    .cloud5 {
-        width: 15vw;
-        right: 15vw;
-        bottom: -30vw;
-    } 
-    .cloud6 {
-        width: 10vw;
-    } 
-}
-@media only screen and (max-width: 960px) { 
-    .scene:nth-child(2) .tree {
-        width: 30%;
-    }
-    .scene:nth-child(2) .content {
-        width: 60%;
-        left: 18%;
-    }
-    .scene:nth-child(5) .tree {
-        bottom: -0.5vw;
-    }
-}
-@media only screen and (max-width: 812px) {
-    .info h3 {
-        margin-bottom: 6px;
-        font-size: var(--roadmapTitleSizeM);
-    }
-    .info p {
-        font-size: var(--roadmapTextSizeM);
-    }
-}
-@media only screen and (max-width: 640px) {
-    .scene:nth-child(2) {
-        width: 50vw;
-        margin-top: 20vw;
-    }
-    .scene:nth-child(3) {
-        width: 50vw;
-        grid-row-start: 3;
-        grid-column-start: 2;
-        margin-left: 0;
-        margin-top: 5vw;
-    }
-    .scene:nth-child(4) {
-        width: 66vw;
-        grid-row-start: 4;
-        grid-column-start: 1;
-        grid-column-end: 2;
-        margin-left: 10vw;
-        margin-top: 20vw;
-    }
-    .scene:nth-child(5) {
-        margin-left: -18vw;
-    }
-    .title {
-        font-size: var(--roadmapHeadllineS);
-        bottom: 25vw;
-        right: 12vw;
-    }
-}
-@media only screen and (max-width: 480px) {
-    .scene:nth-child(1) {
-        width: 90vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(1) .content {
-        width: 40%;
-        left: 36%;
-    }
-    .scene:nth-child(2) {
-        width: 70vw;
-        margin-top: 20vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(2) .content {
-        width: 60%;
-        padding: 10% 5% 10% 12%;
-        bottom: -6vw;
-    }
-    .scene:nth-child(2) .stone {
-        bottom: -8vw;
-        right: 0;
-    }
-    .scene:nth-child(2) .tree {
-        left: 5vw;
-    }
-    .scene:nth-child(3) {
-        width: 70vw;
-        margin-left: 20vw;
-        margin-top: 25vw;
-        grid-column-start: 1;
-    }
-    .scene:nth-child(3) .content {
-        left: 12vw;
-        bottom: -6vw;
-    }
-    .purpleCrystal {
-        bottom: -7vw;
-    }
-    .scene:nth-child(4) {
-        width: 66vw;
-        margin-left: 10vw;
-        margin-top: 30vw;
-    }
-    .scene:nth-child(4) .content {
-        width: 56%;
-    }
-    .blueCrystal {
-        bottom: -6vw;
-    }
-    .scene:nth-child(5) {
-        grid-row-start: 4;
-        margin-top: -5vw;
-        margin-left: -22vw;
-    }
-    .scene:nth-child(5) .tree {
-        bottom: -1vw;
-    }
-    .title {
-        bottom: 32vw;
-        right: 15vw;
-    }
-}
-`
-
-module.exports = Roadmap
-},{"Graphic":33,"bel":4,"crystalIsland":39,"csjs-inject":7,"rellax":27}],36:[function(require,module,exports){
+},{"bel":4,"content":30,"contributor":31,"csjs-inject":7,"graphic":37,"rellax":27}],41:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
-const Graphic = require('Graphic')
-const Content = require('Content')
+const graphic = require('graphic')
+const Content = require('content')
 
-module.exports = SmartcontractCodes
+module.exports = smartcontract_codes
 
-function SmartcontractCodes (data) {
+function smartcontract_codes (data) {
     const css = styles
-    let island = Graphic(css.island, './src/node_modules/assets/svg/floating-island1.svg')
-    let islandMiddle = Graphic(css.islandMiddle, './src/node_modules/assets/svg/floating-island2.svg')
-    let islandRight = Graphic(css.islandRight, './src/node_modules/assets/svg/floating-island2.svg')
-    let blossom = Graphic(css.blossom, './src/node_modules/assets/svg/blossom-tree.svg')
-    let tree = Graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
-    let trees = Graphic(css.trees, './src/node_modules/assets/svg/two-trees.svg')
-    let stone = Graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
-    let smallStone = Graphic(css.smallStone, './src/node_modules/assets/svg/small-stone.svg')
+    let island = graphic(css.island, './src/node_modules/assets/svg/floating-island1.svg')
+    let islandMiddle = graphic(css.islandMiddle, './src/node_modules/assets/svg/floating-island2.svg')
+    let islandRight = graphic(css.islandRight, './src/node_modules/assets/svg/floating-island2.svg')
+    let blossom = graphic(css.blossom, './src/node_modules/assets/svg/blossom-tree.svg')
+    let tree = graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
+    let trees = graphic(css.trees, './src/node_modules/assets/svg/two-trees.svg')
+    let stone = graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
+    let smallStone = graphic(css.smallStone, './src/node_modules/assets/svg/small-stone.svg')
 
     let el = bel`
     <section id="smartcontractCodes" class="${css.section}">
@@ -3976,620 +4067,529 @@ const styles = csjs`
     }
 }
 `
-},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7}],37:[function(require,module,exports){
+},{"bel":4,"content":30,"csjs-inject":7,"graphic":37}],42:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
-// Widgets
-const Graphic = require('Graphic')
+// widgets
+const graphic = require('graphic')
 const Rellax = require('rellax')
-const Content = require('Content')
+const crystalIsland = require('crystalIsland')
 
-function SmartcontractUI (data) {
+function supporters (data) {
     const css = styles
-    let island = Graphic(css.island, './src/node_modules/assets/svg/floating-island.svg')
-    let energyIsland = Graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg')
-    let tree = Graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
-    let stone = Graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
-    let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-
+    let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
+    // crystals
+    let yellowCrystal = graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg')
+    let purpleCrystal = graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg')
+    let blueCrystal = graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg')
+    // stone
+    let stone = graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg')
+    // trees
+    let tree = graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg')
+    let tree1 = graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg')
+    let tree2 = graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg')
+    let tree3 = graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg')
+    // islands
+    let island = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island1 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island2 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island3 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    let island4 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
+    // clouds
+    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
+    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
+    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
+    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
+    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    let cloud6 = graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+    
     // Parallax effects
-    let cloud1Rellax = new Rellax( cloud1, { speed: 2})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 3})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 4})
+    let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 1})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
     let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-    let cloud5Rellax = new Rellax( cloud5, { speed: 3})
+    let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
+    let cloud6Rellax = new Rellax( cloud6, { speed: 3})
 
     let el = bel`
-    <section id="smartcontractUI" class="${css.section}">
-        ${Content(data, css)}
-        
-        <div class=${css.scene}>
-            <div class=${css.objects}>
-                <img class=${css.logo} src=${data.logo} alt="${data.title} logo">
-                <img class=${css.screenshot} src=${data.image} alt=${data.title}>
-                <div class=${css.deco}>
-                    ${stone}
-                    ${tree}
-                </div>
+        <section id=supporters" class="${css.section}">
+
+            ${crystalIsland(data.supporters[0], [yellowCrystal, tree], island, css, pageTitle)}
+            ${crystalIsland(data.supporters[1], [stone, tree1], island1, css)}
+            ${crystalIsland(data.supporters[2], [purpleCrystal], island2, css)}
+            ${crystalIsland(data.supporters[3], [blueCrystal, tree2], island3, css)}
+            
+            <div class=${css.scene}>
+                ${tree3}
+                ${island4}
             </div>
-            ${island}
-        </div>
-        ${energyIsland}
-        ${cloud1}
-        ${cloud2}
-        ${cloud3}
-        ${cloud4}
-        ${cloud5}
-    </section>
+
+            ${cloud1}
+            ${cloud2}
+            ${cloud3}
+            ${cloud4}
+            ${cloud5}
+            ${cloud6}
+            
+        </section>
     `
     return el
 }
 
-const styles = csjs`
+let styles = csjs`
 .section {
     position: relative;
+    background-image: linear-gradient(0deg, var(--section4BgGEnd), var(--section4BgGStart));
     display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 40% 60%;
-    background-image: linear-gradient(0deg, var(--section2BgGEnd), var(--section2BgGStart));
-    padding: 5vw 2vw;
-}
-.content {
-    position: relative;
-    z-index: 9;
-    grid-row-start: 1;
-    grid-column-start: 1;
-    grid-column-end: 2;
-    text-align: center;
-    padding: 0 5%;
-    margin-bottom: 86px;
-}
-.subTitleColor {
-    color: var(--section2TitleColor);
-}
-.buttonBg {
-    background-image: linear-gradient(0deg, #4dc7be, #35bdb9);
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: 15% 35% 35% 15%;
+    padding-top: 10vw;
 }
 .scene {
+}
+.scene:nth-child(1) {
     position: relative;
-    grid-row-start: span 2;
-    grid-column-start: 2;
+    z-index: 3;
+    width: 50vw;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    margin-left: 30vw;
 }
-.objects {
+.scene:nth-child(2) {
     position: relative;
-}
-.screenshot {
-    width: 80%;
-    margin-bottom: -5.5%;
-    margin-left: 10%;
-}
-.logo {
-    position: absolute;
-    left: 0%;
-    bottom: -20%;
-    width: 20%;
-}
-.deco {
-    position: absolute;
-    right: 0;
-    bottom: -18.5%;
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-}
-.tree {
-    width: 13%;
-}
-.stone {
-    position: relative;
-    width: 10%;
-    right: -3%;
-}
-.island {
-}
-.energyIsland {
+    z-index: 4;
+    width: 24vw;
     grid-row-start: 2;
     grid-column-start: 1;
-    grid-column-end: 2;
+    grid-column-end: 3;
+    margin-top: -15vw;
+    margin-left: 5vw;
+}
+.scene:nth-child(3) {
+    position: relative;
+    z-index: 4;
+    width: 24vw;
+    grid-row-start: 2;
+    grid-column-start: 2;
+    margin-top: 3vw;
+    margin-left: 8vw;
+}
+.scene:nth-child(4) {
+    position: relative;
+    z-index: 4;
+    width: 30vw;
+    grid-row-start: 2;
+    grid-column-start: 3;
+    margin-top: 5vw;
+    margin-left: 7vw;
+}
+.scene:nth-child(5) {
+    position: relative;
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 4;
+    width: 10vw;
+    align-self: end;
+    margin-bottom: 12vw;
+}
+.scene:nth-child(5) .tree {
     width: 80%;
-    justify-self: center;
+    margin: 0 auto -1.5vw auto;
+}
+.deco {
+    position: relative;
+}
+.tree {
+    position: relative;
+    width: 50%;
+    margin: 0 0 -11% -9%;
+    z-index: 2;
+}
+.yellowCrystal {
+    position: absolute;
+    width: 25%;
+    left: 20%;
+    bottom: 1%;
+    z-index: 3;
+}
+.title {
+    position: absolute;
+    bottom: 35%;
+    right: 18%;
+    z-index: 5;
+    font-family: var(--titleFont);
+    font-size: var(--supportersHeadlline);
+    color: var(--section4TitleColor);
+}
+.island {
+    
+}
+.content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
+.scene:nth-child(1) .content {
+    width: 35%;
+    left: 21vw;
+    bottom: 2%;
+    background: url('./src/node_modules/assets/svg/card1.svg') no-repeat;
+    background-size: cover;
+    padding: 8% 5% 8% 8%;
+}
+.content h3 {
+    font-family: var(--titleFont);
+    font-size: var(--supportersTitleSize);
+    text-align: center;
+    color: var(--supportersTitleColor);
+    margin-top: 0;
+}
+.content p {
+    font-size: var(--supportersTextSize);
+    text-align: center;
+    margin: 0;
+}
+.scene:nth-child(2) .content {
+    width: 45%;
+    left: 35%;
+    bottom: -2vw;
+    background: url('./src/node_modules/assets/svg/card2.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.scene:nth-child(2) .tree {
+    position: absolute;
+    width: 45%;
+    left: 2vw;
+    bottom: -0.5vw;
+}
+.scene:nth-child(2) .stone {
+    position: absolute;
+    width: 24%;
+    right: 5%;
+    bottom: -2.5vw;
+    z-index: 2;
+}
+.scene:nth-child(3) .content {
+    width: 60%;
+    left: 5vw;
+    bottom: -2.2vw;
+    background: url('./src/node_modules/assets/svg/card3.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.purpleCrystal {
+    position: absolute;
+    width: 40%;
+    left: -6%;
+    bottom: -2.5vw;
+    z-index: 3;
+}
+.scene:nth-child(4) .content {
+    width: 50%;
+    left: 6vw;
+    bottom: -2.5vw;
+    background: url('./src/node_modules/assets/svg/card4.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.scene:nth-child(4) h3 {
+    margin-bottom: 10px;
+}
+.scene:nth-child(4) h3:last-child {
+    margin-bottom: 0;
+}
+.scene:nth-child(4) .tree {
+    position: absolute;
+    width: 24%;
+    right: -0.5vw;
+    bottom: 0vw;
+}
+.blueCrystal {
+    position: absolute;
+    width: 22%;
+    left: 1vw;
+    bottom: -3vw;
+    z-index: 3;
 }
 .cloud1 {
     position: absolute;
-    width: 10vw;
-    left: 2vw;
-    bottom: 0;
-    z-index: 3;
+    width: 8vw;
+    top: 25vw;
+    left: 8vw;
+    z-index: 5;
 }
 .cloud2 {
     position: absolute;
     width: 15vw;
-    left: 38vw;
-    bottom: -35vw;
-    z-index: 2;
+    top: 10vw;
+    left: 50vw;
+    z-index: 6;
 }
 .cloud3 {
     position: absolute;
-    width: 8vw;
-    right: 30vw;
-    bottom: -34vw;
-    z-index: 3;
+    width: 15vw;
+    top: 30vw;
+    right: 10vw;
+    z-index: 5;
 }
 .cloud4 {
     position: absolute;
-    width: 14vw;
-    right: 6vw;
-    bottom: -40vw;
-    z-index: 3;
+    width: 8vw;
+    bottom: 28vw;
+    right: 5vw;
+    z-index: 4;
 }
 .cloud5 {
     position: absolute;
+    width: 12vw;
+    bottom: -3vw;
+    right: 6vw;
+    z-index: 5;
+}
+.cloud6 {
+    position: absolute;
     width: 8vw;
-    right: 2vw;
     bottom: -10vw;
-    z-index: 2;
+    right: 2vw;
+    z-index: 6;
+}
+@media only screen and (min-width: 3840px) {
+    .info h3 {
+        margin-bottom: 6px;
+        font-size: calc( var(--supportersTitleSizeM) * 2);
+    }
+    .info p {
+        font-size: calc( var(--supportersTextSizeM) * 2);
+    }
+}
+@media only screen and (max-width: 1366px) {
+    .title {
+        bottom: 17vw;
+    }
 }
 @media only screen and (max-width: 1024px) {
-    .content {
+    .section {
+        grid-template-columns: repeat(2, 50vw);
+    }
+    .scene:nth-child(1) {
         grid-row-start: 1;
-        grid-column-end: 3;
+        width: 70vw;
+        margin-left: 10vw;
     }
-    .scene {
+    .scene:nth-child(1) .content {
+        width: 35%;
+        left: 28vw;
+    }
+    .scene:nth-child(2) {
         grid-row-start: 2;
-    }
-    .energyIsland {
-        align-self: end;
-    }
-}
-
-@media only screen and (max-width: 640px) {
-    .scene {
         grid-column-start: 1;
-        grid-column-end: 3;
+        width: 40vw;
+        margin-top: 15vw;
+        margin-left: 5vw;
     }
-    .energyIsland {
+    .scene:nth-child(2) .content {
+        bottom: -3vw;
+        left: 28%;
+    }
+    .scene:nth-child(2) .stone {
+        bottom: -4vw;
+        right: 9%;
+    }
+    .scene:nth-child(3) {
+        grid-row-start: 2;
+        grid-column-start: 2;
+        width: 40vw;
+        margin-top: 20vw;
+        margin-left: 5vw;
+    }
+    .scene:nth-child(3) .content {
+        left: 8vw;
+        bottom: -3vw;
+    }
+    .purpleCrystal {
+        bottom: -3.5vw;
+    }
+    .scene:nth-child(4) {
         grid-row-start: 3;
-        grid-column-start: 1;
-        grid-column-end: 3;
-        width: 60%;
-        justify-self: start;
+        grid-column-start: 2;
+        width: 50vw;
+        margin: 10vw 0 0 -25vw;
+    }
+    .scene:nth-child(4) .content {
+        bottom: -4.5vw;
+        width: 50%;
+        left: 8vw;
+    }
+    .blueCrystal {
+        bottom: -5vw;
+    }
+    .scene:nth-child(5) {
+        grid-row-start: 1;
+        grid-column-start: 3;
+        width: 15vw;
+        align-self: start;
+        margin-top: 15vw;
+        margin-left: -20vw;     
+    }
+    .scene:nth-child(5) .tree {
+        width: 65%;
+        margin: 0 auto -2vw auto;
+    }
+    .title {
+        font-size: var(--supportersHeadllineM);
+        bottom: 25vw;
+        right: 11vw;
     }
     .cloud1 {
-        width: 16vw;
+        width: 15vw;
+        top: 30vw;
     }
     .cloud2 {
-        width: 20vw;
-        left: 50vw;
-        bottom: 10vw;
+        width: 25vw;
     }
     .cloud3 {
-        width: 15vw;
-        bottom: 50vw;
+        width: 18vw;
+        top: 40vw;
+        right: 5vw;
     }
     .cloud4 {
-        width: 25vw;
-        bottom: -85vw;
+        width: 15vw;
+        bottom: -10vw;
     }
     .cloud5 {
         width: 15vw;
-        bottom: 30vw;
+        right: 15vw;
+        bottom: -30vw;
+    } 
+    .cloud6 {
+        width: 10vw;
+    } 
+}
+@media only screen and (max-width: 960px) { 
+    .scene:nth-child(2) .tree {
+        width: 30%;
+    }
+    .scene:nth-child(2) .content {
+        width: 60%;
+        left: 18%;
+    }
+    .scene:nth-child(5) .tree {
+        bottom: -0.5vw;
     }
 }
-`
-
-module.exports = SmartcontractUI
-},{"Content":30,"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],38:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const Graphic = require('Graphic')
-
-module.exports = contributor
-
-function contributor(person, className, theme) {
-    let css = Object.assign({}, styles, theme)
-    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
-    let el = bel`
-      <div class=${className}>
-        <div class=${css.member}>
-          <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
-          <div class=${css.info}>
-            <h3 class=${css.name}>${person.name}</h3>
-            ${person.careers &&
-                person.careers.map( career =>
-                    bel`<span class=${css.career}>${career}</span>`
-                )
-            }
-          </div>
-        </div>
-        ${lifeIsland}
-      </div>
-  `
-    return el
-}
-
-const styles = csjs`
-.member {
-    position: absolute;
-    z-index: 1;
-    display: grid;
-    grid-template: 1fr / 40% 60%;
-    width: 70%;
-    top: 20%;
-}
-.avatar {
-    position: relative;
-    z-index: 2;
-}
-.info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: var(--contributorsTextSize);
-    text-align: center;
-    background-color: var(--contributorsBg);
-    padding: 0% 2% 4% 20%;
-    margin-left: -20%;
-}
-.name {
-    color: var(--section5TitleColor);
-    margin-top: 0;
-    margin-bottom: 3%;
-}
-.career {
-    display: block;
-    color: var(--contributorsCareerColor);
-}
-.lifeIsland {
-    width: 100%;
-}
-@media only screen and (max-width: 1550px) {
-    .member {
-        width: 280px;
-        top: 15%;
-        left: -2vw;
+@media only screen and (max-width: 812px) {
+    .info h3 {
+        margin-bottom: 6px;
+        font-size: var(--supportersTitleSizeM);
     }
-}
-@media only screen and (max-width: 1200px) {
-    .lifeIsland {
-        width: 115%;
-    }
-}
-@media only screen and (max-width: 1280px) {
-    .member {
-        top: 12%;
-        left: -4vw;
-    }
-}
-
-@media only screen and (max-width: 1130px) {
-    .member {
-        top: 1vw;
-        left: -6vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .lifeIsland {
-        width: 100%;
-    }
-    .member {
-        width: 32vw;
-        top: 6vw;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 768px) {
-    .member {
-        width: 85%;
-        top: 5vw;
-        left: -4vw;
+    .info p {
+        font-size: var(--supportersTextSizeM);
     }
 }
 @media only screen and (max-width: 640px) {
-    .member {
-        width: 75%;
-        top: 9vw;
+    .scene:nth-child(2) {
+        width: 50vw;
+        margin-top: 20vw;
+    }
+    .scene:nth-child(3) {
+        width: 50vw;
+        grid-row-start: 3;
+        grid-column-start: 2;
+        margin-left: 0;
+        margin-top: 5vw;
+    }
+    .scene:nth-child(4) {
+        width: 66vw;
+        grid-row-start: 4;
+        grid-column-start: 1;
+        grid-column-end: 2;
+        margin-left: 10vw;
+        margin-top: 20vw;
+    }
+    .scene:nth-child(5) {
+        margin-left: -18vw;
+    }
+    .title {
+        font-size: var(--supportersHeadllineS);
+        bottom: 25vw;
+        right: 12vw;
     }
 }
-@media only screen and (max-width: 414px) {
-    .member {
-        width: 90%;
-        top: 5vw;
-        left: -10vw;
+@media only screen and (max-width: 480px) {
+    .scene:nth-child(1) {
+        width: 90vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(1) .content {
+        width: 40%;
+        left: 36%;
+    }
+    .scene:nth-child(2) {
+        width: 70vw;
+        margin-top: 20vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(2) .content {
+        width: 60%;
+        padding: 10% 5% 10% 12%;
+        bottom: -6vw;
+    }
+    .scene:nth-child(2) .stone {
+        bottom: -8vw;
+        right: 0;
+    }
+    .scene:nth-child(2) .tree {
+        left: 5vw;
+    }
+    .scene:nth-child(3) {
+        width: 70vw;
+        margin-left: 20vw;
+        margin-top: 25vw;
+        grid-column-start: 1;
+    }
+    .scene:nth-child(3) .content {
+        left: 12vw;
+        bottom: -6vw;
+    }
+    .purpleCrystal {
+        bottom: -7vw;
+    }
+    .scene:nth-child(4) {
+        width: 66vw;
+        margin-left: 10vw;
+        margin-top: 30vw;
+    }
+    .scene:nth-child(4) .content {
+        width: 56%;
+    }
+    .blueCrystal {
+        bottom: -6vw;
+    }
+    .scene:nth-child(5) {
+        grid-row-start: 4;
+        margin-top: -5vw;
+        margin-left: -22vw;
+    }
+    .scene:nth-child(5) .tree {
+        bottom: -1vw;
+    }
+    .title {
+        bottom: 32vw;
+        right: 15vw;
     }
 }
 `
 
-
-
-},{"Graphic":33,"bel":4,"csjs-inject":7}],39:[function(require,module,exports){
-const bel = require('bel')
-
-function crystalIsland({date, info}, deco, island, css, title) {
-    let el = bel`
-                <div class=${css.scene}>
-                    <div class=${css.deco}>
-                        <div class=${css.content}>
-                            <h3>${date}</h3>
-                            ${ info === 'Coming soon' ? bel`<h3>${info}</h3>` : bel`<p>${info}</p>` }
-                        </div>
-                        ${deco.map(item => item)}
-                    </div>
-                    ${title}
-                    ${island}
-                </div>
-                `
-    return el
-}
-
-module.exports = crystalIsland
-},{"bel":4}],40:[function(require,module,exports){
-module.exports = fetch_data
-
-async function fetch_data(path) {
-    let response = await fetch(path)
-    if (response.status == 200) {
-        let texts = await response.json()
-        return texts
-    }
-    throw new Error(response.status)
-}
-},{}],41:[function(require,module,exports){
+module.exports = supporters
+},{"bel":4,"crystalIsland":32,"csjs-inject":7,"graphic":37,"rellax":27}],43:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
-const Graphic = require('Graphic')
-const Rellax = require('rellax')
-
-module.exports = header
-
-function header(data) {
-		const css = styles
-		let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
-		let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
-		let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-		let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-		let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-		let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-		let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-		let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-		let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
-
-		// Parallax effects
-		// let playRellax = new Rellax(playIsland, { speed: 2 })
-		let sunRellax = new Rellax(sun, { speed: 2 })
-		let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
-		let cloud2Rellax = new Rellax(cloud2, { speed: 2 })
-		let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
-		let cloud4Rellax = new Rellax(cloud4, { speed: 2 })
-		let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
-		let cloud6Rellax = new Rellax(cloud6, { speed: 3 })
-		let cloud7Rellax = new Rellax(cloud7, { speed: 3 })
-		
-		let el = bel`
-		<div class=${css.header}">
-				<h1 class=${css.title}>${data.title}</h1>
-				<section class=${css.scene}>
-						<div class=${css.sunCloud}>
-								${cloud1}
-								${sun}
-								${cloud2}
-						</div>
-						${cloud3}
-						${cloud4}
-						${cloud5}
-						${cloud6}
-						${cloud7}
-						${playIsland}
-				</section>
-		</div>
-		`
-		return el
-}
-
-let styles = csjs`
-.header {
-		position: relative;
-		padding-top: 0vw;
-		background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
-		overflow: hidden;
-}
-.scene {
-		position: relative;
-		margin-top: 5vw;
-}
-.playIsland {
-		position: relative;
-		width: 90%;
-		margin-top: 0;
-		margin-left: 5vw;
-		z-index: 2;
-}
-.sunCloud {
-		position: absolute;
-		top: -4%;
-		width: 12%;
-		margin-left: 8vw;
-		z-index: 1;
-}
-.sun {
-		width: 100%;
-}
-[class^="cloud"] {
-		transition: left 0.6s, bottom 0.5s, top 0.5s linear;
-}
-.cloud1 {
-		position: absolute;
-		z-index: 2;
-		width: 7vw;
-		left: -3vw;
-		bottom: 0;
-}
-.cloud2 {
-		position: absolute;
-		z-index: 1;
-		width: 7vw;
-		left: 10vw;
-		top: 25%;
-}
-.cloud3 {
-		position: absolute;
-		z-index: 2;
-		width: 7vw;
-		height: auto;
-		top: -2.5%;
-		right: 14vw;
-}
-.cloud4 {
-		position: absolute;
-		z-index: 1;
-		width: 5vw;
-		height: auto;
-		top: 8%;
-		right: 6vw;
-}
-.cloud5 {
-		position: absolute;
-		z-index: 1;
-		width: 12vw;
-		height: auto;
-		top: 50%;
-		left: 2vw;
-}
-.cloud6 {
-		position: absolute;
-		z-index: 3;
-		width: 12vw;
-		height: auto;
-		bottom: 15%;
-		left: 15vw;
-}
-.cloud7 {
-		position: absolute;
-		z-index: 4;
-		width: 18vw;
-		height: auto;
-		bottom: 25%;
-		right: 5vw;
-}
-.title {
-		position: relative;
-		z-index: 4;
-		font-size: var(--titleSize);
-		font-family: var(--titleFont);
-		color: var(--titleColor);
-		text-align: center;
-		margin: 0;
-		padding: 2% 2%;
-}
-.sun {
-		will-change: transform;
-}
-.cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
-		will-change: transform;
-}
-@media only screen and (min-width: 1680px) {
-		.scrollUp .header {
-				padding-top: 2.5%;
-		}
-}
-@media only screen and (min-width: 2561px) {
-		.scene {
-				max-width: 90%;
-				margin-left: auto;
-				margin-right: auto;
-		}
-		.title {
-				font-size: calc(var(--titleSize) * 1.5);
-				margin-bottom: 6vh;
-		}
-}
-@media only screen and (min-width: 4096px) {
-		.title {
-				font-size: calc(var(--titleSize) * 2.25);
-		}
-}
-@media only screen and (max-width: 1680px) {
-		.header {
-				padding-top: 2vw;
-		}
-}
-@media only screen and (max-width: 1280px) {
-		.header {
-				padding-top: 3vw;
-		}
-		.scrollUp .header {
-				padding-top: 6.5vh;
-		}
-}
-@media only screen and (max-width: 1024px) {
-		.header {
-				padding-top: 0%;
-		}
-}
-@media only screen and (max-width: 812px) {
-		.header {
-				padding-top: 5vh;
-		}
-		.title { 
-				padding: 0 5%;
-				font-size: var(--titleSizeM);
-		}
-}
-@media only screen and (max-width: 414px) {
-		.header {
-				padding-top: 8vh;
-		}
-		.title {
-				font-size: var(--titlesSizeS);
-		}
-		.playIsland {
-				width: 150%;
-				margin-left: -26vw;
-		}
-		.sunCloud {
-				top: -2vh;
-				left: -3vw;
-		}
-		.cloud5 {
-				width: 12vw;
-				left: -4vw;
-				top: 64%;
-		}
-		.cloud6 {
-				width: 15vw;
-				left: 5vw;
-		}
-		.cloud7 {
-				width: 20vw;
-				right: -5vw;
-		}
-}
-`
-
-},{"Graphic":33,"bel":4,"csjs-inject":7,"rellax":27}],42:[function(require,module,exports){
-async function loadSVG (url, done) { 
-    const parser = document.createElement('div')
-    let response = await fetch(url)
-    if (response.status == 200) {
-      let svg = await response.text()
-      parser.innerHTML = svg
-      return done(null, parser.children[0])
-    }
-    throw new Error(response.status)
-}
-
-module.exports = loadSVG
-},{}],43:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const Graphic = require('Graphic')
+const Graphic = require('graphic')
 // plugins
 const zenscroll = require('zenscroll')
 
@@ -4745,4 +4745,4 @@ let css = csjs`
     }
 }
 `
-},{"Graphic":33,"bel":4,"csjs-inject":7,"zenscroll":28}]},{},[1]);
+},{"bel":4,"csjs-inject":7,"graphic":37,"zenscroll":28}]},{},[1]);
