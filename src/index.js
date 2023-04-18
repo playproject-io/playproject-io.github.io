@@ -25,20 +25,20 @@ function make_page(opts, done, lang) {
     default:
       var path = `./src/node_modules/lang/en-us.json`
   }
-  fetch_data(path).then(text => {
+  fetch_data(path).then(async (text) => {
     let { menu, header, section1, section2, section3, section4, section5, footer } = text.pages
     const {theme} = opts
     const css = styles
     const landingPage = bel`
       <div id="top" class=${css.wrap}>
-        ${topnav(menu)}
-        ${Header(header)}
-        ${datdot(section1)}
-        ${editor(section2)}
-        ${smartcontract_codes(section3)}
-        ${supporters(section4)}
-        ${our_contributors(section5)}
-        ${Footer(footer)}
+        ${await topnav(menu)}
+        ${await Header(header)}
+        ${await datdot(section1)}
+        ${await editor(section2)}
+        ${await smartcontract_codes(section3)}
+        ${await supporters(section4)}
+        ${await our_contributors(section5)}
+        ${await Footer(footer)}
       </div>`
   return done(null, landingPage)
 

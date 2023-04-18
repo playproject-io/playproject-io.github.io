@@ -2148,20 +2148,20 @@ function make_page(opts, done, lang) {
     default:
       var path = `./src/node_modules/lang/en-us.json`
   }
-  fetch_data(path).then(text => {
+  fetch_data(path).then(async (text) => {
     let { menu, header, section1, section2, section3, section4, section5, footer } = text.pages
     const {theme} = opts
     const css = styles
     const landingPage = bel`
       <div id="top" class=${css.wrap}>
-        ${topnav(menu)}
-        ${Header(header)}
-        ${datdot(section1)}
-        ${editor(section2)}
-        ${smartcontract_codes(section3)}
-        ${supporters(section4)}
-        ${our_contributors(section5)}
-        ${Footer(footer)}
+        ${await topnav(menu)}
+        ${await Header(header)}
+        ${await datdot(section1)}
+        ${await editor(section2)}
+        ${await smartcontract_codes(section3)}
+        ${await supporters(section4)}
+        ${await our_contributors(section5)}
+        ${await Footer(footer)}
       </div>`
   return done(null, landingPage)
 
@@ -2250,9 +2250,9 @@ const Graphic = require('graphic')
 
 module.exports = contributor
 
-function contributor(person, className, theme) {
+async function contributor(person, className, theme) {
     let css = Object.assign({}, styles, theme)
-    let lifeIsland = Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
+    let lifeIsland = await Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
     let el = bel`
       <div class=${className}>
         <div class=${css.member}>
@@ -2395,16 +2395,19 @@ const graphic = require('graphic')
 const Rellax = require('rellax')
 const content = require('content')
 
-function datdot(data) {
+async function datdot(data) {
     const css = styles
-    let blockchainIsland = graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg')
-    let blossomIsland = graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg')
-    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    var graphics = [
+      graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg'),
+      graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg'),
+      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
+    ]
 
+    const [blockchainIsland, blossomIsland, cloud1, cloud2, cloud3, cloud4, cloud5] = await Promise.all(graphics)
     // Parallax effects
     let cloud1Rellax = new Rellax( cloud1, { speed: 4})
     let cloud2Rellax = new Rellax( cloud2, { speed: 2})
@@ -2623,17 +2626,21 @@ const graphic = require('graphic')
 const Rellax = require('rellax')
 const Content = require('content')
 
-function editor (data) {
+async function editor (data) {
     const css = styles
-    let island = graphic(css.island, './src/node_modules/assets/svg/floating-island.svg')
-    let energyIsland = graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg')
-    let tree = graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
-    let stone = graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
-    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
+    const graphics = [
+      graphic(css.island, './src/node_modules/assets/svg/floating-island.svg'),
+      graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg'),
+      graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg'),
+      graphic(css.stone, './src/node_modules/assets/svg/stone.svg'),
+      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
+    ]
+
+    const [island, energyIsland, tree, stone, cloud1, cloud2, cloud3, cloud4, cloud5] = await Promise.all(graphics)
 
     // Parallax effects
     let cloud1Rellax = new Rellax( cloud1, { speed: 2})
@@ -2839,21 +2846,23 @@ const csjs = require('csjs-inject')
 // widgets
 const graphic = require('graphic')
 
-function footer(footer) {
+async function footer(footer) {
     const css = styles
-    let island = graphic(css.island, './src/node_modules/assets/svg/deco-island.svg')
+    let island = await graphic(css.island, './src/node_modules/assets/svg/deco-island.svg')
+    const graphics = footer.icons.map(icon => graphic(css.icon, icon.imgURL))
+    const icons = await Promise.all(graphics)
 
     let el = bel`
     <footer class=${css.footer}>
         <div class=${css.scene}>
             ${island}
             <nav class=${css.contacts}>
-                ${footer.icons.map(icon => 
+                ${footer.icons.map((icon, i) => 
                     bel`
                     <a href=${icon.url} 
                     title=${icon.name} 
                     target="${icon.url.includes('http') ? "_blank" : null}"
-                    >${graphic(css.icon, icon.imgURL)}</a>`
+                    >${icons[i]}</a>`
                 )}
             </nav>
         </div>
@@ -2933,14 +2942,16 @@ module.exports = footer
 const loadSVG = require('loadSVG')
 
 function graphic(className, url) {
+  
+  return new Promise((resolve, reject) => {
     let el = document.createElement('div')
     el.classList.add(className)
     loadSVG(url, (err, svg) => {
-        if (err) return console.error(err)
-        el.append(svg)
+      if (err) return console.error(err)
+      el.append(svg)
+      resolve(el)
     })
-
-    return el
+  })
 }   
 
 module.exports = graphic
@@ -2948,22 +2959,26 @@ module.exports = graphic
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
-const Graphic = require('graphic')
+const graphic = require('graphic')
 const Rellax = require('rellax')
 
 module.exports = header
 
-function header(data) {
+async function header(data) {
 		const css = styles
-		let playIsland = Graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg')
-		let sun = Graphic(css.sun, './src/node_modules/assets/svg/sun.svg')
-		let cloud1 = Graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-		let cloud2 = Graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-		let cloud3 = Graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-		let cloud4 = Graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-		let cloud5 = Graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-		let cloud6 = Graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-		let cloud7 = Graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
+    var graphics = [
+      graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg'),
+      graphic(css.sun, './src/node_modules/assets/svg/sun.svg'),
+      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg'),
+    ]
+
+    const [playIsland, sun, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6, cloud7] = await Promise.all(graphics)
 
 		// Parallax effects
 		// let playRellax = new Rellax(playIsland, { speed: 2 })
@@ -3199,16 +3214,21 @@ const Rellax = require('rellax')
 const Content = require('content')
 const Contributor = require('contributor')
 
-function our_contributors (data) {
+async function our_contributors (data) {
     const css = styles
-    let island = graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg')
-    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-    let cloud6 = graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
-    let cloud7 = graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg')
+    const graphics = [
+      graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg'),
+      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg'),
+    ]
+
+    const [island, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6, cloud7] = await Promise.all(graphics)
+    const contributors = await Promise.all(data.contributors.map(person => Contributor( person, css.group, css)))
 
     let cloud1Rellax = new Rellax( cloud1, { speed: 0.3})
     let cloud2Rellax = new Rellax( cloud2, { speed: 0.4})
@@ -3226,7 +3246,7 @@ function our_contributors (data) {
             </div>
 
             <div class=${css.groups}>
-                ${data.contributors.map(person => Contributor( person, css.group, css))}
+                ${contributors}
             </div>
 
             ${cloud4}
@@ -3886,49 +3906,53 @@ const Content = require('content')
 
 module.exports = smartcontract_codes
 
-function smartcontract_codes (data) {
-    const css = styles
-    let island = graphic(css.island, './src/node_modules/assets/svg/floating-island1.svg')
-    let islandMiddle = graphic(css.islandMiddle, './src/node_modules/assets/svg/floating-island2.svg')
-    let islandRight = graphic(css.islandRight, './src/node_modules/assets/svg/floating-island2.svg')
-    let blossom = graphic(css.blossom, './src/node_modules/assets/svg/blossom-tree.svg')
-    let tree = graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg')
-    let trees = graphic(css.trees, './src/node_modules/assets/svg/two-trees.svg')
-    let stone = graphic(css.stone, './src/node_modules/assets/svg/stone.svg')
-    let smallStone = graphic(css.smallStone, './src/node_modules/assets/svg/small-stone.svg')
+async function smartcontract_codes (data) {
+  const css = styles
+  const graphics = [
+    graphic(css.island, './src/node_modules/assets/svg/floating-island1.svg'),
+    graphic(css.islandMiddle, './src/node_modules/assets/svg/floating-island2.svg'),
+    graphic(css.islandRight, './src/node_modules/assets/svg/floating-island2.svg'),
+    graphic(css.blossom, './src/node_modules/assets/svg/blossom-tree.svg'),
+    graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg'),
+    graphic(css.trees, './src/node_modules/assets/svg/two-trees.svg'),
+    graphic(css.stone, './src/node_modules/assets/svg/stone.svg'),
+    graphic(css.smallStone, './src/node_modules/assets/svg/small-stone.svg'),
+  ]
 
-    let el = bel`
-    <section id="smartcontractCodes" class="${css.section}">
+  const [island, islandMiddle, islandRight, blossom, tree, trees, stone, smallStone] = await Promise.all(graphics)
 
-        ${Content(data, css)}
+  let el = bel`
+  <section id="smartcontractCodes" class="${css.section}">
 
-        <div class=${css.scene}>
-            <div class=${css.deco}>
-                <img class=${css.logo} src=${data.logo} alt="${data.title} logo">
-                <img class=${css.screenshot} src=${data.image} alt=${data.title}>
-                ${trees}
-            </div>
-            ${island}
-        </div>
-        <div class=${css.sceneMedium}>
-            <div class=${css.deco}>
-                <div class=${css.container}>
-                    ${smallStone}
-                    ${stone}
-                    ${blossom}
-                </div>
-                ${islandMiddle}
-            </div>
-            <div class=${css.deco}>
-                ${tree}
-                ${islandRight}
-            </div>
-        </div>
-        
-    </section>
-    `
+      ${Content(data, css)}
 
-    return el
+      <div class=${css.scene}>
+          <div class=${css.deco}>
+              <img class=${css.logo} src=${data.logo} alt="${data.title} logo">
+              <img class=${css.screenshot} src=${data.image} alt=${data.title}>
+              ${trees}
+          </div>
+          ${island}
+      </div>
+      <div class=${css.sceneMedium}>
+          <div class=${css.deco}>
+              <div class=${css.container}>
+                  ${smallStone}
+                  ${stone}
+                  ${blossom}
+              </div>
+              ${islandMiddle}
+          </div>
+          <div class=${css.deco}>
+              ${tree}
+              ${islandRight}
+          </div>
+      </div>
+      
+  </section>
+  `
+
+  return el
 }
 
 const styles = csjs`
@@ -4075,33 +4099,38 @@ const graphic = require('graphic')
 const Rellax = require('rellax')
 const crystalIsland = require('crystalIsland')
 
-function supporters (data) {
+async function supporters (data) {
     const css = styles
     let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
-    // crystals
-    let yellowCrystal = graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg')
-    let purpleCrystal = graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg')
-    let blueCrystal = graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg')
-    // stone
-    let stone = graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg')
-    // trees
-    let tree = graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg')
-    let tree1 = graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg')
-    let tree2 = graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg')
-    let tree3 = graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg')
-    // islands
-    let island = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island1 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island2 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island3 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    let island4 = graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg')
-    // clouds
-    let cloud1 = graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg')
-    let cloud2 = graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg')
-    let cloud3 = graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg')
-    let cloud4 = graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg')
-    let cloud5 = graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg')
-    let cloud6 = graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg')
+    const graphics = [
+      // crystals
+      graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg'),
+      graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg'),
+      graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg'),
+      // stone
+      graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg'),
+      // trees
+      graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg'),
+      graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg'),
+      graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg'),
+      graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg'),
+      // islands
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      // clouds
+      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
+    ]
+
+    const [yellowCrystal, purpleCrystal, blueCrystal, stone, tree, tree1, tree2, tree3, 
+      island, island1, island2, island3, island4, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6] = await Promise.all(graphics)
     
     // Parallax effects
     let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
@@ -4589,14 +4618,14 @@ module.exports = supporters
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
-const Graphic = require('graphic')
+const graphic = require('graphic')
 // plugins
 const zenscroll = require('zenscroll')
 
 module.exports = topnav
 
-function topnav(data) {
-    const playLogo = Graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
+async function topnav(data) {
+    const playLogo = await graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
 
     function click(url) {
         let id = document.querySelector(`#${url}`)
