@@ -4141,7 +4141,7 @@ async function supporters (data) {
     let cloud6Rellax = new Rellax( cloud6, { speed: 3})
 
     let el = bel`
-        <section id=supporters" class="${css.section}">
+        <section id="supporters" class="${css.section}">
 
             ${crystalIsland(data.supporters[0], [yellowCrystal, tree], island, css, pageTitle)}
             ${crystalIsland(data.supporters[1], [stone, tree1], island1, css)}
@@ -4625,153 +4625,153 @@ const zenscroll = require('zenscroll')
 module.exports = topnav
 
 async function topnav(data) {
-    const playLogo = await graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
+		const playLogo = await graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
 
-    function click(url) {
-        let id = document.querySelector(`#${url}`)
-        zenscroll.to(id, 20000)
-    }
+		function click(url) {
+				let id = document.querySelector(`#${url}`)
+				zenscroll.to(id, 20000)
+		}
 
-    const body = document.body
-    const scrollUp = css.scrollUp
-    const scrollDown = css.scrollDown
-    let lastScroll = 0
-    
-    window.addEventListener('scroll', ()=> {
-        if (window.innerWidth >= 1024) {
-            let currentScroll = window.pageYOffset
-            if (currentScroll < 1) {
-                body.classList.remove(scrollUp)
-                body.classList.remove(scrollDown)
-                return
-            }
-            if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
-                body.classList.add(scrollDown)
-                body.classList.remove(scrollUp)
-            } else if (currentScroll < lastScroll) {
-                body.classList.add(scrollUp)
-                body.classList.remove(scrollDown)
-            }
-            lastScroll = currentScroll
-        }
-    })
+		const body = document.body
+		const scrollUp = css.scrollUp
+		const scrollDown = css.scrollDown
+		let lastScroll = 0
+		
+		window.addEventListener('scroll', ()=> {
+				if (window.innerWidth >= 1024) {
+						let currentScroll = window.pageYOffset
+						if (currentScroll < 1) {
+								body.classList.remove(scrollUp)
+								body.classList.remove(scrollDown)
+								return
+						}
+						if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
+								body.classList.add(scrollDown)
+								body.classList.remove(scrollUp)
+						} else if (currentScroll < lastScroll) {
+								body.classList.add(scrollUp)
+								body.classList.remove(scrollDown)
+						}
+						lastScroll = currentScroll
+				}
+		})
 
-    window.addEventListener('resize', ()=> {
-        if (window.innerWidth <= 1024) {
-            body.classList.remove(scrollUp)
-            body.classList.remove(scrollDown)
-        }
-    })
-    
-    return bel`
-            <div class=${css.topnav}>
-                <a href="#top">${playLogo}</a>
-                <nav class=${css.menu}>
-                    ${ data.map( menu =>  
-                        { 
-                            if (menu.url.includes('http')) {
-                                return bel`<a href="${menu.url}" target="_blank">${menu.text}</a>` 
-                            } else {
-                                return bel`<a href="#${menu.url}" onclick=${() => click(menu.url)}>${menu.text}</a>` 
-                            }
-                            
-                        }
-                    )}
-                </nav>
-            </div>
-    `
+		window.addEventListener('resize', ()=> {
+				if (window.innerWidth <= 1024) {
+						body.classList.remove(scrollUp)
+						body.classList.remove(scrollDown)
+				}
+		})
+		
+		return bel`
+						<div class=${css.topnav}>
+								<a href="#top">${playLogo}</a>
+								<nav class=${css.menu}>
+										${ data.map(menu =>  
+												{ 
+														if (menu.url.includes('http')) {
+																return bel`<a href="${menu.url}" target="_blank">${menu.text}</a>` 
+														} else {
+																return bel`<a href="#${menu.url}" onclick=${() => click(menu.url)}>${menu.text}</a>` 
+														}
+														
+												}
+										)}
+								</nav>
+						</div>
+		`
 }
 
 let css = csjs`
 .topnav {
-    position: relative;
-    width: 100%;
-    z-index: 20;
-    display: grid;
-    grid-template: 1fr / auto;
-    background-color: var(--playBgGStart);
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
-    transition: background-color .6s, -webkit-transform .4s, transform .4s, opacity .3s linear;
+		position: relative;
+		width: 100%;
+		z-index: 20;
+		display: grid;
+		grid-template: 1fr / auto;
+		background-color: var(--playBgGStart);
+		-webkit-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+		transition: background-color .6s, -webkit-transform .4s, transform .4s, opacity .3s linear;
 }
 .playLogo {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    width: 15rem;
-    z-index: 99;
-    transition: width .6s ease-in-out;
+		position: absolute;
+		top: 10px;
+		left: 0;
+		width: 15rem;
+		z-index: 99;
+		transition: width .6s ease-in-out;
 }
 .menu {
-    padding: 2.5rem;
-    text-align: right;
+		padding: 2.5rem;
+		text-align: right;
 }
 .menu a {
-    font-size: var(--menuSize);
-    margin-left: 1.75%;
-    color: #575551;
-    text-transform: uppercase;
-    transition: color .6s linear;
+		font-size: var(--menuSize);
+		margin-left: 1.75%;
+		color: #575551;
+		text-transform: uppercase;
+		transition: color .6s linear;
 }
 .menu a:hover {
-    color: #00acff;
+		color: #00acff;
 }
 .scrollUp .topnav {
-    position: fixed;
-    background-color: white;
-    -webkit-transform: none;
-    transform: none;
+		position: fixed;
+		background-color: white;
+		-webkit-transform: none;
+		transform: none;
 }
 .scrollDown .topnav {
-    position: fixed;
-    -webkit-transform: translate3d(0, -100%, 0);
-    transform: translate3d(0, -100%, 0);
-    opacity: 0;
+		position: fixed;
+		-webkit-transform: translate3d(0, -100%, 0);
+		transform: translate3d(0, -100%, 0);
+		opacity: 0;
 }
 .scrollUp .playLogo {
-    width: 10rem;
+		width: 10rem;
 }
  .scrollDown .playLogo {
-    width: 10rem;
-    top: 0;
+		width: 10rem;
+		top: 0;
 }
 @media only screen and (min-width: 4096px) {
-    .menu a {
-        font-size: calc(var(--menuSize) * 1.5);
-    }
+		.menu a {
+				font-size: calc(var(--menuSize) * 1.5);
+		}
 }
 @media only screen and (max-width: 1024px) {
-    .playLogo  {
-        width: 9vw;
-        min-width: 100px;
-    }
+		.playLogo  {
+				width: 9vw;
+				min-width: 100px;
+		}
 }
 @media only screen and (max-width: 960px) {
-    .topnav {
-        position: relative;
-    }
-    .menu {
-        padding-top: 3%;
-        padding-right: 2.5vw;
-    }
-    .menu a {
-        margin-left: 1.5%;
-    }
+		.topnav {
+				position: relative;
+		}
+		.menu {
+				padding-top: 3%;
+				padding-right: 2.5vw;
+		}
+		.menu a {
+				margin-left: 1.5%;
+		}
 }
 @media only screen and (max-width: 812px) {
-    .menu {
-        display: none;
-    }
-    .playLogo  {
-        top: 20px;
-        min-width: 12vw;
-    }
+		.menu {
+				display: none;
+		}
+		.playLogo  {
+				top: 20px;
+				min-width: 12vw;
+		}
 }
 @media only screen and (max-width: 414px) {
-    .playLogo  {
-        min-width: 20vw;
-    }
+		.playLogo  {
+				min-width: 20vw;
+		}
 }
 `
 },{"bel":4,"csjs-inject":7,"graphic":37,"zenscroll":28}]},{},[1]);
