@@ -4,8 +4,17 @@
   "description": "Playproject.io official landing page",
   "main": "src/index.js",
   "scripts": {
-    "start": "budo demo/demo.js:bundle.js --dir ./ --live --open",
-    "build": "browserify demo/demo.js -o bundle.js"
+    "start": "budo web/boot.js:bundle.js --dir ./ --live --open",
+    "build": "browserify web/boot.js -o bundle.js",
+    "lint": "standardx --fix",
+    "start:doc": "budo doc/state/example/boot.js:doc/state/example/bundle.js  --dir ./ --live --open",
+    "build:doc": "browserify doc/state/example/boot.js > doc/state/example/bundle.js",
+    "start:doc2": "budo doc/state/example2/boot.js:doc/state/example2/bundle.js  --dir ./ --live --open",
+    "build:doc2": "browserify doc/state/example2/boot.js > doc/state/example2/bundle.js",
+    "start:doc3": "budo doc/state/example3/boot.js:doc/state/example3/bundle.js  --dir ./ --live --open",
+    "build:doc3": "browserify doc/state/example3/boot.js > doc/state/example3/bundle.js",
+    "start:doc4": "budo doc/state/example4/boot.js:doc/state/example4/bundle.js  --dir ./ --live --open",
+    "build:doc4": "browserify doc/state/example4/boot.js > doc/state/example4/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -34,12 +43,11 @@
   },
   "homepage": "https://github.com/fionataeyang/playproject-io.github.io#readme",
   "devDependencies": {
-    "budo": "^11.6.3"
+    "budo": "^11.6.3",
+    "eslint-config-standardx": "^16.0.3",
+    "standardx": "^7.0.0"
   },
   "dependencies": {
-    "bel": "^6.0.0",
-    "csjs-inject": "^1.0.1",
-    "rellax": "^1.12.0",
-    "zenscroll": "^4.0.2"
+    "rellax": "^1.12.0"
   }
 }

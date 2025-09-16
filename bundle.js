@@ -1,1267 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-const make_page = require('../') 
-const theme = require('theme')
-
-const appleTouch = bel`<link rel="apple-touch-icon" sizes="180x180" href="./src/node_modules/assets/images/favicon/apple-touch-icon.png">`
-const icon32 = bel`<link rel="icon" type="image/png" sizes="32x32" href="./src/node_modules/assets/images/favicon/favicon-32x32.png">`
-const icon16 = bel`<link rel="icon" type="image/png" sizes="16x16" href="./src/node_modules/assets/images/favicon/favicon-16x16.png">`
-const webmanifest = bel`<link rel="manifest" href="./src/node_modules/assets/images/favicon/site.webmanifest"></link>`
-document.head.append(appleTouch, icon32, icon16, webmanifest)
-
-const params = new URL(location.href).searchParams
-const lang = params.get('lang')
-
-if (lang === 'en') {
-	params.delete('lang')
-	location.search = params
-}
-
-const styles = csjs`
-html {
-	font-size: 82.5%;
-	scroll-behavior: smooth;
-}
-body {
-	font-family: var(--bodyFont);
-	font-size: 1.4rem;
-	color: var(--bodyColor);
-	margin: 0;
-	padding: 0;
-	background-color: var(--bodyBg);
-	overflow-x: hidden;
-}
-a {
-	text-decoration: none;
-}
-button {
-	outline: none;
-	border: none;
-	font-family: var(--titleFont);
-	font-size: var(--sectionButtonSize);
-	color: var(--titleColor);
-	border-radius: 2rem;
-	padding: 1.2rem 3.8rem;
-	cursor: pointer;
-}
-img {
-	width: 100%;
-	height: auto;
-}
-article {
-	font-size: var(--articleSize);
-	color: var(--articleColor);
-	line-height: 2.5rem;
-	padding-bottom: 4rem;
-}
-@media only screen and (min-width: 2561px) {
-	article {
-		font-size: calc(var(--articleSize) * 1.5 );
-		line-height: calc(2.5rem * 1.5);
-	}
-	button {
-		font-size: calc(var(--sectionButtonSize) * 1.5 );
-}
-}
-@media only screen and (min-width: 4096px) {
-	article {
-		font-size: calc(var(--articleSize) * 2.25 );
-		line-height: calc(2.5rem * 2.25);
-	}
-	button {
-		font-size: calc(var(--sectionButtonSize) * 2.25 );
-	}
-}
-`
-
-// callback done()
-const el = (err, landingPage) => {
-	const vars = theme
-
-	if (err) {
-		document.body.style = `color: red; font-size: 1.6rem; text-align:center; background-color: #d9d9d9;`
-		document.body.innerHTML = `<p>${err.stack}</p>`
-	} else {
-		document.body.appendChild(landingPage)
-	}
-
-	updateTheme(vars)
-} 
-
-function updateTheme (vars) {
-	Object.keys(vars).forEach(name => {
-		document.body.style.setProperty(`--${name}`, vars[name])
-	})
-}
-
-make_page({theme}, el, lang)
-},{"../":29,"bel":4,"csjs-inject":7,"theme":2}],2:[function(require,module,exports){
-const bel = require('bel')
-const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
-const loadFont = bel`<link href=${font} rel='stylesheet' type='text/css'>`
-document.head.appendChild(loadFont)
-
-const defines = {
-    fonts: {
-        slackey         : `'Slackey', Arial, sans-serif`,
-        nunito          : `'Nunito', Arial, sans-serif`,
-    },
-    sizes: {
-        'xx-small'      : '1.2rem',
-        'x-small'       : '1.3rem',
-        small           : '1.4rem',
-        medium          : '1.6rem',
-        large           : '2rem',
-        'x-large'       : '3rem',
-        'xx-large'      : '4rem',
-        'xxx-large'     : '5rem',
-    },
-    colors: {
-        white           : '#fff',
-        skyblue         : '#b3e2ff',
-        turquoise       : '#aae6ed',
-        pink            : '#e14365',
-        grey            : '#333333',
-        lightGrey       : '#999999',
-        lightGreen      : '#a1e9da',
-        blueGreen       : '#00a6ad',
-        purple          : '#b337fb',
-        lightBluePurple : '#9db9ee',
-        bluePurple      : '#9a91ff',
-        lightPurple     : '#beb2d7',
-        lightYellow     : '#eddca4',
-        lightSky        : '#b4e4fd',
-        green           : '#4aa95b',
-        lowYellow       : '#fdfbee',
-        brown           : '#b06d56',
-    }
-}
-
-const theme = {
-    bodyFont            : defines.fonts.nunito,
-    bodyColor           : defines.colors.grey,
-    bodyBg              : defines.colors.lightSky,
-    menuSize            : defines.sizes.small,
-    titleFont           : defines.fonts.slackey,
-    titleSize           : defines.sizes['xxx-large'],
-    titleSizeM          : '3.6rem',
-    titlesSizeS         : '2.8rem',
-    titleColor          : defines.colors.white,
-    playBgGStart        : defines.colors.skyblue,
-    playBgGEnd          : defines.colors.turquoise,
-    subTitleSize        : '4.2rem',
-    section1TitleColor  : defines.colors.pink,
-    section2TitleColor  : defines.colors.blueGreen,
-    section3TitleColor  : defines.colors.purple,
-    section4TitleColor  : defines.colors.brown,
-    section5TitleColor  : defines.colors.green,
-    articleSize         : defines.sizes.small,
-    articleColor        : defines.colors.grey,
-    section1BgGStart    : defines.colors.turquoise,
-    section1BgGEnd      : defines.colors.lightGreen,
-    section2BgGStart    : defines.colors.lightGreen,
-    section2BgGEnd      : defines.colors.lightBluePurple,
-    section3BgGStart    : defines.colors.lightBluePurple,
-    section3BgGEnd      : defines.colors.bluePurple,
-    section4BgGStart    : defines.colors.bluePurple,
-    section4BgGEnd      : defines.colors.lightPurple,
-    section5BgGStart    : defines.colors.lightPurple,
-    section5BgGMiddle   : defines.colors.lightYellow,
-    section5BgGEnd      : defines.colors.lightSky,
-    sectionButtonSize   : defines.sizes.small,
-    roadmapHeadlline    : '4rem',
-    roadmapHeadllineM   : '3rem',
-    roadmapHeadllineS   : '1.6rem',
-    roadmapTitleSize    : defines.sizes.large,
-    roadmapTitleSizeM   : defines.sizes.medium,
-    roadmapTitleColor   : defines.colors.blueGreen,
-    roadmapTextSize     : defines.sizes.medium,
-    roadmapTextSizeM    : defines.sizes["x-small"],
-    contributorsBg              : defines.colors.lowYellow,
-    contributorsTextSize        : defines.sizes.small,
-    contributorsTextSizeS       : defines.sizes["xx-small"],
-    contributorsCareerColor     : defines.colors.lightGrey,
-    footerTextColor     : defines.colors.grey,
-    footerBg            : defines.colors.lightSky
-}
-
-module.exports = theme
-
-},{"bel":4}],3:[function(require,module,exports){
-var trailingNewlineRegex = /\n[\s]+$/
-var leadingNewlineRegex = /^\n[\s]+/
-var trailingSpaceRegex = /[\s]+$/
-var leadingSpaceRegex = /^[\s]+/
-var multiSpaceRegex = /[\n\s]+/g
-
-var TEXT_TAGS = [
-  'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'data', 'dfn', 'em', 'i',
-  'kbd', 'mark', 'q', 'rp', 'rt', 'rtc', 'ruby', 's', 'amp', 'small', 'span',
-  'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr'
-]
-
-var VERBATIM_TAGS = [
-  'code', 'pre', 'textarea'
-]
-
-module.exports = function appendChild (el, childs) {
-  if (!Array.isArray(childs)) return
-
-  var nodeName = el.nodeName.toLowerCase()
-
-  var hadText = false
-  var value, leader
-
-  for (var i = 0, len = childs.length; i < len; i++) {
-    var node = childs[i]
-    if (Array.isArray(node)) {
-      appendChild(el, node)
-      continue
-    }
-
-    if (typeof node === 'number' ||
-      typeof node === 'boolean' ||
-      typeof node === 'function' ||
-      node instanceof Date ||
-      node instanceof RegExp) {
-      node = node.toString()
-    }
-
-    var lastChild = el.childNodes[el.childNodes.length - 1]
-
-    // Iterate over text nodes
-    if (typeof node === 'string') {
-      hadText = true
-
-      // If we already had text, append to the existing text
-      if (lastChild && lastChild.nodeName === '#text') {
-        lastChild.nodeValue += node
-
-      // We didn't have a text node yet, create one
-      } else {
-        node = document.createTextNode(node)
-        el.appendChild(node)
-        lastChild = node
-      }
-
-      // If this is the last of the child nodes, make sure we close it out
-      // right
-      if (i === len - 1) {
-        hadText = false
-        // Trim the child text nodes if the current node isn't a
-        // node where whitespace matters.
-        if (TEXT_TAGS.indexOf(nodeName) === -1 &&
-          VERBATIM_TAGS.indexOf(nodeName) === -1) {
-          value = lastChild.nodeValue
-            .replace(leadingNewlineRegex, '')
-            .replace(trailingSpaceRegex, '')
-            .replace(trailingNewlineRegex, '')
-            .replace(multiSpaceRegex, ' ')
-          if (value === '') {
-            el.removeChild(lastChild)
-          } else {
-            lastChild.nodeValue = value
-          }
-        } else if (VERBATIM_TAGS.indexOf(nodeName) === -1) {
-          // The very first node in the list should not have leading
-          // whitespace. Sibling text nodes should have whitespace if there
-          // was any.
-          leader = i === 0 ? '' : ' '
-          value = lastChild.nodeValue
-            .replace(leadingNewlineRegex, leader)
-            .replace(leadingSpaceRegex, ' ')
-            .replace(trailingSpaceRegex, '')
-            .replace(trailingNewlineRegex, '')
-            .replace(multiSpaceRegex, ' ')
-          lastChild.nodeValue = value
-        }
-      }
-
-    // Iterate over DOM nodes
-    } else if (node && node.nodeType) {
-      // If the last node was a text node, make sure it is properly closed out
-      if (hadText) {
-        hadText = false
-
-        // Trim the child text nodes if the current node isn't a
-        // text node or a code node
-        if (TEXT_TAGS.indexOf(nodeName) === -1 &&
-          VERBATIM_TAGS.indexOf(nodeName) === -1) {
-          value = lastChild.nodeValue
-            .replace(leadingNewlineRegex, '')
-            .replace(trailingNewlineRegex, '')
-            .replace(multiSpaceRegex, ' ')
-
-          // Remove empty text nodes, append otherwise
-          if (value === '') {
-            el.removeChild(lastChild)
-          } else {
-            lastChild.nodeValue = value
-          }
-        // Trim the child nodes if the current node is not a node
-        // where all whitespace must be preserved
-        } else if (VERBATIM_TAGS.indexOf(nodeName) === -1) {
-          value = lastChild.nodeValue
-            .replace(leadingSpaceRegex, ' ')
-            .replace(leadingNewlineRegex, '')
-            .replace(trailingNewlineRegex, '')
-            .replace(multiSpaceRegex, ' ')
-          lastChild.nodeValue = value
-        }
-      }
-
-      // Store the last nodename
-      var _nodeName = node.nodeName
-      if (_nodeName) nodeName = _nodeName.toLowerCase()
-
-      // Append the node to the DOM
-      el.appendChild(node)
-    }
-  }
-}
-
-},{}],4:[function(require,module,exports){
-var hyperx = require('hyperx')
-var appendChild = require('./appendChild')
-
-var SVGNS = 'http://www.w3.org/2000/svg'
-var XLINKNS = 'http://www.w3.org/1999/xlink'
-
-var BOOL_PROPS = [
-  'autofocus', 'checked', 'defaultchecked', 'disabled', 'formnovalidate',
-  'indeterminate', 'readonly', 'required', 'selected', 'willvalidate'
-]
-
-var COMMENT_TAG = '!--'
-
-var SVG_TAGS = [
-  'svg', 'altGlyph', 'altGlyphDef', 'altGlyphItem', 'animate', 'animateColor',
-  'animateMotion', 'animateTransform', 'circle', 'clipPath', 'color-profile',
-  'cursor', 'defs', 'desc', 'ellipse', 'feBlend', 'feColorMatrix',
-  'feComponentTransfer', 'feComposite', 'feConvolveMatrix',
-  'feDiffuseLighting', 'feDisplacementMap', 'feDistantLight', 'feFlood',
-  'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR', 'feGaussianBlur', 'feImage',
-  'feMerge', 'feMergeNode', 'feMorphology', 'feOffset', 'fePointLight',
-  'feSpecularLighting', 'feSpotLight', 'feTile', 'feTurbulence', 'filter',
-  'font', 'font-face', 'font-face-format', 'font-face-name', 'font-face-src',
-  'font-face-uri', 'foreignObject', 'g', 'glyph', 'glyphRef', 'hkern', 'image',
-  'line', 'linearGradient', 'marker', 'mask', 'metadata', 'missing-glyph',
-  'mpath', 'path', 'pattern', 'polygon', 'polyline', 'radialGradient', 'rect',
-  'set', 'stop', 'switch', 'symbol', 'text', 'textPath', 'title', 'tref',
-  'tspan', 'use', 'view', 'vkern'
-]
-
-function belCreateElement (tag, props, children) {
-  var el
-
-  // If an svg tag, it needs a namespace
-  if (SVG_TAGS.indexOf(tag) !== -1) {
-    props.namespace = SVGNS
-  }
-
-  // If we are using a namespace
-  var ns = false
-  if (props.namespace) {
-    ns = props.namespace
-    delete props.namespace
-  }
-
-  // Create the element
-  if (ns) {
-    el = document.createElementNS(ns, tag)
-  } else if (tag === COMMENT_TAG) {
-    return document.createComment(props.comment)
-  } else {
-    el = document.createElement(tag)
-  }
-
-  // Create the properties
-  for (var p in props) {
-    if (props.hasOwnProperty(p)) {
-      var key = p.toLowerCase()
-      var val = props[p]
-      // Normalize className
-      if (key === 'classname') {
-        key = 'class'
-        p = 'class'
-      }
-      // The for attribute gets transformed to htmlFor, but we just set as for
-      if (p === 'htmlFor') {
-        p = 'for'
-      }
-      // If a property is boolean, set itself to the key
-      if (BOOL_PROPS.indexOf(key) !== -1) {
-        if (val === 'true') val = key
-        else if (val === 'false') continue
-      }
-      // If a property prefers being set directly vs setAttribute
-      if (key.slice(0, 2) === 'on') {
-        el[p] = val
-      } else {
-        if (ns) {
-          if (p === 'xlink:href') {
-            el.setAttributeNS(XLINKNS, p, val)
-          } else if (/^xmlns($|:)/i.test(p)) {
-            // skip xmlns definitions
-          } else {
-            el.setAttributeNS(null, p, val)
-          }
-        } else {
-          el.setAttribute(p, val)
-        }
-      }
-    }
-  }
-
-  appendChild(el, children)
-  return el
-}
-
-module.exports = hyperx(belCreateElement, {comments: true})
-module.exports.default = module.exports
-module.exports.createElement = belCreateElement
-
-},{"./appendChild":3,"hyperx":25}],5:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var csjs = require('csjs');
-var insertCss = require('insert-css');
-
-function csjsInserter() {
-  var args = Array.prototype.slice.call(arguments);
-  var result = csjs.apply(null, args);
-  if (global.document) {
-    insertCss(csjs.getCss(result));
-  }
-  return result;
-}
-
-module.exports = csjsInserter;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":10,"insert-css":26}],6:[function(require,module,exports){
-'use strict';
-
-module.exports = require('csjs/get-css');
-
-},{"csjs/get-css":9}],7:[function(require,module,exports){
-'use strict';
-
-var csjs = require('./csjs');
-
-module.exports = csjs;
-module.exports.csjs = csjs;
-module.exports.getCss = require('./get-css');
-
-},{"./csjs":5,"./get-css":6}],8:[function(require,module,exports){
-'use strict';
-
-module.exports = require('./lib/csjs');
-
-},{"./lib/csjs":14}],9:[function(require,module,exports){
-'use strict';
-
-module.exports = require('./lib/get-css');
-
-},{"./lib/get-css":18}],10:[function(require,module,exports){
-'use strict';
-
-var csjs = require('./csjs');
-
-module.exports = csjs();
-module.exports.csjs = csjs;
-module.exports.noScope = csjs({ noscope: true });
-module.exports.getCss = require('./get-css');
-
-},{"./csjs":8,"./get-css":9}],11:[function(require,module,exports){
-'use strict';
-
-/**
- * base62 encode implementation based on base62 module:
- * https://github.com/andrew/base62.js
- */
-
-var CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-module.exports = function encode(integer) {
-  if (integer === 0) {
-    return '0';
-  }
-  var str = '';
-  while (integer > 0) {
-    str = CHARS[integer % 62] + str;
-    integer = Math.floor(integer / 62);
-  }
-  return str;
-};
-
-},{}],12:[function(require,module,exports){
-'use strict';
-
-var makeComposition = require('./composition').makeComposition;
-
-module.exports = function createExports(classes, keyframes, compositions) {
-  var keyframesObj = Object.keys(keyframes).reduce(function(acc, key) {
-    var val = keyframes[key];
-    acc[val] = makeComposition([key], [val], true);
-    return acc;
-  }, {});
-
-  var exports = Object.keys(classes).reduce(function(acc, key) {
-    var val = classes[key];
-    var composition = compositions[key];
-    var extended = composition ? getClassChain(composition) : [];
-    var allClasses = [key].concat(extended);
-    var unscoped = allClasses.map(function(name) {
-      return classes[name] ? classes[name] : name;
-    });
-    acc[val] = makeComposition(allClasses, unscoped);
-    return acc;
-  }, keyframesObj);
-
-  return exports;
-}
-
-function getClassChain(obj) {
-  var visited = {}, acc = [];
-
-  function traverse(obj) {
-    return Object.keys(obj).forEach(function(key) {
-      if (!visited[key]) {
-        visited[key] = true;
-        acc.push(key);
-        traverse(obj[key]);
-      }
-    });
-  }
-
-  traverse(obj);
-  return acc;
-}
-
-},{"./composition":13}],13:[function(require,module,exports){
-'use strict';
-
-module.exports = {
-  makeComposition: makeComposition,
-  isComposition: isComposition,
-  ignoreComposition: ignoreComposition
-};
-
-/**
- * Returns an immutable composition object containing the given class names
- * @param  {array} classNames - The input array of class names
- * @return {Composition}      - An immutable object that holds multiple
- *                              representations of the class composition
- */
-function makeComposition(classNames, unscoped, isAnimation) {
-  var classString = classNames.join(' ');
-  return Object.create(Composition.prototype, {
-    classNames: { // the original array of class names
-      value: Object.freeze(classNames),
-      configurable: false,
-      writable: false,
-      enumerable: true
-    },
-    unscoped: { // the original array of class names
-      value: Object.freeze(unscoped),
-      configurable: false,
-      writable: false,
-      enumerable: true
-    },
-    className: { // space-separated class string for use in HTML
-      value: classString,
-      configurable: false,
-      writable: false,
-      enumerable: true
-    },
-    selector: { // comma-separated, period-prefixed string for use in CSS
-      value: classNames.map(function(name) {
-        return isAnimation ? name : '.' + name;
-      }).join(', '),
-      configurable: false,
-      writable: false,
-      enumerable: true
-    },
-    toString: { // toString() method, returns class string for use in HTML
-      value: function() {
-        return classString;
-      },
-      configurable: false,
-      writeable: false,
-      enumerable: false
-    }
-  });
-}
-
-/**
- * Returns whether the input value is a Composition
- * @param value      - value to check
- * @return {boolean} - whether value is a Composition or not
- */
-function isComposition(value) {
-  return value instanceof Composition;
-}
-
-function ignoreComposition(values) {
-  return values.reduce(function(acc, val) {
-    if (isComposition(val)) {
-      val.classNames.forEach(function(name, i) {
-        acc[name] = val.unscoped[i];
-      });
-    }
-    return acc;
-  }, {});
-}
-
-/**
- * Private constructor for use in `instanceof` checks
- */
-function Composition() {}
-
-},{}],14:[function(require,module,exports){
-'use strict';
-
-var extractExtends = require('./css-extract-extends');
-var composition = require('./composition');
-var isComposition = composition.isComposition;
-var ignoreComposition = composition.ignoreComposition;
-var buildExports = require('./build-exports');
-var scopify = require('./scopeify');
-var cssKey = require('./css-key');
-var extractExports = require('./extract-exports');
-
-module.exports = function csjsTemplate(opts) {
-  opts = (typeof opts === 'undefined') ? {} : opts;
-  var noscope = (typeof opts.noscope === 'undefined') ? false : opts.noscope;
-
-  return function csjsHandler(strings, values) {
-    // Fast path to prevent arguments deopt
-    var values = Array(arguments.length - 1);
-    for (var i = 1; i < arguments.length; i++) {
-      values[i - 1] = arguments[i];
-    }
-    var css = joiner(strings, values.map(selectorize));
-    var ignores = ignoreComposition(values);
-
-    var scope = noscope ? extractExports(css) : scopify(css, ignores);
-    var extracted = extractExtends(scope.css);
-    var localClasses = without(scope.classes, ignores);
-    var localKeyframes = without(scope.keyframes, ignores);
-    var compositions = extracted.compositions;
-
-    var exports = buildExports(localClasses, localKeyframes, compositions);
-
-    return Object.defineProperty(exports, cssKey, {
-      enumerable: false,
-      configurable: false,
-      writeable: false,
-      value: extracted.css
-    });
-  }
-}
-
-/**
- * Replaces class compositions with comma seperated class selectors
- * @param  value - the potential class composition
- * @return       - the original value or the selectorized class composition
- */
-function selectorize(value) {
-  return isComposition(value) ? value.selector : value;
-}
-
-/**
- * Joins template string literals and values
- * @param  {array} strings - array of strings
- * @param  {array} values  - array of values
- * @return {string}        - strings and values joined
- */
-function joiner(strings, values) {
-  return strings.map(function(str, i) {
-    return (i !== values.length) ? str + values[i] : str;
-  }).join('');
-}
-
-/**
- * Returns first object without keys of second
- * @param  {object} obj      - source object
- * @param  {object} unwanted - object with unwanted keys
- * @return {object}          - first object without unwanted keys
- */
-function without(obj, unwanted) {
-  return Object.keys(obj).reduce(function(acc, key) {
-    if (!unwanted[key]) {
-      acc[key] = obj[key];
-    }
-    return acc;
-  }, {});
-}
-
-},{"./build-exports":12,"./composition":13,"./css-extract-extends":15,"./css-key":16,"./extract-exports":17,"./scopeify":23}],15:[function(require,module,exports){
-'use strict';
-
-var makeComposition = require('./composition').makeComposition;
-
-var regex = /\.([^\s]+)(\s+)(extends\s+)(\.[^{]+)/g;
-
-module.exports = function extractExtends(css) {
-  var found, matches = [];
-  while (found = regex.exec(css)) {
-    matches.unshift(found);
-  }
-
-  function extractCompositions(acc, match) {
-    var extendee = getClassName(match[1]);
-    var keyword = match[3];
-    var extended = match[4];
-
-    // remove from output css
-    var index = match.index + match[1].length + match[2].length;
-    var len = keyword.length + extended.length;
-    acc.css = acc.css.slice(0, index) + " " + acc.css.slice(index + len + 1);
-
-    var extendedClasses = splitter(extended);
-
-    extendedClasses.forEach(function(className) {
-      if (!acc.compositions[extendee]) {
-        acc.compositions[extendee] = {};
-      }
-      if (!acc.compositions[className]) {
-        acc.compositions[className] = {};
-      }
-      acc.compositions[extendee][className] = acc.compositions[className];
-    });
-    return acc;
-  }
-
-  return matches.reduce(extractCompositions, {
-    css: css,
-    compositions: {}
-  });
-
-};
-
-function splitter(match) {
-  return match.split(',').map(getClassName);
-}
-
-function getClassName(str) {
-  var trimmed = str.trim();
-  return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
-}
-
-},{"./composition":13}],16:[function(require,module,exports){
-'use strict';
-
-/**
- * CSS identifiers with whitespace are invalid
- * Hence this key will not cause a collision
- */
-
-module.exports = ' css ';
-
-},{}],17:[function(require,module,exports){
-'use strict';
-
-var regex = require('./regex');
-var classRegex = regex.classRegex;
-var keyframesRegex = regex.keyframesRegex;
-
-module.exports = extractExports;
-
-function extractExports(css) {
-  return {
-    css: css,
-    keyframes: getExport(css, keyframesRegex),
-    classes: getExport(css, classRegex)
-  };
-}
-
-function getExport(css, regex) {
-  var prop = {};
-  var match;
-  while((match = regex.exec(css)) !== null) {
-    var name = match[2];
-    prop[name] = name;
-  }
-  return prop;
-}
-
-},{"./regex":20}],18:[function(require,module,exports){
-'use strict';
-
-var cssKey = require('./css-key');
-
-module.exports = function getCss(csjs) {
-  return csjs[cssKey];
-};
-
-},{"./css-key":16}],19:[function(require,module,exports){
-'use strict';
-
-/**
- * djb2 string hash implementation based on string-hash module:
- * https://github.com/darkskyapp/string-hash
- */
-
-module.exports = function hashStr(str) {
-  var hash = 5381;
-  var i = str.length;
-
-  while (i) {
-    hash = (hash * 33) ^ str.charCodeAt(--i)
-  }
-  return hash >>> 0;
-};
-
-},{}],20:[function(require,module,exports){
-'use strict';
-
-var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
-var findKeyframes = /(@\S*keyframes\s*)([^{\s]*)/.source;
-var ignoreComments = /(?!(?:[^*/]|\*[^/]|\/[^*])*\*+\/)/.source;
-
-var classRegex = new RegExp(findClasses + ignoreComments, 'g');
-var keyframesRegex = new RegExp(findKeyframes + ignoreComments, 'g');
-
-module.exports = {
-  classRegex: classRegex,
-  keyframesRegex: keyframesRegex,
-  ignoreComments: ignoreComments,
-};
-
-},{}],21:[function(require,module,exports){
-var ignoreComments = require('./regex').ignoreComments;
-
-module.exports = replaceAnimations;
-
-function replaceAnimations(result) {
-  var animations = Object.keys(result.keyframes).reduce(function(acc, key) {
-    acc[result.keyframes[key]] = key;
-    return acc;
-  }, {});
-  var unscoped = Object.keys(animations);
-
-  if (unscoped.length) {
-    var regexStr = '((?:animation|animation-name)\\s*:[^};]*)('
-      + unscoped.join('|') + ')([;\\s])' + ignoreComments;
-    var regex = new RegExp(regexStr, 'g');
-
-    var replaced = result.css.replace(regex, function(match, preamble, name, ending) {
-      return preamble + animations[name] + ending;
-    });
-
-    return {
-      css: replaced,
-      keyframes: result.keyframes,
-      classes: result.classes
-    }
-  }
-
-  return result;
-}
-
-},{"./regex":20}],22:[function(require,module,exports){
-'use strict';
-
-var encode = require('./base62-encode');
-var hash = require('./hash-string');
-
-module.exports = function fileScoper(fileSrc) {
-  var suffix = encode(hash(fileSrc));
-
-  return function scopedName(name) {
-    return name + '_' + suffix;
-  }
-};
-
-},{"./base62-encode":11,"./hash-string":19}],23:[function(require,module,exports){
-'use strict';
-
-var fileScoper = require('./scoped-name');
-var replaceAnimations = require('./replace-animations');
-var regex = require('./regex');
-var classRegex = regex.classRegex;
-var keyframesRegex = regex.keyframesRegex;
-
-module.exports = scopify;
-
-function scopify(css, ignores) {
-  var makeScopedName = fileScoper(css);
-  var replacers = {
-    classes: classRegex,
-    keyframes: keyframesRegex
-  };
-
-  function scopeCss(result, key) {
-    var replacer = replacers[key];
-    function replaceFn(fullMatch, prefix, name) {
-      var scopedName = ignores[name] ? name : makeScopedName(name);
-      result[key][scopedName] = name;
-      return prefix + scopedName;
-    }
-    return {
-      css: result.css.replace(replacer, replaceFn),
-      keyframes: result.keyframes,
-      classes: result.classes
-    };
-  }
-
-  var result = Object.keys(replacers).reduce(scopeCss, {
-    css: css,
-    keyframes: {},
-    classes: {}
-  });
-
-  return replaceAnimations(result);
-}
-
-},{"./regex":20,"./replace-animations":21,"./scoped-name":22}],24:[function(require,module,exports){
-module.exports = attributeToProperty
-
-var transform = {
-  'class': 'className',
-  'for': 'htmlFor',
-  'http-equiv': 'httpEquiv'
-}
-
-function attributeToProperty (h) {
-  return function (tagName, attrs, children) {
-    for (var attr in attrs) {
-      if (attr in transform) {
-        attrs[transform[attr]] = attrs[attr]
-        delete attrs[attr]
-      }
-    }
-    return h(tagName, attrs, children)
-  }
-}
-
-},{}],25:[function(require,module,exports){
-var attrToProp = require('hyperscript-attribute-to-property')
-
-var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
-var ATTR_KEY = 5, ATTR_KEY_W = 6
-var ATTR_VALUE_W = 7, ATTR_VALUE = 8
-var ATTR_VALUE_SQ = 9, ATTR_VALUE_DQ = 10
-var ATTR_EQ = 11, ATTR_BREAK = 12
-var COMMENT = 13
-
-module.exports = function (h, opts) {
-  if (!opts) opts = {}
-  var concat = opts.concat || function (a, b) {
-    return String(a) + String(b)
-  }
-  if (opts.attrToProp !== false) {
-    h = attrToProp(h)
-  }
-
-  return function (strings) {
-    var state = TEXT, reg = ''
-    var arglen = arguments.length
-    var parts = []
-
-    for (var i = 0; i < strings.length; i++) {
-      if (i < arglen - 1) {
-        var arg = arguments[i+1]
-        var p = parse(strings[i])
-        var xstate = state
-        if (xstate === ATTR_VALUE_DQ) xstate = ATTR_VALUE
-        if (xstate === ATTR_VALUE_SQ) xstate = ATTR_VALUE
-        if (xstate === ATTR_VALUE_W) xstate = ATTR_VALUE
-        if (xstate === ATTR) xstate = ATTR_KEY
-        if (xstate === OPEN) {
-          if (reg === '/') {
-            p.push([ OPEN, '/', arg ])
-            reg = ''
-          } else {
-            p.push([ OPEN, arg ])
-          }
-        } else if (xstate === COMMENT && opts.comments) {
-          reg += String(arg)
-        } else if (xstate !== COMMENT) {
-          p.push([ VAR, xstate, arg ])
-        }
-        parts.push.apply(parts, p)
-      } else parts.push.apply(parts, parse(strings[i]))
-    }
-
-    var tree = [null,{},[]]
-    var stack = [[tree,-1]]
-    for (var i = 0; i < parts.length; i++) {
-      var cur = stack[stack.length-1][0]
-      var p = parts[i], s = p[0]
-      if (s === OPEN && /^\//.test(p[1])) {
-        var ix = stack[stack.length-1][1]
-        if (stack.length > 1) {
-          stack.pop()
-          stack[stack.length-1][0][2][ix] = h(
-            cur[0], cur[1], cur[2].length ? cur[2] : undefined
-          )
-        }
-      } else if (s === OPEN) {
-        var c = [p[1],{},[]]
-        cur[2].push(c)
-        stack.push([c,cur[2].length-1])
-      } else if (s === ATTR_KEY || (s === VAR && p[1] === ATTR_KEY)) {
-        var key = ''
-        var copyKey
-        for (; i < parts.length; i++) {
-          if (parts[i][0] === ATTR_KEY) {
-            key = concat(key, parts[i][1])
-          } else if (parts[i][0] === VAR && parts[i][1] === ATTR_KEY) {
-            if (typeof parts[i][2] === 'object' && !key) {
-              for (copyKey in parts[i][2]) {
-                if (parts[i][2].hasOwnProperty(copyKey) && !cur[1][copyKey]) {
-                  cur[1][copyKey] = parts[i][2][copyKey]
-                }
-              }
-            } else {
-              key = concat(key, parts[i][2])
-            }
-          } else break
-        }
-        if (parts[i][0] === ATTR_EQ) i++
-        var j = i
-        for (; i < parts.length; i++) {
-          if (parts[i][0] === ATTR_VALUE || parts[i][0] === ATTR_KEY) {
-            if (!cur[1][key]) cur[1][key] = strfn(parts[i][1])
-            else parts[i][1]==="" || (cur[1][key] = concat(cur[1][key], parts[i][1]));
-          } else if (parts[i][0] === VAR
-          && (parts[i][1] === ATTR_VALUE || parts[i][1] === ATTR_KEY)) {
-            if (!cur[1][key]) cur[1][key] = strfn(parts[i][2])
-            else parts[i][2]==="" || (cur[1][key] = concat(cur[1][key], parts[i][2]));
-          } else {
-            if (key.length && !cur[1][key] && i === j
-            && (parts[i][0] === CLOSE || parts[i][0] === ATTR_BREAK)) {
-              // https://html.spec.whatwg.org/multipage/infrastructure.html#boolean-attributes
-              // empty string is falsy, not well behaved value in browser
-              cur[1][key] = key.toLowerCase()
-            }
-            if (parts[i][0] === CLOSE) {
-              i--
-            }
-            break
-          }
-        }
-      } else if (s === ATTR_KEY) {
-        cur[1][p[1]] = true
-      } else if (s === VAR && p[1] === ATTR_KEY) {
-        cur[1][p[2]] = true
-      } else if (s === CLOSE) {
-        if (selfClosing(cur[0]) && stack.length) {
-          var ix = stack[stack.length-1][1]
-          stack.pop()
-          stack[stack.length-1][0][2][ix] = h(
-            cur[0], cur[1], cur[2].length ? cur[2] : undefined
-          )
-        }
-      } else if (s === VAR && p[1] === TEXT) {
-        if (p[2] === undefined || p[2] === null) p[2] = ''
-        else if (!p[2]) p[2] = concat('', p[2])
-        if (Array.isArray(p[2][0])) {
-          cur[2].push.apply(cur[2], p[2])
-        } else {
-          cur[2].push(p[2])
-        }
-      } else if (s === TEXT) {
-        cur[2].push(p[1])
-      } else if (s === ATTR_EQ || s === ATTR_BREAK) {
-        // no-op
-      } else {
-        throw new Error('unhandled: ' + s)
-      }
-    }
-
-    if (tree[2].length > 1 && /^\s*$/.test(tree[2][0])) {
-      tree[2].shift()
-    }
-
-    if (tree[2].length > 2
-    || (tree[2].length === 2 && /\S/.test(tree[2][1]))) {
-      if (opts.createFragment) return opts.createFragment(tree[2])
-      throw new Error(
-        'multiple root elements must be wrapped in an enclosing tag'
-      )
-    }
-    if (Array.isArray(tree[2][0]) && typeof tree[2][0][0] === 'string'
-    && Array.isArray(tree[2][0][2])) {
-      tree[2][0] = h(tree[2][0][0], tree[2][0][1], tree[2][0][2])
-    }
-    return tree[2][0]
-
-    function parse (str) {
-      var res = []
-      if (state === ATTR_VALUE_W) state = ATTR
-      for (var i = 0; i < str.length; i++) {
-        var c = str.charAt(i)
-        if (state === TEXT && c === '<') {
-          if (reg.length) res.push([TEXT, reg])
-          reg = ''
-          state = OPEN
-        } else if (c === '>' && !quot(state) && state !== COMMENT) {
-          if (state === OPEN && reg.length) {
-            res.push([OPEN,reg])
-          } else if (state === ATTR_KEY) {
-            res.push([ATTR_KEY,reg])
-          } else if (state === ATTR_VALUE && reg.length) {
-            res.push([ATTR_VALUE,reg])
-          }
-          res.push([CLOSE])
-          reg = ''
-          state = TEXT
-        } else if (state === COMMENT && /-$/.test(reg) && c === '-') {
-          if (opts.comments) {
-            res.push([ATTR_VALUE,reg.substr(0, reg.length - 1)])
-          }
-          reg = ''
-          state = TEXT
-        } else if (state === OPEN && /^!--$/.test(reg)) {
-          if (opts.comments) {
-            res.push([OPEN, reg],[ATTR_KEY,'comment'],[ATTR_EQ])
-          }
-          reg = c
-          state = COMMENT
-        } else if (state === TEXT || state === COMMENT) {
-          reg += c
-        } else if (state === OPEN && c === '/' && reg.length) {
-          // no-op, self closing tag without a space <br/>
-        } else if (state === OPEN && /\s/.test(c)) {
-          if (reg.length) {
-            res.push([OPEN, reg])
-          }
-          reg = ''
-          state = ATTR
-        } else if (state === OPEN) {
-          reg += c
-        } else if (state === ATTR && /[^\s"'=/]/.test(c)) {
-          state = ATTR_KEY
-          reg = c
-        } else if (state === ATTR && /\s/.test(c)) {
-          if (reg.length) res.push([ATTR_KEY,reg])
-          res.push([ATTR_BREAK])
-        } else if (state === ATTR_KEY && /\s/.test(c)) {
-          res.push([ATTR_KEY,reg])
-          reg = ''
-          state = ATTR_KEY_W
-        } else if (state === ATTR_KEY && c === '=') {
-          res.push([ATTR_KEY,reg],[ATTR_EQ])
-          reg = ''
-          state = ATTR_VALUE_W
-        } else if (state === ATTR_KEY) {
-          reg += c
-        } else if ((state === ATTR_KEY_W || state === ATTR) && c === '=') {
-          res.push([ATTR_EQ])
-          state = ATTR_VALUE_W
-        } else if ((state === ATTR_KEY_W || state === ATTR) && !/\s/.test(c)) {
-          res.push([ATTR_BREAK])
-          if (/[\w-]/.test(c)) {
-            reg += c
-            state = ATTR_KEY
-          } else state = ATTR
-        } else if (state === ATTR_VALUE_W && c === '"') {
-          state = ATTR_VALUE_DQ
-        } else if (state === ATTR_VALUE_W && c === "'") {
-          state = ATTR_VALUE_SQ
-        } else if (state === ATTR_VALUE_DQ && c === '"') {
-          res.push([ATTR_VALUE,reg],[ATTR_BREAK])
-          reg = ''
-          state = ATTR
-        } else if (state === ATTR_VALUE_SQ && c === "'") {
-          res.push([ATTR_VALUE,reg],[ATTR_BREAK])
-          reg = ''
-          state = ATTR
-        } else if (state === ATTR_VALUE_W && !/\s/.test(c)) {
-          state = ATTR_VALUE
-          i--
-        } else if (state === ATTR_VALUE && /\s/.test(c)) {
-          res.push([ATTR_VALUE,reg],[ATTR_BREAK])
-          reg = ''
-          state = ATTR
-        } else if (state === ATTR_VALUE || state === ATTR_VALUE_SQ
-        || state === ATTR_VALUE_DQ) {
-          reg += c
-        }
-      }
-      if (state === TEXT && reg.length) {
-        res.push([TEXT,reg])
-        reg = ''
-      } else if (state === ATTR_VALUE && reg.length) {
-        res.push([ATTR_VALUE,reg])
-        reg = ''
-      } else if (state === ATTR_VALUE_DQ && reg.length) {
-        res.push([ATTR_VALUE,reg])
-        reg = ''
-      } else if (state === ATTR_VALUE_SQ && reg.length) {
-        res.push([ATTR_VALUE,reg])
-        reg = ''
-      } else if (state === ATTR_KEY) {
-        res.push([ATTR_KEY,reg])
-        reg = ''
-      }
-      return res
-    }
-  }
-
-  function strfn (x) {
-    if (typeof x === 'function') return x
-    else if (typeof x === 'string') return x
-    else if (x && typeof x === 'object') return x
-    else if (x === null || x === undefined) return x
-    else return concat('', x)
-  }
-}
-
-function quot (state) {
-  return state === ATTR_VALUE_SQ || state === ATTR_VALUE_DQ
-}
-
-var closeRE = RegExp('^(' + [
-  'area', 'base', 'basefont', 'bgsound', 'br', 'col', 'command', 'embed',
-  'frame', 'hr', 'img', 'input', 'isindex', 'keygen', 'link', 'meta', 'param',
-  'source', 'track', 'wbr', '!--',
-  // SVG TAGS
-  'animate', 'animateTransform', 'circle', 'cursor', 'desc', 'ellipse',
-  'feBlend', 'feColorMatrix', 'feComposite',
-  'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap',
-  'feDistantLight', 'feFlood', 'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR',
-  'feGaussianBlur', 'feImage', 'feMergeNode', 'feMorphology',
-  'feOffset', 'fePointLight', 'feSpecularLighting', 'feSpotLight', 'feTile',
-  'feTurbulence', 'font-face-format', 'font-face-name', 'font-face-uri',
-  'glyph', 'glyphRef', 'hkern', 'image', 'line', 'missing-glyph', 'mpath',
-  'path', 'polygon', 'polyline', 'rect', 'set', 'stop', 'tref', 'use', 'view',
-  'vkern'
-].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
-function selfClosing (tag) { return closeRE.test(tag) }
-
-},{"hyperscript-attribute-to-property":24}],26:[function(require,module,exports){
-var inserted = {};
-
-module.exports = function (css, options) {
-    if (inserted[css]) return;
-    inserted[css] = true;
-    
-    var elem = document.createElement('style');
-    elem.setAttribute('type', 'text/css');
-
-    if ('textContent' in elem) {
-      elem.textContent = css;
-    } else {
-      elem.styleSheet.cssText = css;
-    }
-    
-    var head = document.getElementsByTagName('head')[0];
-    if (options && options.prepend) {
-        head.insertBefore(elem, head.childNodes[0]);
-    } else {
-        head.appendChild(elem);
-    }
-};
-
-},{}],27:[function(require,module,exports){
-(function (global){
+(function (global){(function (){
 
 // ------------------------------------------
 // Rellax.js
@@ -1760,1191 +498,2325 @@ module.exports = function (css, options) {
   return Rellax;
 }));
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],28:[function(require,module,exports){
-/**
- * Zenscroll 4.0.2
- * https://github.com/zengabor/zenscroll/
- *
- * Copyright 2015–2018 Gabor Lenard
- *
- * This is free and unencumbered software released into the public domain.
- * 
- * Anyone is free to copy, modify, publish, use, compile, sell, or
- * distribute this software, either in source code form or as a compiled
- * binary, for any purpose, commercial or non-commercial, and by any
- * means.
- * 
- * In jurisdictions that recognize copyright laws, the author or authors
- * of this software dedicate any and all copyright interest in the
- * software to the public domain. We make this dedication for the benefit
- * of the public at large and to the detriment of our heirs and
- * successors. We intend this dedication to be an overt act of
- * relinquishment in perpetuity of all present and future rights to this
- * software under copyright law.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- * 
- * For more information, please refer to <http://unlicense.org>
- * 
- */
-
-/*jshint devel:true, asi:true */
-
-/*global define, module */
-
-
-(function (root, factory) {
-	if (typeof define === "function" && define.amd) {
-		define([], factory())
-	} else if (typeof module === "object" && module.exports) {
-		module.exports = factory()
-	} else {
-		(function install() {
-			// To make sure Zenscroll can be referenced from the header, before `body` is available
-			if (document && document.body) {
-				root.zenscroll = factory()
-			} else {
-				// retry 9ms later
-				setTimeout(install, 9)
-			}
-		})()
-	}
-}(this, function () {
-	"use strict"
-
-
-	// Detect if the browser already supports native smooth scrolling (e.g., Firefox 36+ and Chrome 49+) and it is enabled:
-	var isNativeSmoothScrollEnabledOn = function (elem) {
-		return elem && "getComputedStyle" in window &&
-			window.getComputedStyle(elem)["scroll-behavior"] === "smooth"
-	}
-
-
-	// Exit if it’s not a browser environment:
-	if (typeof window === "undefined" || !("document" in window)) {
-		return {}
-	}
-
-
-	var makeScroller = function (container, defaultDuration, edgeOffset) {
-
-		// Use defaults if not provided
-		defaultDuration = defaultDuration || 999 //ms
-		if (!edgeOffset && edgeOffset !== 0) {
-			// When scrolling, this amount of distance is kept from the edges of the container:
-			edgeOffset = 9 //px
-		}
-
-		// Handling the life-cycle of the scroller
-		var scrollTimeoutId
-		var setScrollTimeoutId = function (newValue) {
-			scrollTimeoutId = newValue
-		}
-
-		/**
-		 * Stop the current smooth scroll operation immediately
-		 */
-		var stopScroll = function () {
-			clearTimeout(scrollTimeoutId)
-			setScrollTimeoutId(0)
-		}
-
-		var getTopWithEdgeOffset = function (elem) {
-			return Math.max(0, container.getTopOf(elem) - edgeOffset)
-		}
-
-		/**
-		 * Scrolls to a specific vertical position in the document.
-		 *
-		 * @param {targetY} The vertical position within the document.
-		 * @param {duration} Optionally the duration of the scroll operation.
-		 *        If not provided the default duration is used.
-		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
-		 */
-		var scrollToY = function (targetY, duration, onDone) {
-			stopScroll()
-			if (duration === 0 || (duration && duration < 0) || isNativeSmoothScrollEnabledOn(container.body)) {
-				container.toY(targetY)
-				if (onDone) {
-					onDone()
-				}
-			} else {
-				var startY = container.getY()
-				var distance = Math.max(0, targetY) - startY
-				var startTime = new Date().getTime()
-				duration = duration || Math.min(Math.abs(distance), defaultDuration);
-				(function loopScroll() {
-					setScrollTimeoutId(setTimeout(function () {
-						// Calculate percentage:
-						var p = Math.min(1, (new Date().getTime() - startTime) / duration)
-						// Calculate the absolute vertical position:
-						var y = Math.max(0, Math.floor(startY + distance*(p < 0.5 ? 2*p*p : p*(4 - p*2)-1)))
-						container.toY(y)
-						if (p < 1 && (container.getHeight() + y) < container.body.scrollHeight) {
-							loopScroll()
-						} else {
-							setTimeout(stopScroll, 99) // with cooldown time
-							if (onDone) {
-								onDone()
-							}
-						}
-					}, 9))
-				})()
-			}
-		}
-
-		/**
-		 * Scrolls to the top of a specific element.
-		 *
-		 * @param {elem} The element to scroll to.
-		 * @param {duration} Optionally the duration of the scroll operation.
-		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
-		 */
-		var scrollToElem = function (elem, duration, onDone) {
-			scrollToY(getTopWithEdgeOffset(elem), duration, onDone)
-		}
-
-		/**
-		 * Scrolls an element into view if necessary.
-		 *
-		 * @param {elem} The element.
-		 * @param {duration} Optionally the duration of the scroll operation.
-		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
-		 */
-		var scrollIntoView = function (elem, duration, onDone) {
-			var elemHeight = elem.getBoundingClientRect().height
-			var elemBottom = container.getTopOf(elem) + elemHeight
-			var containerHeight = container.getHeight()
-			var y = container.getY()
-			var containerBottom = y + containerHeight
-			if (getTopWithEdgeOffset(elem) < y || (elemHeight + edgeOffset) > containerHeight) {
-				// Element is clipped at top or is higher than screen.
-				scrollToElem(elem, duration, onDone)
-			} else if ((elemBottom + edgeOffset) > containerBottom) {
-				// Element is clipped at the bottom.
-				scrollToY(elemBottom - containerHeight + edgeOffset, duration, onDone)
-			} else if (onDone) {
-				onDone()
-			}
-		}
-
-		/**
-		 * Scrolls to the center of an element.
-		 *
-		 * @param {elem} The element.
-		 * @param {duration} Optionally the duration of the scroll operation.
-		 * @param {offset} Optionally the offset of the top of the element from the center of the screen.
-		 *        A value of 0 is ignored.
-		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
-		 */
-		var scrollToCenterOf = function (elem, duration, offset, onDone) {
-			scrollToY(Math.max(0, container.getTopOf(elem) - container.getHeight()/2 + (offset || elem.getBoundingClientRect().height/2)), duration, onDone)
-		}
-
-		/**
-		 * Changes default settings for this scroller.
-		 *
-		 * @param {newDefaultDuration} Optionally a new value for default duration, used for each scroll method by default.
-		 *        Ignored if null or undefined.
-		 * @param {newEdgeOffset} Optionally a new value for the edge offset, used by each scroll method by default. Ignored if null or undefined.
-		 * @returns An object with the current values.
-		 */
-		var setup = function (newDefaultDuration, newEdgeOffset) {
-			if (newDefaultDuration === 0 || newDefaultDuration) {
-				defaultDuration = newDefaultDuration
-			}
-			if (newEdgeOffset === 0 || newEdgeOffset) {
-				edgeOffset = newEdgeOffset
-			}
-			return {
-				defaultDuration: defaultDuration,
-				edgeOffset: edgeOffset
-			}
-		}
-
-		return {
-			setup: setup,
-			to: scrollToElem,
-			toY: scrollToY,
-			intoView: scrollIntoView,
-			center: scrollToCenterOf,
-			stop: stopScroll,
-			moving: function () { return !!scrollTimeoutId },
-			getY: container.getY,
-			getTopOf: container.getTopOf
-		}
-
-	}
-
-
-	var docElem = document.documentElement
-	var getDocY = function () { return window.scrollY || docElem.scrollTop }
-
-	// Create a scroller for the document:
-	var zenscroll = makeScroller({
-		body: document.scrollingElement || document.body,
-		toY: function (y) { window.scrollTo(0, y) },
-		getY: getDocY,
-		getHeight: function () { return window.innerHeight || docElem.clientHeight },
-		getTopOf: function (elem) { return elem.getBoundingClientRect().top + getDocY() - docElem.offsetTop }
-	})
-
-
-	/**
-	 * Creates a scroller from the provided container element (e.g., a DIV)
-	 *
-	 * @param {scrollContainer} The vertical position within the document.
-	 * @param {defaultDuration} Optionally a value for default duration, used for each scroll method by default.
-	 *        Ignored if 0 or null or undefined.
-	 * @param {edgeOffset} Optionally a value for the edge offset, used by each scroll method by default. 
-	 *        Ignored if null or undefined.
-	 * @returns A scroller object, similar to `zenscroll` but controlling the provided element.
-	 */
-	zenscroll.createScroller = function (scrollContainer, defaultDuration, edgeOffset) {
-		return makeScroller({
-			body: scrollContainer,
-			toY: function (y) { scrollContainer.scrollTop = y },
-			getY: function () { return scrollContainer.scrollTop },
-			getHeight: function () { return Math.min(scrollContainer.clientHeight, window.innerHeight || docElem.clientHeight) },
-			getTopOf: function (elem) { return elem.offsetTop }
-		}, defaultDuration, edgeOffset)
-	}
-
-
-	// Automatic link-smoothing on achors
-	// Exclude IE8- or when native is enabled or Zenscroll auto- is disabled
-	if ("addEventListener" in window && !window.noZensmooth && !isNativeSmoothScrollEnabledOn(document.body)) {
-
-		var isHistorySupported = "history" in window && "pushState" in history
-		var isScrollRestorationSupported = isHistorySupported && "scrollRestoration" in history
-
-		// On first load & refresh make sure the browser restores the position first
-		if (isScrollRestorationSupported) {
-			history.scrollRestoration = "auto"
-		}
-
-		window.addEventListener("load", function () {
-
-			if (isScrollRestorationSupported) {
-				// Set it to manual
-				setTimeout(function () { history.scrollRestoration = "manual" }, 9)
-				window.addEventListener("popstate", function (event) {
-					if (event.state && "zenscrollY" in event.state) {
-						zenscroll.toY(event.state.zenscrollY)
-					}
-				}, false)
-			}
-
-			// Add edge offset on first load if necessary
-			// This may not work on IE (or older computer?) as it requires more timeout, around 100 ms
-			if (window.location.hash) {
-				setTimeout(function () {
-					// Adjustment is only needed if there is an edge offset:
-					var edgeOffset = zenscroll.setup().edgeOffset
-					if (edgeOffset) {
-						var targetElem = document.getElementById(window.location.href.split("#")[1])
-						if (targetElem) {
-							var targetY = Math.max(0, zenscroll.getTopOf(targetElem) - edgeOffset)
-							var diff = zenscroll.getY() - targetY
-							// Only do the adjustment if the browser is very close to the element:
-							if (0 <= diff && diff < 9 ) {
-								window.scrollTo(0, targetY)
-							}
-						}
-					}
-				}, 9)
-			}
-
-		}, false)
-
-		// Handling clicks on anchors
-		var RE_noZensmooth = new RegExp("(^|\\s)noZensmooth(\\s|$)")
-		window.addEventListener("click", function (event) {
-			var anchor = event.target
-			while (anchor && anchor.tagName !== "A") {
-				anchor = anchor.parentNode
-			}
-			// Let the browser handle the click if it wasn't with the primary button, or with some modifier keys:
-			if (!anchor || event.which !== 1 || event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) {
-				return
-			}
-			// Save the current scrolling position so it can be used for scroll restoration:
-			if (isScrollRestorationSupported) {
-				var historyState = history.state && typeof history.state === "object" ? history.state : {}
-				historyState.zenscrollY = zenscroll.getY()
-				try {
-					history.replaceState(historyState, "")
-				} catch (e) {
-					// Avoid the Chrome Security exception on file protocol, e.g., file://index.html
-				}
-			}
-			// Find the referenced ID:
-			var href = anchor.getAttribute("href") || ""
-			if (href.indexOf("#") === 0 && !RE_noZensmooth.test(anchor.className)) {
-				var targetY = 0
-				var targetElem = document.getElementById(href.substring(1))
-				if (href !== "#") {
-					if (!targetElem) {
-						// Let the browser handle the click if the target ID is not found.
-						return
-					}
-					targetY = zenscroll.getTopOf(targetElem)
-				}
-				event.preventDefault()
-				// By default trigger the browser's `hashchange` event...
-				var onDone = function () { window.location = href }
-				// ...unless there is an edge offset specified
-				var edgeOffset = zenscroll.setup().edgeOffset
-				if (edgeOffset) {
-					targetY = Math.max(0, targetY - edgeOffset)
-					if (isHistorySupported) {
-						onDone = function () { history.pushState({}, "", href) }
-					}
-				}
-				zenscroll.toY(targetY, null, onDone)
-			}
-		}, false)
-
-	}
-
-
-	return zenscroll
-
-
-}));
-
-},{}],29:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-
-// pages
-const topnav = require('topnav')
-const Header = require('header')
-const datdot = require('datdot')
-const editor = require('editor')
-const smartcontract_codes = require('smartcontract-codes')
-const supporters = require('supporters')
-const our_contributors = require('our-contributors')
-const Footer = require('footer')
-const fetch_data = require('fetch-data')
-
-module.exports = make_page
-
-function make_page(opts, done, lang) {
-  switch(lang) {
-    case 'zh-tw':
-    case 'ja':
-    case 'th':
-    case 'fr':
-      var path = `./src/node_modules/lang/${lang}.json`
-      break
-    default:
-      var path = `./src/node_modules/lang/en-us.json`
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],2:[function(require,module,exports){
+(function (__filename){(function (){
+/******************************************************************************
+  STATE
+******************************************************************************/
+const STATE = require('STATE')
+const name = 'app'
+const statedb = STATE(__filename)
+const shopts = { mode: 'closed' }
+// ----------------------------------------
+const { sdb, subs: [get], sub_modules } = statedb(fallback_module, fallback_instance)
+function fallback_module () {
+  return {
+    _: {
+      topnav: {},
+      theme_widget: {},
+      header: {},
+      footer: {}
+    }
   }
-  fetch_data(path).then(async (text) => {
-    let { menu, header, section1, section2, section3, section4, section5, footer } = text.pages
-    const {theme} = opts
-    const css = styles
-    const landingPage = bel`
-      <div id="top" class=${css.wrap}>
-        ${await topnav(menu)}
-        ${await Header(header)}
-        ${await datdot(section1)}
-        ${await editor(section2)}
-        ${await smartcontract_codes(section3)}
-        ${await supporters(section4)}
-        ${await our_contributors(section5)}
-        ${await Footer(footer)}
-      </div>`
-  return done(null, landingPage)
+}
+function fallback_instance () {
+  return {
+    _: {
+      topnav: {},
+      theme_widget: {},
+      header: {},
+      footer: {}
+    },
+    inputs: {
+      'app.css': {
+        $ref: new URL('src/node_modules/css/default/app.css', location).href
+      }
+    }
+  }
+}
+function override ([topnav]) {
+  const data = topnav()
+  console.log(data)
+  data['topnav.json'].data.links.push({
+    id: 'app',
+    text: 'app',
+    url: 'app'
+  })
+  return data
+}
+/******************************************************************************
+  MAKE_PAGE COMPONENT
+******************************************************************************/
+const IO = require('io')
+const modules = {
+  [sub_modules.theme_widget]: require('theme_widget'),
+  [sub_modules.topnav]: require('topnav'),
+  [sub_modules.header]: require('header'),
+  //  datdot : require('datdot'),
+  //  editor : require('editor'),
+  //  smartcontract_codes : require('smartcontract_codes'),
+  //  supporters : require('supporters'),
+  //  our_contributors : require('our_contributors'),
+  [sub_modules.footer]: require('footer')
+}
+module.exports = app
 
-  }).catch( err => {
-    return done(err, null)
+async function app (opts) {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const { id, sdb } = await get(opts.sid)
+  const on = {
+    jump,
+    css: inject
+  }
+
+  const send = await IO(id, name, on)
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.createElement('div')
+  const shadow = el.attachShadow(shopts)
+  shadow.innerHTML = `
+  <div id="top" class='wrap'></div>
+  <style></style>`
+  const style = shadow.querySelector('style')
+  const main = shadow.querySelector('div')
+
+  const subs = await sdb.watch(onbatch)
+
+  console.log(subs, modules)
+  main.append(...await Promise.all(
+    subs.map(async ({ sid, type }) => {
+      const el = document.createElement('div')
+      el.name = type
+      const shadow = el.attachShadow(shopts)
+      shadow.append(await modules[type]({ sid, hub: [id] }))
+      return el
+    })))
+  return el
+
+  function onbatch (batch) {
+    for (const { type, data } of batch) {
+      on[type](data)
+    }
+  }
+  async function jump ({ data }) {
+    main.querySelector('#' + data).scrollIntoView({ behavior: 'smooth' })
+  }
+  async function inject (data) {
+    style.innerHTML = data.join('\n')
+  }
+}
+
+}).call(this)}).call(this,"/src/app.js")
+},{"STATE":3,"footer":4,"header":9,"io":10,"theme_widget":14,"topnav":16}],3:[function(require,module,exports){
+const localdb = require('localdb')
+const io = require('io')
+
+let db
+/** Data stored in a entry in db by STATE (Schema): 
+ * id (String): Node Path 
+ * name (String/Optional): Any (To be used in theme_widget)
+ * type (String): Module Name for module / Module id for instances
+ * hubs (Array): List of hub-nodes
+ * subs (Array): List of sub-nodes
+ * inputs (Array): List of input files
+ */
+// Constants and initial setup (global level)
+const VERSION = 13
+const HELPER_MODULES = ['io', 'localdb', 'STATE']
+const FALLBACK_POST_ERROR = '\nFor more info visit https://github.com/alyhxn/playproject/blob/main/doc/state/temp.md#defining-fallbacks'
+const FALLBACK_SYNTAX_POST_ERROR = '\nFor more info visit https://github.com/alyhxn/playproject/blob/main/doc/state/temp.md#key-descriptions'
+const FALLBACK_SUBS_POST_ERROR = '\nFor more info visit https://github.com/alyhxn/playproject/blob/main/doc/state/temp.md#shadow-dom-integration'
+const status = {
+  root_module: true, 
+  root_instance: true, 
+  overrides: {},
+  tree: {},
+  tree_pointers: {},
+  modulepaths: {},
+  addresses: {},
+  inits: [],
+  open_branches: {},
+  db,
+  local_statuses: {},
+  listeners: {},
+  missing_supers: new Set(),
+  imports: {},
+  expected_imports: {},
+  used_ids: new Set(),
+  a2i: {},
+  i2a: {},
+  s2i: {},
+  i2s: {},
+  services: {},
+  args: {},
+  callbacks: [],
+  root_datasets: [],
+  dataset_types: {},
+  helpers: {
+    listify
+  }
+}
+window.STATEMODULE = status
+
+
+
+// Symbol mappings
+let admins = [0]
+
+// Inner Function
+function STATE (address, modulepath, dependencies) {
+  status.modulepaths[modulepath] = 0
+  status.addresses[modulepath] = address
+  //Variables (module-level)
+  
+  const local_status = {
+    name: extract_filename(address),
+    module_id: modulepath,
+    deny: {},
+    sub_modules: [],
+    sub_instances: {}
+  }
+  status.local_statuses[modulepath] = local_status
+  if(status.ROOT_ID)
+    return statedb
+  const sdb = statedb
+  sdb.admin = admin
+  return sdb
+  
+  function admin (imported_db = localdb) {
+    db = imported_db()
+    status.db = db
+    // Version check and initialization
+    status.fallback_check = Boolean(check_version())
+    status.fallback_check && db.add(['playproject_version'], VERSION)
+    status.ROOT_ID = modulepath
+    return { on }
+    function on (callback) {
+      status.callback = callback
+    }
+  }
+  function statedb (fallback) {
+    if(!status.ROOT_ID)
+      throw new Error('Admin access required! Call statedb.admin() first.' + FALLBACK_POST_ERROR)
+
+    const data = fallback(status.args[modulepath], { listify: tree => listify(tree, modulepath), tree: status.tree_pointers[modulepath] })
+    local_status.fallback_instance = data.api
+    const super_id = modulepath.split(/>(?=[^>]*$)/)[0]
+    
+    if(super_id === status.current_node)
+      status.expected_imports[super_id].splice(status.expected_imports[super_id].indexOf(modulepath), 1)
+    else if((status?.current_node?.split('>').length || 0) < super_id.split('>').length){
+      let temp = super_id
+      while(temp !== status.current_node && temp.includes('>')){
+        status.open_branches[temp] = 0
+        temp = temp.split(/>(?=[^>]*$)/)[0]
+      }
+    }
+    else{
+      let temp = status.current_node
+      while(temp !== super_id && temp.includes('>')){
+        status.open_branches[temp] = 0
+        temp = temp.split(/>(?=[^>]*$)/)[0]
+      }
+    }
+
+    if(data._){
+      status.open_branches[modulepath] = Object.values(data._).filter(node => node).length
+      status.expected_imports[modulepath] = Object.keys(data._)
+      status.current_node = modulepath
+    }
+
+    local_status.fallback_module = new Function(`return ${fallback.toString()}`)()
+    verify_imports(modulepath, dependencies, data)
+    const updated_status = append_tree_node(modulepath, status)
+    Object.assign(status.tree_pointers, updated_status.tree_pointers)
+    Object.assign(status.open_branches, updated_status.open_branches)
+    status.inits.push(init_module)
+    
+    // console.log(Object.values(status.open_branches).reduce((acc, curr) => acc + curr, 0))
+    if(!Object.values(status.open_branches).reduce((acc, curr) => acc + curr, 0)){
+      status.inits.forEach(init => init())
+    }
+    
+    const sdb = create_statedb_interface(local_status, modulepath, xtype = 'module')
+    sdb.id = modulepath
+    status.dataset = sdb.private_api
+
+    const get = init_instance
+    const extra_fallbacks = Object.entries(local_status.fallback_instance || {})
+    extra_fallbacks.length && extra_fallbacks.forEach(([key]) => {
+      get[key] = (sid) => get(sid, key)
+    })
+    if(!status.a2i[modulepath]){
+      status.i2a[status.a2i[modulepath] = encode(modulepath)] = modulepath
+    }
+    
+    try {
+      status.callback && status.callback({ type: 'create sdb', data: modulepath })
+      return {
+      id: modulepath,
+      sdb: sdb.public_api,
+      get: init_instance,
+      io: io(status.a2i[modulepath], modulepath, status.callback)
+      // sub_modules
+    }
+    } catch (error) {
+      throw new Error(`ID: ${modulepath}\n`+error)
+    }
+    
+  }
+  function append_tree_node (id, status) {
+    const [super_id, name] = id.split(/>(?=[^>]*$)/)
+
+    if(Object.keys(status.tree).length){
+      if(status.tree_pointers[super_id]){
+        status.tree_pointers[super_id]._[name] = { $: { _: {} } }
+        status.tree_pointers[id] = status.tree_pointers[super_id]._[name].$
+        status.open_branches[super_id]--
+      }
+      else{
+        let new_name = name
+        let new_super_id = super_id
+
+
+        while(!status.tree_pointers[new_super_id]){
+          [new_super_id, temp_name] = new_super_id.split(/>(?=[^>]*$)/)
+          new_name = temp_name + '>' + new_name
+        }
+        status.tree_pointers[new_super_id]._[new_name] = { $: { _: {} } }
+        status.tree_pointers[id] = status.tree_pointers[new_super_id]._[new_name].$
+        if(!status.missing_supers.has(super_id))
+          status.open_branches[new_super_id]--
+        status.missing_supers.add(super_id)
+      }
+    }
+    else{
+      status.tree[id] = { $: { _: {} } }
+      status.tree_pointers[id] = status.tree[id].$
+    }
+    return status
+  }
+  function init_module () {
+    const {statedata, state_entries, newstatus, updated_local_status} = get_module_data(local_status.fallback_module)
+    statedata.orphan && (local_status.orphan = true)
+    //side effects
+    if (status.fallback_check) {
+      Object.assign(status.root_module, newstatus.root_module)
+      Object.assign(status.overrides, newstatus.overrides)
+      console.log('Main module: ', statedata.id, '\n', state_entries)
+      updated_local_status && Object.assign(local_status, updated_local_status)
+      // console.log('Local status: ', local_status.fallback_instance, statedata.api)
+      const old_fallback = local_status.fallback_instance
+      
+      if(local_status.fallback_instance ? local_status.fallback_instance?.toString() === statedata.api?.toString() : false)
+        local_status.fallback_instance = statedata.api
+      else
+        local_status.fallback_instance = (args, tools) => {
+          return statedata.api(args, tools, [old_fallback])
+        }
+      const extra_fallbacks = Object.entries(old_fallback || {})
+      extra_fallbacks.length && extra_fallbacks.forEach(([key, value]) => {
+        local_status.fallback_instance[key] = (args, tools) => {
+          console.log('Extra fallback: ', statedata.api[key] ? statedata.api[key] : old_fallback[key])
+          return (statedata.api[key] ? statedata.api[key] : old_fallback[key])(args, tools, [value])
+        }
+      })
+      db.append(['state'], state_entries)
+      db.add(['root_datasets'], [
+        { name: 'state' }
+      ])
+      // add_source_code(statedata.inputs) // @TODO: remove side effect
+    }
+    [local_status.sub_modules, symbol2ID, ID2Symbol, address2ID, ID2Address] = symbolfy(statedata, local_status)
+    Object.assign(status.s2i, symbol2ID)
+    Object.assign(status.i2s, ID2Symbol)
+    Object.assign(status.a2i, address2ID)
+    Object.assign(status.i2a, ID2Address)
+    
+    //Setup local data (module level)
+    if(status.root_module){
+      status.root_module = false
+      statedata.admins && admins.push(...statedata.admins)
+    }
+    // @TODO: handle sub_modules when dynamic require is implemented
+    // const sub_modules = {}
+    // statedata.subs && statedata.subs.forEach(id => {
+    //   sub_modules[db.read(['state', id]).type] = id
+    // })
+  }
+  function init_instance (sid, fallback_key) {
+    const fallback = local_status.fallback_instance[fallback_key] || local_status.fallback_instance
+    const {statedata, state_entries, newstatus} = get_instance_data(sid, fallback)
+    
+    if (status.fallback_check) {
+      Object.assign(status.root_module, newstatus.root_module)
+      Object.assign(status.overrides, newstatus.overrides)
+      Object.assign(status.tree, newstatus.tree)
+      console.log('Main instance: ', statedata.id, '\n', state_entries)
+      db.append(['state'], state_entries)
+    }
+    [local_status.sub_instances[statedata.id], symbol2ID, ID2Symbol, address2ID, ID2Address] = symbolfy(statedata, local_status)
+    Object.assign(status.s2i, symbol2ID)
+    Object.assign(status.i2s, ID2Symbol)
+    Object.assign(status.a2i, address2ID)
+    Object.assign(status.i2a, ID2Address)
+    
+    const sdb = create_statedb_interface(local_status, statedata.id, xtype = 'instance')
+    sdb.id = statedata.id
+
+    const sanitized_event = {}
+    statedata.net && Object.keys(statedata.net).forEach(node => {
+      statedata.net[node].id = status.a2i[node] || (status.a2i[node] = encode(node))
+    })
+
+    status.callback && status.callback({ type:'create sdb', data:statedata.id })
+    return {
+      id: statedata.id,
+      net: statedata.net,
+      sdb: sdb.public_api,
+      io: io(status.a2i[statedata.id], modulepath, status.callback),
+    }
+  }
+  function get_module_data (fallback) {
+    let data = db.read(['state', modulepath])
+    if (status.fallback_check) {
+      if (data) {
+        var {sanitized_data, updated_status} = preprocess({ fun_status: status, fallback, xtype: 'module', pre_data: data })
+      } 
+      else if (status.root_module) {
+        var {sanitized_data, updated_status} = preprocess({ fun_status: status, fallback, xtype: 'module', pre_data: {id: modulepath}})
+      } 
+      else {
+        var {sanitized_data, updated_status, updated_local_status} = find_super({ xtype: 'module', fallback, fun_status:status, local_status })
+      }
+      data = sanitized_data.entry
+    }
+    return {
+      statedata: data,
+      state_entries: sanitized_data?.entries,
+      newstatus: updated_status,
+      updated_local_status
+    }
+  }
+  function get_instance_data (sid, fallback) {
+    let id = status.s2i[sid]
+    if(id && (id.split(':')[0] !== modulepath || !id.includes(':')))
+        throw new Error(`Access denied! Wrong SID '${id}' used by instance of '${modulepath}'` + FALLBACK_SUBS_POST_ERROR)
+    if(status.used_ids.has(id))
+      throw new Error(`Access denied! SID '${id}' is already used` + FALLBACK_SUBS_POST_ERROR)
+
+    id && status.used_ids.add(id)
+    let data = id && db.read(['state', id])
+    let sanitized_data, updated_status = status
+    if (status.fallback_check) {
+      if (!data && !status.root_instance) {
+        ({sanitized_data, updated_status} = find_super({ xtype: 'instance', fallback, fun_status: status }))
+      } else {
+        ({sanitized_data, updated_status} = preprocess({
+          fun_status: status,
+          fallback, 
+          xtype: 'instance',
+          pre_data: data || {id: get_instance_path(modulepath)}
+        }))
+        updated_status.root_instance = false
+      }
+      data = sanitized_data.entry
+    }
+    else if (status.root_instance) {
+      data = db.read(['state', id || get_instance_path(modulepath)])
+      updated_status.tree = JSON.parse(JSON.stringify(status.tree))
+      updated_status.root_instance = false
+    }
+    
+    if (!data && local_status.orphan) {
+      data = db.read(['state', get_instance_path(modulepath)])
+    }
+    return {
+      statedata: data,
+      state_entries: sanitized_data?.entries,
+      newstatus: updated_status,
+    }
+  }
+  function find_super ({ xtype, fallback, fun_status, local_status }) {
+    let modulepath_super = modulepath.split(/\>(?=[^>]*$)/)[0]
+    let modulepath_grand = modulepath_super.split(/\>(?=[^>]*$)/)[0]
+    if(status.modulepaths[modulepath_super] !== undefined){
+      throw new Error(`Node "${modulepath}" is not defined in the fallback of "${modulepath_super}"` + FALLBACK_SUBS_POST_ERROR)
+    }
+    const split = modulepath.split('>')
+    let data
+    const entries = {}
+    if(xtype === 'module'){
+      let name = split.at(-1)
+      while(!data && modulepath_grand.includes('>')){
+        data = db.read(['state', modulepath_super])
+        const split = modulepath_super.split(/\>(?=[^>]*$)/)
+        modulepath_super = split[0]
+        name = split[1] + '>' + name
+      }
+      console.log(data)
+      data.path = data.id = modulepath_super + '>' + name
+      modulepath = modulepath_super + '>' + name
+      local_status.name = name
+
+      const super_data = db.read(['state', modulepath_super])
+      super_data.subs.forEach((sub_id, i) => {
+        if(sub_id === modulepath_super){
+          super_data.subs.splice(i, 1)
+          return
+        }
+      })
+      super_data.subs.push(data.id)
+      entries[super_data.id] = super_data
+    }
+    else{
+      //@TODO: Make the :0 dynamic
+      let instance_path_super = modulepath_super + ':0'
+      let temp
+      while(!data && temp !== modulepath_super){
+        data = db.read(['state', instance_path_super])
+        temp = modulepath_super
+        modulepath_grand = modulepath_super = modulepath_super.split(/\>(?=[^>]*$)/)[0]
+        instance_path_super = modulepath_super + ':0'
+      }
+      data.path = data.id = get_instance_path(modulepath)
+      temp = null
+      let super_data
+      let instance_path_grand = modulepath_grand.includes('>') ? modulepath_grand + ':0' : modulepath_grand
+
+      while(!super_data?.subs && temp !== modulepath_grand){
+        super_data = db.read(['state', instance_path_grand])
+        temp = modulepath_grand
+        modulepath_grand = modulepath_grand.split(/\>(?=[^>]*$)/)[0]
+        instance_path_grand = modulepath_grand.includes('>') ? modulepath_grand + ':0' : modulepath_grand
+      }
+      
+      super_data.subs.forEach((sub_id, i) => {
+        if(sub_id === instance_path_super){
+          super_data.subs.splice(i, 1)
+          return
+        }
+      })
+      super_data.subs.push(data.id)
+      entries[super_data.id] = super_data
+    }
+    data.name = split.at(-1)
+    return { updated_local_status: local_status,
+      ...preprocess({ 
+      fun_status,
+      fallback, xtype, 
+      pre_data: data, 
+      orphan_check: true, entries }) }
+  }
+  function preprocess ({ fallback, xtype, pre_data = {}, orphan_check, fun_status, entries }) {
+    const used_keys = new Set()
+    let {id: pre_id, hubs: pre_hubs, mapping} = pre_data
+    const fallback_args = [status.args[pre_id], { listify: tree => listify(tree, modulepath), tree: status.tree_pointers[modulepath] }]
+    let fallback_data = fallback(...fallback_args)
+    try {
+      validate(fallback_data, xtype)
+    } catch (error) {
+      throw new Error(`in fallback function of ${pre_id} ${xtype}\n${error.stack}`)
+    }
+    const overrides = fun_status.overrides[pre_id]
+    if(overrides){
+      // console.log('Before: ', JSON.parse(JSON.stringify(fallback_data)))
+      const override = overrides.fun.shift()
+      fallback_data = override(...fallback_args, get_fallbacks({ fallback_data, overrides: overrides.fun, modulepath, instance_path: pre_id }))
+      // console.log('After: ', JSON.parse(JSON.stringify(fallback_data)))
+      console.log('Override used: ', pre_id, overrides.by, )
+      overrides.by.splice(0, 1)
+      overrides.fun.splice(0, 1)
+    }
+    
+    // console.log('fallback_data: ', fallback)
+    fun_status.overrides = register_overrides({ overrides: fun_status.overrides, tree: fallback_data, path: modulepath, id: pre_id, address })
+    console.log('overrides: ', Object.keys(fun_status.overrides))
+    orphan_check && (fallback_data.orphan = orphan_check)
+    //This function makes changes in fun_status (side effect)
+    return {
+      sanitized_data: sanitize_state({ local_id: '', entry: fallback_data, path: pre_id, xtype, mapping, entries }),
+      updated_status: fun_status
+    }
+    
+    function sanitize_state ({ local_id, entry, path, hub_entry, local_tree, entries = {}, xtype, mapping, xkey }) {
+      [path, entry, local_tree] = extract_data({ local_id, entry, path, hub_entry, local_tree, xtype, xkey })
+
+      entry.id =  path
+      entry.name = entry.name || local_id.split(':')[0] || local_status.name
+      mapping && (entry.mapping = mapping)
+      
+      entries = {...entries, ...sanitize_subs({ local_id, entry, path, local_tree, xtype, mapping })}
+      delete entry._
+      entries[entry.id] = entry
+      // console.log('Entry: ', entry)
+      return {entries, entry}
+    }
+    function extract_data ({ local_id, entry, path, hub_entry, xtype, xkey }) {
+      if (local_id) {
+        entry.hubs = [hub_entry.id]
+        if (xtype === 'instance') {
+          let temp_path = path.split(':')[0]
+          temp_path = temp_path ? temp_path + '>' : temp_path
+          const module_id = temp_path + local_id
+          entry.type = module_id
+          path = module_id + ':' + xkey
+          temp = Number(xkey)+1
+          temp2 = db.read(['state', path])
+          while(temp2 || used_keys.has(path)){
+            path = module_id + ':' + temp
+            temp2 = db.read(['state', path])
+            temp++
+          }
+        }
+        else {
+          entry.type = local_id
+          path = path ? path + '>' : ''
+          path = path + local_id
+        }
+      } 
+      else {
+        if (xtype === 'instance') {
+          entry.type = local_status.module_id
+        } else {
+          local_tree = JSON.parse(JSON.stringify(entry))
+          // @TODO Handle JS file entry
+          // console.log('pre_id:', pre_id)
+          // const file_id = local_status.name + '.js'
+          // entry.drive || (entry.drive = {})
+          // entry.drive[file_id] = { $ref: address }
+          entry.type = local_status.name
+        }
+        pre_hubs && (entry.hubs = pre_hubs)
+      }
+      return [path, entry, local_tree]
+    }
+    function sanitize_subs ({ local_id, entry, path, local_tree, xtype, mapping }) {
+      const entries = {}
+      if (!local_id) {
+        entry.subs = []
+
+        if (entry.drive) {
+          // entry.drive.theme && (entry.theme = entry.drive.theme)
+          // entry.drive.lang && (entry.lang = entry.drive.lang)
+          entry.inputs = []
+          const new_drive = []
+          const map_drive = {}
+          const path_def = {}
+          Object.entries(entry.drive).forEach(([dataset_type, dataset]) => {
+            if(dataset_type.split('/')[1]){
+              path_def[dataset_type] = dataset
+              return
+            }
+            dataset_type = dataset_type.split('/')[0]
+
+            const new_dataset = { files: [], mapping: {}, name: 'default' }
+            Object.entries(dataset).forEach(([key, value]) => {
+              new_dataset.files.push(append_file(key, value, entry, entries))
+            })
+            new_dataset.id = entry.id + '.default.' + dataset_type + '.dataset'
+            Object.assign(new_dataset, fill_dataset(new_dataset, dataset_type))
+            activate_dataset(new_dataset, dataset_type)
+            new_drive.push(new_dataset.id)
+
+          })
+          if (Object.keys(path_def).length) {
+            Object.entries(path_def).forEach(([path, value]) =>{
+              const [dataset_type, file_name] = path.split('/')
+              const new_dataset = map_drive[dataset_type] || (map_drive[dataset_type] = { files: [], mapping: {}, name: 'default' })
+              
+              if(!new_dataset.id){
+                new_dataset.id = entry.id + '.default.' + dataset_type + '.dataset'
+                if(new_drive.includes(new_dataset.id)){
+                  console.warn(`Both JSON and path definitions used for dataset "${dataset_type}" in the drive of "${entry.id}"`)
+                  return
+                }
+                Object.assign(new_dataset, fill_dataset(new_dataset, dataset_type))
+              }
+              new_dataset.files.push(append_file(file_name, value, entry, entries))
+              activate_dataset(new_dataset, dataset_type)
+            })
+            new_drive.push(...Object.values(map_drive).map(dataset => dataset.id))
+          }
+          entry.drive = new_drive
+        }
+        else
+          entry.drive = []
+
+        if(entry._){
+          //@TODO refactor when fallback structure improves
+          Object.entries(entry._).forEach(([local_id, value]) => {
+            value.mapping = sanitize_mapping(value.mapping)
+            Object.entries(value).forEach(([key, override]) => {
+              if(key === 'mapping' || (key === '$' && xtype === 'instance'))
+                return
+              const sub_instance = sanitize_state({ local_id, entry: value, path, hub_entry: entry, local_tree, xtype: key === '$' ? 'module' : 'instance', mapping: value['mapping'], xkey: key }).entry
+              entries[sub_instance.id] = JSON.parse(JSON.stringify(sub_instance))
+              entry.subs.push(sub_instance.id)
+              used_keys.add(sub_instance.id)
+            })
+        })}
+
+      }
+      return entries
+
+      function append_file (key, value, entry, entries) {
+        const sanitized_file = sanitize_file(key, value, entry, entries)
+        entries[sanitized_file.id] = sanitized_file
+        return sanitized_file.id
+      }
+      function fill_dataset (dataset, dataset_type) {
+        dataset.type = status.dataset_types[dataset_type] || dataset_type
+        dataset.xtype = dataset_type
+        dataset.id = db.gen_id(dataset.id)
+        dataset.node_id = entry.id
+        entries[dataset.id] = dataset
+      }
+      function activate_dataset (dataset, dataset_type) {
+        let check_name = true
+        entry.inputs.forEach(dataset_id => {
+          const ds = entries[dataset_id]
+          if(ds.type === dataset.type)
+            check_name = false
+        })
+        check_name && entry.inputs.push(dataset.id)
+
+        if(status.root_module)
+          fun_status.root_datasets.push(dataset.type)
+        else {
+          const hub_entry = db.read(['state', entry.hubs[0]])
+          if(!hub_entry.inputs)
+            throw new Error(`Node "${hub_entry.id}" has no "drive" defined in its fallback` + FALLBACK_SUBS_POST_ERROR)
+          if(!mapping?.[dataset_type])
+            throw new Error(`No mapping found for dataset "${dataset_type}" of subnode "${entry.id}" in node "${hub_entry.id}"\nTip: Add a mapping prop for "${dataset.type}" dataset in "${hub_entry.id}"'s fallback for "${entry.id}"` + FALLBACK_POST_ERROR)
+          const mapped_file_type = mapping[dataset.type]
+          hub_entry.inputs.some(input_id => {
+            const input = db.read(['state', input_id])
+            if(mapped_file_type === input.type){
+              input.mapping[entry.id] = dataset.id
+              entries[input_id] = input
+              return
+            }
+          })
+        }
+      }
+      function sanitize_mapping (mapping) {
+        if(!mapping)
+          return mapping
+        console.log('Sanitizing mapping: ', mapping, entry.id)
+        const new_mapping = mapping
+        Object.entries(mapping).forEach(([key, value]) => {
+          if(status.root_datasets.includes(value)){
+            fun_status.dataset_types[key] = value
+          }
+          else if(status.dataset_types[value]){
+            new_mapping[key] = status.dataset_types[value]
+            fun_status.dataset_types[key] = status.dataset_types[value]
+          }
+          else
+            throw new Error(`Mapped dataset "${value}" of "${entry.id}" can't be mapped to any root datasets` + FALLBACK_POST_ERROR)
+        })
+        return new_mapping
+      }
+    }
+    function sanitize_file (file_id, file, entry, entries) {
+      const type = file_id.split('.').at(-1)
+
+      if (!isNaN(Number(file_id))) return file_id
+
+      const raw_id = local_status.name + '.' + type
+      file.id = raw_id
+      file.name = file.name || file_id
+      file.type = type
+      file[file.type === 'js' ? 'subs' : 'hubs'] = [entry.id]
+      if(file.$ref){
+        file.address = file.address || address
+      }
+      file.id = db.gen_id(file.id)
+      while(entries[file.id]){
+        const no = file.id.split(':')[1]
+        file.id = raw_id + ':' + (Number(no || 0) + 1)
+      }
+      return file
+    }
+  }
+}
+
+// External Function (helper)
+function validate (data, xtype) {
+  /**  Expected structure and types
+   * Sample : "key1|key2:*:type1|type2"
+   * ":" : separator
+   * "|" : OR
+   * "*" : Required key
+   * */
+  const expected_structure = {
+    'api::function': () => {},
+    '_::object': {
+      ":*:object|number": {
+        ":*:function|string|object": '',
+        "mapping::": {}
+      }
+    },
+    'drive::object': {
+      "::object": {
+        "::object|string": { // Required key, any name allowed
+          "raw|$ref:*:object|string": {}, // data or $ref are names, required, object or string are types
+          "$ref": "string",
+          "address": "string",
+        }
+      },
+    },
+    'net::object': {}
+  }
+
+  validate_shape(data, expected_structure)
+
+  function validate_shape (obj, expected, super_node = 'root', path = '') {
+    const keys = Object.keys(obj)
+    const values = Object.values(obj)
+    let strict = Object.keys(expected).length
+
+    const all_keys = []
+    Object.entries(expected).forEach(([expected_key, expected_value]) => {
+      let [expected_key_names, required, expected_types] = expected_key.split(':')
+      expected_types = expected_types ? expected_types.split('|') : [typeof(expected_value)]
+      let absent = true
+      if(expected_key_names)
+        expected_key_names.split('|').forEach(expected_key_name => {
+          const value = obj[expected_key_name]
+          if(value !== undefined){
+            all_keys.push(expected_key_name)
+            const type = typeof(value)
+            absent = false
+
+            if(expected_types.includes(type))
+              type === 'object' && validate_shape(value, expected_value, expected_key_name, path + '/' + expected_key_name)
+            else
+              throw new Error(`Type mismatch: Expected "${expected_types.join(' or ')}" got "${type}" for key "${expected_key_name}" at:` + path + FALLBACK_POST_ERROR)
+          }
+        })
+      else{
+        strict = false
+        values.forEach((value, index) => {
+          absent = false
+          const type = typeof(value)
+
+          if(expected_types.includes(type))
+            type === 'object' && validate_shape(value, expected_value, keys[index], path + '/' + keys[index])
+          else
+            throw new Error(`Type mismatch: Expected "${expected_types.join(' or ')}" got "${type}" for key "${keys[index]}" at: ` + path + FALLBACK_POST_ERROR)
+        })
+      }
+      if(absent && required){
+        if(expected_key_names)
+          throw new Error(`Can't find required key "${expected_key_names.replace('|', ' or ')}" at: ` + path + FALLBACK_POST_ERROR)
+        else
+          throw new Error(`No sub-nodes found for super key "${super_node}" at sub: ` + path + FALLBACK_POST_ERROR)
+      }
+    })
+
+    strict && keys.forEach(key => {
+      if(!all_keys.includes(key)){
+        throw new Error(`Unknown key detected: '${key}' is an unknown property at: ${path || 'root'}` + FALLBACK_POST_ERROR)
+      }
+    })
+  }
+}
+function extract_filename (address) {
+  const parts = address.split('/node_modules/')
+  const last = parts.at(-1).split('/')
+  if(last.at(-1) === 'index.js')
+    return last.at(-2)
+  return last.at(-1).slice(0, -3)
+}
+function get_instance_path (modulepath, modulepaths = status.modulepaths) {
+  return modulepath + ':' + modulepaths[modulepath]++
+}
+async function get_input ({ id, name, $ref, type, raw, address }) {
+  const xtype = (typeof(id) === "number" ? name : id).split('.').at(-1)
+  let result = db.read(['state', id])?.raw
+  if (!result) {
+    if (raw === undefined){
+      // Patch: Prepend GitHub project name if running on GitHub Pages
+      let github_project = ''
+      if (typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')) {
+        const path_parts = window.location.pathname.split('/').filter(Boolean)
+        if (path_parts.length > 0 && !$ref.startsWith('/' + path_parts[0])) {
+          github_project = '/' + path_parts[0] + ($ref.startsWith('/') ? '' : '/')
+        }
+      }
+      const ref = github_project + address.substring(0, address.lastIndexOf("/")) + '/'  + $ref
+      const response = await fetch(ref, { cache: 'no-store' })
+
+      if (!response.ok) 
+        throw new Error(`Failed to fetch data from '${ref}' for '${id}'` + FALLBACK_SYNTAX_POST_ERROR)
+      else
+        result = await response[xtype === 'json' ? 'json' : 'text']()
+    }
+    else
+      result = raw
+    db.add(['state', id], { id, name, type, address, $ref, raw: result })
+  }
+  return result
+}
+function compare(before, after, address) {
+  if (typeof after !== "object" || after === null) return after
+
+  for (const key in after) {
+    if (key === "$ref") {
+      if (!before || before[key] !== after[key]) {
+        //@TODO: What if before is from an override not fallback
+        after.address = address
+      }
+    } else {
+      after[key] = compare(before ? before[key] : undefined, after[key], address)
+    }
+  }
+  return after
+}
+//Unavoidable side effect
+function add_source_code (hubs) {
+  hubs.forEach(async id => {
+    const data = db.read(['state', id])
+    if (data.type === 'js') {
+      data.data = await get_input(data)
+      db.add(['state', data.id], data)
+      return
+    }
   })
 }
+function verify_imports (id, imports, data) {
+  const state_address = imports.find(imp => imp.includes('STATE'))
+  HELPER_MODULES.push(state_address)
+  imports = imports.filter(imp => !HELPER_MODULES.includes(imp))
+  if(!data._){
+    if(imports.length > 1){
+      imports.splice(imports.indexOf(state_address), 1)
+      throw new Error(`No sub-nodes found for required modules "${imports.join(', ')}" in the fallback of "${status.local_statuses[id].module_id}"` + FALLBACK_POST_ERROR)
+    }
+    else return
+  }
+  const fallback_imports = Object.keys(data._)
 
-const styles = csjs`
-.wrap {
-    background: var(--bodyBg);
-}
-[class^="cloud"] {
-    transition: left 0.6s, bottom 0.5s, top 0.5s linear;
-}`
+  imports.forEach(imp => {
+    let check = true
+    fallback_imports.forEach(fallimp => {
+      if(imp === fallimp)
+        check = false
+    })
 
-},{"bel":4,"csjs-inject":7,"datdot":33,"editor":34,"fetch-data":35,"footer":36,"header":38,"our-contributors":40,"smartcontract-codes":41,"supporters":42,"topnav":43}],30:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-
-function content(data, theme) {
-    const css = Object.assign({}, styles, theme)
-    let el = bel`
-    <div class="${css.content}">
-        <h2 class="${css.subTitle} ${css.subTitleColor}">${data.title}</h2>
-        <article class=${css.article}>${data.article}</article>
-        <a class="${css.button} ${css.buttonBg}" href=${data.url} target="_blank">${data.action}</a>
-    </div>
-    `
-    return el
-}
-
-let styles = csjs`
-.content {
+    if(check)
+      throw new Error('Required module "'+imp+'" is not defined in the fallback of '+status.local_statuses[id].module_id + FALLBACK_POST_ERROR)
+  })
+  
+  fallback_imports.forEach(fallimp => {
+    let check = true
+    imports.forEach(imp => {
+      if(imp === fallimp)
+        check = false
+    })
     
-}
-.subTitle {
-    font-family: var(--titleFont);
-    font-size: var(--subTitleSize);
-    margin-bottom: 2.5rem;
-}
-.subTitleColor {
-    color: var(--section2TitleColor);
-}
-.article {
-    
-}
-.button {
-    display: inline-block;
-    outline: none;
-    border: none;
-    font-family: var(--titleFont);
-    font-size: var(--sectionButtonSize);
-    color: var(--titleColor);
-    border-radius: 2rem;
-    padding: 1.2rem 3.8rem;
-    cursor: pointer;
-}
-.buttonBg {
+    if(check)
+      throw new Error('Module "'+fallimp+'" defined in the fallback of '+status.local_statuses[id].module_id+' is not required')
+  })
 
 }
-@media screen and (min-width: 2561px) {
-    .subTitle {
-        font-size: calc(var(--subTitleSize) * 1.5);
+function symbolfy (data) {
+  const i2s = {}
+  const s2i = {}
+  const i2a = {}
+  const a2i = {}
+  const subs = []
+  data.subs && data.subs.forEach(sub => {
+    const substate = db.read(['state', sub])
+    i2a[a2i[sub] = encode(sub)] = sub
+    s2i[i2s[sub] = Symbol(a2i[sub])] = sub
+    subs.push({ sid: i2s[sub], type: substate.type })
+  })
+  return [subs, s2i, i2s, a2i, i2a]
+}
+function encode(text) {
+  let code = ''
+  while (code.length < 10) {
+    for (let i = 0; i < text.length && code.length < 10; i++) {
+      code += Math.floor(10 + Math.random() * 90)
     }
+  }
+  return code
 }
-}
-@media screen and (min-width: 4096px) {
-    .subTitle {
-        font-size: calc(var(--subTitleSize) * 2.25);
-    }
-}
-@media screen and (max-width: 414px) {
-    .subTitle {
-        font-size: var(--titlesSizeS);
-        margin-bottom: 1.5rem;
-    }
-}
-`
-module.exports = content
-},{"bel":4,"csjs-inject":7}],31:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const Graphic = require('graphic')
+function listify(tree, prefix = '') {
+  if (!tree)
+    return []
+  
+  const result = []
 
-module.exports = contributor
+  function walk(current, prefix = '') {
+    for (const key in current) {
+      if (key === '$' && current[key]._ && typeof current[key]._ === 'object') {
+        walk(current[key]._, prefix)
+      } else {
+        const path = prefix ? `${prefix}>${key}` : key
+        result.push(path)
+        if (current[key]?.$?._ && typeof current[key].$._ === 'object') {
+          walk(current[key].$._, path)
+        }
+      }
+    }
+  }
 
-async function contributor(person, className, theme) {
-    let css = Object.assign({}, styles, theme)
-    let lifeIsland = await Graphic(css.lifeIsland,'./src/node_modules/assets/svg/life-island.svg')
-    let el = bel`
-      <div class=${className}>
-        <div class=${css.member}>
-          <img class=${css.avatar} src=${person.avatar} alt=${person.name}>
-          <div class=${css.info}>
-            <h3 class=${css.name}>${person.name}</h3>
-            ${person.careers &&
-                person.careers.map( career =>
-                    bel`<span class=${css.career}>${career}</span>`
-                )
+  if (tree._ && typeof tree._ === 'object') {
+    walk(tree._, prefix)
+  }
+
+  return result
+}
+function register_overrides ({overrides, address, ...args}) {
+  const { id: root_id } = args
+  recurse(args)
+  return overrides
+  function recurse ({ tree, path = '', id, xtype = 'instance', local_modulepaths = {} }) {
+
+    tree._ && Object.entries(tree._).forEach(([type, instances]) => {
+      const sub_path = path + '>' + type
+      Object.entries(instances).forEach(([id, branch]) => {
+        const resultant_path = id === '$' ? sub_path : sub_path + ':' + id
+        if(typeof(branch) === 'function'){
+          const override = mutate
+          function mutate (...all) {
+            const before = JSON.parse(JSON.stringify(all[2][0]()))
+            const after = compare(before, branch(...all), address)
+            if(after.api){
+              const api = after.api
+              after.api = (...all) => {
+                const before = JSON.parse(JSON.stringify(all[2][0]()))
+                return compare(before, api(...all), address)
+              }
             }
-          </div>
-        </div>
-        ${lifeIsland}
-      </div>
-  `
-    return el
+            return after
+          }
+          if(overrides[resultant_path]){
+            overrides[resultant_path].fun.push(override)
+            overrides[resultant_path].by.push(root_id)
+          }
+          else
+            overrides[resultant_path] = {fun: [override], by: [root_id]}
+        }
+        else if ( ['object', 'string'].includes(typeof(branch)) && id !== 'mapping' && branch._ === undefined)
+          status.args[resultant_path] = structuredClone(branch)
+        else
+          recurse({ tree: branch, path: sub_path, id, xtype, local_modulepaths })
+      })
+    })
+  }
 }
-
-const styles = csjs`
-.member {
-    position: absolute;
-    z-index: 1;
-    display: grid;
-    grid-template: 1fr / 40% 60%;
-    width: 70%;
-    top: 20%;
-}
-.avatar {
-    position: relative;
-    z-index: 2;
-}
-.info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: var(--contributorsTextSize);
-    text-align: center;
-    background-color: var(--contributorsBg);
-    padding: 0% 2% 4% 20%;
-    margin-left: -20%;
-}
-.name {
-    color: var(--section5TitleColor);
-    margin-top: 0;
-    margin-bottom: 3%;
-}
-.career {
-    display: block;
-    color: var(--contributorsCareerColor);
-}
-.lifeIsland {
-    width: 100%;
-}
-@media only screen and (max-width: 1550px) {
-    .member {
-        width: 280px;
-        top: 15%;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 1200px) {
-    .lifeIsland {
-        width: 115%;
-    }
-}
-@media only screen and (max-width: 1280px) {
-    .member {
-        top: 12%;
-        left: -4vw;
-    }
-}
-
-@media only screen and (max-width: 1130px) {
-    .member {
-        top: 1vw;
-        left: -6vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .lifeIsland {
-        width: 100%;
-    }
-    .member {
-        width: 32vw;
-        top: 6vw;
-        left: -2vw;
-    }
-}
-@media only screen and (max-width: 768px) {
-    .member {
-        width: 85%;
-        top: 5vw;
-        left: -4vw;
-    }
-}
-@media only screen and (max-width: 640px) {
-    .member {
-        width: 75%;
-        top: 9vw;
-    }
-}
-@media only screen and (max-width: 414px) {
-    .member {
-        width: 90%;
-        top: 5vw;
-        left: -10vw;
-    }
-}
-`
-
-
-
-},{"bel":4,"csjs-inject":7,"graphic":37}],32:[function(require,module,exports){
-const bel = require('bel')
-
-function crystalIsland({date, info}, deco, island, css, title) {
-    let el = bel`
-                <div class=${css.scene}>
-                    <div class=${css.deco}>
-                        <div class=${css.content}>
-                            <h3>${date}</h3>
-                            ${ info === 'Coming soon' ? bel`<h3>${info}</h3>` : bel`<p>${info}</p>` }
-                        </div>
-                        ${deco.map(item => item)}
-                    </div>
-                    ${title}
-                    ${island}
-                </div>
-                `
-    return el
-}
-
-module.exports = crystalIsland
-},{"bel":4}],33:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const graphic = require('graphic')
-const Rellax = require('rellax')
-const content = require('content')
-
-async function datdot(data) {
-    const css = styles
-    var graphics = [
-      graphic(css.blockchainIsland, './src/node_modules/assets/svg/blockchian-island.svg'),
-      graphic(css.blossomIsland, './src/node_modules/assets/svg/blossom-island.svg'),
-      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
-    ]
-
-    const [blockchainIsland, blossomIsland, cloud1, cloud2, cloud3, cloud4, cloud5] = await Promise.all(graphics)
-    // Parallax effects
-    let cloud1Rellax = new Rellax( cloud1, { speed: 4})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 2})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 5})
-    let cloud4Rellax = new Rellax( cloud4, { speed: 2})
-    let cloud5Rellax = new Rellax( cloud5, { speed: 4})
+function get_fallbacks ({ fallback_data, overrides, modulepath, instance_path }) {
+  return [mutated_fallback, ...overrides]
     
-    let el = bel`
-    <section id="datdot" class="${css.section}">
-        ${content(data, css)}
-        ${blockchainIsland}
-        ${blossomIsland} 
-        ${cloud1}
-        ${cloud2}
-        ${cloud3}
-        ${cloud4}
-        ${cloud5}
-    </section>
-    `
-    return el
-}
+  function mutated_fallback () {
+    const data = fallback_data
 
-const styles = csjs`
-.section {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 60% 40%;
-    background-image: linear-gradient(0deg, var(--section1BgGEnd), var(--section1BgGStart));
-    padding: 0 2vw;
-}
-.content {
-    position: relative;
-    z-index: 9;
-    grid-row-start: 1;
-    grid-column-start: 2;
-    grid-column-end: 3;
-    text-align: center;
-    padding: 0 5%; 
-}
-.subTitleColor {
-    color: var(--section1TitleColor);
-}
-.buttonBg {
-    background-image: linear-gradient(0deg, #ed6e87, #e9627e);
-}
-.blockchainIsland {
-    position: relative;
-    z-index: 2;
-    grid-row-start: 1; 
-    grid-row-end: 3;
-    grid-column-start: 1; 
-}
-.blossomIsland {
-    position: relative;
-    z-index: 2;
-    grid-column-start: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    padding-left: 2rem;
-    align-self: end;
-    width: 90%;
-}
-.cloud1 {
-    position: absolute;
-    z-index: 4;
-    width: 10vw;
-    bottom: 10vh;
-    left: 5vw;
-}
-.cloud2 {
-    position: absolute;
-    z-index: 4;
-    width: 14vw;
-    bottom: -8vh;
-    left: 42vw;
-}
-.cloud3 {
-    position: absolute;
-    z-index: 1;
-    width: 8vw;
-    bottom: 15vh;
-    left: 52vw;
-}
-.cloud4 {
-    position: absolute;
-    width: 6vw;
-    bottom: 60%;
-    right: 5vw;
-}
-.cloud5 {
-    position: absolute;
-    z-index: 1;
-    width: 18vw;
-    bottom: -10vh;
-    right: 2vw;
-}
-@media only screen and (max-width: 1560px) {
-    .content {
-        padding: 0;
-    }
-    .blossomIsland {
-        margin-top: 30px;
-        width: 35vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .section1 {
-        grid-template-columns: 55% 45%; 
-    }
-    .content {
-        grid-column-start: 1;
-        padding: 0 15vw;
-    }
-    .blockchainIsland {
-        grid-row-start: 2;
-    }
-    .blossomIsland {
-        width: 90%;
-        margin-left: 2vw;
-        align-self: center;
-    }
-    .cloud1 {
-        bottom: 0vh;
-    }
-    .cloud2 {
-        bottom: -5vh;
-    }
-    .cloud3 {
-        bottom: 10%;
-    }
-    .cloud4 {
-        bottom: 60%;
-        width: 12vw;
-    }
-    .cloud5 {
-        bottom: -4vh;
-    }
-}
-@media only screen and (max-width: 812px) { 
-    .cloud3 {
-        bottom: 10%;
-    }
-    .cloud4 {
-        bottom: 50%;
-    }
-}
-@media only screen and (max-width: 768px) { 
-    .cloud3 {
-        bottom: 12%;
-    }
-}
-@media only screen and (max-width: 640px) {
-    .section1 {
-        grid-template-rows: repeat(3, auto);
-        grid-template-columns: 100%;
-    }
-    .content {
-        padding-bottom: 10%;
-    }
-    .blockchainIsland {
-        grid-column-end: 3;
-    }
-    .blossomIsland {
-        grid-row-start: 3;
-        grid-column-start: 1;
-        width: 100%;
-        justify-self: end;
-    }
-    .cloud1 {
-        width: 15vw;
-    }
-    .cloud2 {
-        width: 30vw;
-        left: 50vw;
-        bottom: -50vw;
-    }
-    .cloud3 {
-        width: 20vw;
-        bottom: 5vw;
-    }
-    .cloud4 {
-        top: 30vw;
-    }
-}
-@media only screen and (max-width: 414px) {
-    .content {
-        padding: 0 5vw 5vh 5vw;
-    }
-    .article {
-        padding-bottom: 2rem;
-    }
-    .section {
-        margin-top: 0;
-    }
-    .blossomIsland {
-        width: 60vw;
-        margin-left: 35vw;
-    }
-    .cloud3 {
-        bottom: 5vh;
-    }
-    .cloud4 {
-        bottom: 35%;
-        width: 15vw;
-    }
-}
-`
+    merge_trees(data, modulepath)
+    return data
 
-module.exports = datdot
-},{"bel":4,"content":30,"csjs-inject":7,"graphic":37,"rellax":27}],34:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const graphic = require('graphic')
-const Rellax = require('rellax')
-const Content = require('content')
+    function merge_trees (data, path) {
+      if (data._) {
+        Object.entries(data._).forEach(([type, data]) => merge_trees(data, path + '>' + type.split('$')[0].replace('.', '>')))
+      } else {
+        data.$ = { _: status.tree_pointers[path]?._ }
+      }
+    }
+  }
+}
+function check_version () {
+  if (db.read(['playproject_version']) != VERSION) {
+    db.wash()
+    return true
+  }
+}
+function download (data, name) {
+  const dataStr = JSON.stringify(data, null, 2)
+  const blob = new Blob([dataStr], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `${name}.json`
+  a.click()
+}
+// Public Function
+function create_statedb_interface (local_status, node_id, xtype) {
+  const drive = {
+        get: (path) => get(path), has: (path) => has(path), 
+        put: (path, buffer) => put(path, buffer), list: (path) => list(path)
+      }
+  const admin_drive = { get, has, put, list }
+  const api =  {
+    public_api: {
+      watch, get_sub, drive, get: get_drive
+    },
+    private_api: {
+      drive: admin_drive,
+      xget: (id) => db.read(['state', id]),
+      get_all: () => db.read_all(['state']),
+      get_dataset,
+      register,
+      load: (snapshot) => {
+        db.wash()
+        Object.entries(snapshot).forEach(([key, value]) => {
+          db.add([key], JSON.parse(value), true)
+        })
+        window.location.reload()
+      },
+      swtch,
+      unregister,
+      status,
+      export_db,
+      import_db,
+      export_root,
+      import_root,
+      register_callback
+    }
+  }
+  node_id === status.ROOT_ID && (api.public_api.admin = api.private_api)
+  return api
 
-async function editor (data) {
-    const css = styles
-    const graphics = [
-      graphic(css.island, './src/node_modules/assets/svg/floating-island.svg'),
-      graphic(css.energyIsland, './src/node_modules/assets/svg/energy-island.svg'),
-      graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg'),
-      graphic(css.stone, './src/node_modules/assets/svg/stone.svg'),
-      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
-    ]
+  async function watch (listener, on) {
+    if(on)
+      status.services[node_id] = Object.keys(on)
+    const data = db.read(['state', node_id])
+    if(listener){
+      (status.listeners[data.id] = status.listeners[data.id] || []).push(listener)
+      await listener(await make_input_map(data.inputs))
+    }
+    return xtype === 'module' ? local_status.sub_modules : local_status.sub_instances[node_id]
+  }
+  function register_callback (callbacks) {
+    status.callbacks.push(...callbacks)
+  }
+  function export_db (result) {
+    const datasets = get_dataset(result)
+    result.dataset = {}
+    datasets.forEach(dataset_id => {
+      const dataset = db.read(['state', dataset_id])
+      const node_id = dataset.node_id
+      const files = dataset.files || []
+      result.dataset[node_id] = {}
+      files.forEach(file_id => {
+        const file = db.read(['state', file_id])
+        result.dataset[node_id][file.name] = { raw: file.raw}
+      })
+    })
+    
+    download(result, `${result.name}-${result.type}`)
+  }
+  function import_db (data) {
+    register(data)
+    status.callback({ type: 'import', data })
+  }
+  function export_root ({name}) {
+    const result = db.read_all([name])
+    console.log(name, result)
+    download(result, name)
+  }
+  function import_root (data, name) {
+    Object.entries(data).forEach(([key, value]) => {
+      db.add([name, key], value)
+    })
+    console.log('hello')
+    db.push(['root_datasets'], { name: name })
+    status.callback({ type: 'import', data })
+  }
+  function get_sub (type) {
+    const subs = xtype === 'module' ? local_status.sub_modules : local_status.sub_instances[node_id]
+    return subs.filter(sub => sub.type === type)
+  }
+  function get_dataset ({ root = 'state', type: dataset_type, name: dataset_name } = { root: 'state'}) {
+    const node = db.read([root, status.ROOT_ID])
+    if(dataset_type){
+      const dataset_list = []
+      node.drive.forEach(dataset_id => {
+        const dataset = db.read([root, dataset_id])
+        if(dataset.type === dataset_type)
+          dataset_list.push(dataset.name)
+      })
+      if(dataset_name){
+        return recurse(status.ROOT_ID, dataset_type)
+      }
+      return dataset_list
+    }
+    const datasets = []
+    node.inputs && node.inputs.forEach(dataset_id => {
+      datasets.push(db.read([root, dataset_id]).type)
+    })
+    return datasets
+  
+    function recurse (node_id, dataset_type){
+      const node_list = []
+      const entry = db.read(['state', node_id])
+      entry.drive && entry.drive.forEach(dataset_id => {
+        const dataset = db.read(['state', dataset_id])
+        if(dataset.type === dataset_type && dataset.name === dataset_name){
+          node_list.push(dataset_id)
+          return
+        }
+      })
+      entry.subs && entry.subs.forEach(sub_id => node_list.push(...recurse(sub_id, dataset_type)))
+      return node_list
+    }
+  }
+  function register ({ type: dataset_type, name: dataset_name, dataset}) {
+    Object.entries(dataset).forEach(([node_id, files]) => {
+      const new_dataset = { files: [] }
+      const node = db.read(['state', node_id])
 
-    const [island, energyIsland, tree, stone, cloud1, cloud2, cloud3, cloud4, cloud5] = await Promise.all(graphics)
-
-    // Parallax effects
-    let cloud1Rellax = new Rellax( cloud1, { speed: 2})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 3})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 4})
-    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-    let cloud5Rellax = new Rellax( cloud5, { speed: 3})
-
-    let el = bel`
-    <section id="smartcontractUI" class="${css.section}">
-        ${Content(data, css)}
+      Object.entries(files).forEach(([file_id, file]) => {
+        const type = file_id.split('.').at(-1)
         
-        <div class=${css.scene}>
-            <div class=${css.objects}>
-                <img class=${css.logo} src=${data.logo} alt="${data.title} logo">
-                <img class=${css.screenshot} src=${data.image} alt=${data.title}>
-                <div class=${css.deco}>
-                    ${stone}
-                    ${tree}
-                </div>
-            </div>
-            ${island}
-        </div>
-        ${energyIsland}
-        ${cloud1}
-        ${cloud2}
-        ${cloud3}
-        ${cloud4}
-        ${cloud5}
-    </section>
-    `
-    return el
-}
-
-const styles = csjs`
-.section {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 40% 60%;
-    background-image: linear-gradient(0deg, var(--section2BgGEnd), var(--section2BgGStart));
-    padding: 5vw 2vw;
-}
-.content {
-    position: relative;
-    z-index: 9;
-    grid-row-start: 1;
-    grid-column-start: 1;
-    grid-column-end: 2;
-    text-align: center;
-    padding: 0 5%;
-    margin-bottom: 86px;
-}
-.subTitleColor {
-    color: var(--section2TitleColor);
-}
-.buttonBg {
-    background-image: linear-gradient(0deg, #4dc7be, #35bdb9);
-}
-.scene {
-    position: relative;
-    grid-row-start: span 2;
-    grid-column-start: 2;
-}
-.objects {
-    position: relative;
-}
-.screenshot {
-    width: 80%;
-    margin-bottom: -5.5%;
-    margin-left: 10%;
-}
-.logo {
-    position: absolute;
-    left: 0%;
-    bottom: -20%;
-    width: 20%;
-}
-.deco {
-    position: absolute;
-    right: 0;
-    bottom: -18.5%;
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-}
-.tree {
-    width: 13%;
-}
-.stone {
-    position: relative;
-    width: 10%;
-    right: -3%;
-}
-.island {
-}
-.energyIsland {
-    grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: 2;
-    width: 80%;
-    justify-self: center;
-}
-.cloud1 {
-    position: absolute;
-    width: 10vw;
-    left: 2vw;
-    bottom: 0;
-    z-index: 3;
-}
-.cloud2 {
-    position: absolute;
-    width: 15vw;
-    left: 38vw;
-    bottom: -35vw;
-    z-index: 2;
-}
-.cloud3 {
-    position: absolute;
-    width: 8vw;
-    right: 30vw;
-    bottom: -34vw;
-    z-index: 3;
-}
-.cloud4 {
-    position: absolute;
-    width: 14vw;
-    right: 6vw;
-    bottom: -40vw;
-    z-index: 3;
-}
-.cloud5 {
-    position: absolute;
-    width: 8vw;
-    right: 2vw;
-    bottom: -10vw;
-    z-index: 2;
-}
-@media only screen and (max-width: 1024px) {
-    .content {
-        grid-row-start: 1;
-        grid-column-end: 3;
-    }
-    .scene {
-        grid-row-start: 2;
-    }
-    .energyIsland {
-        align-self: end;
-    }
-}
-
-@media only screen and (max-width: 640px) {
-    .scene {
-        grid-column-start: 1;
-        grid-column-end: 3;
-    }
-    .energyIsland {
-        grid-row-start: 3;
-        grid-column-start: 1;
-        grid-column-end: 3;
-        width: 60%;
-        justify-self: start;
-    }
-    .cloud1 {
-        width: 16vw;
-    }
-    .cloud2 {
-        width: 20vw;
-        left: 50vw;
-        bottom: 10vw;
-    }
-    .cloud3 {
-        width: 15vw;
-        bottom: 50vw;
-    }
-    .cloud4 {
-        width: 25vw;
-        bottom: -85vw;
-    }
-    .cloud5 {
-        width: 15vw;
-        bottom: 30vw;
-    }
-}
-`
-
-module.exports = editor
-},{"bel":4,"content":30,"csjs-inject":7,"graphic":37,"rellax":27}],35:[function(require,module,exports){
-module.exports = fetch_data
-
-async function fetch_data(path) {
-    let response = await fetch(path)
-    if (response.status == 200) {
-        let texts = await response.json()
-        return texts
-    }
-    throw new Error(response.status)
-}
-},{}],36:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const graphic = require('graphic')
-
-async function footer(footer) {
-    const css = styles
-    let island = await graphic(css.island, './src/node_modules/assets/svg/deco-island.svg')
-    const graphics = footer.icons.map(icon => graphic(css.icon, icon.imgURL))
-    const icons = await Promise.all(graphics)
-
-    let el = bel`
-    <footer class=${css.footer}>
-        <div class=${css.scene}>
-            ${island}
-            <nav class=${css.contacts}>
-                ${footer.icons.map((icon, i) => 
-                    bel`
-                    <a href=${icon.url} 
-                    title=${icon.name} 
-                    target="${icon.url.includes('http') ? "_blank" : null}"
-                    >${icons[i]}</a>`
-                )}
-            </nav>
-        </div>
+        file.id = db.gen_id(node.name + '.' + type)
+        file.name = file_id
+        file.type = type
+        file[file.type === 'js' ? 'subs' : 'hubs'] = [node_id]
         
-        <p class=${css.copyright}>${footer.copyright}</p>
-    </footer>
-    `
-    return el
+        
+        db.add(['state', file.id], file)
+        new_dataset.files.push(file.id)
+      })
+  
+      new_dataset.id = db.gen_id(node_id + '.' + dataset_name + '.' + dataset_type + '.dataset')
+      new_dataset.name = dataset_name
+      new_dataset.type = dataset_type
+      //@TODO: Make dataset xtypes dynamic
+      new_dataset.xtype = dataset_type
+      new_dataset.node_id = node_id
+      
+      node.drive.push(new_dataset.id) //@TODO: Rethink how to simplify this push
+      db.add(['state', node.id], node)
+      db.add(['state', new_dataset.id], new_dataset)
+    })
+    console.log(' registered ' + dataset_name + '.' + dataset_type)
+  }
+  function unregister ({ type: dataset_type, name: dataset_name } = {}) {
+    return recurse(status.ROOT_ID)
+
+    function recurse (node_id){
+      const node = db.read(['state', node_id])
+      node.drive && node.drive.some(dataset_id => {
+        const dataset = db.read(['state', dataset_id])
+        if(dataset.name === dataset_name && dataset.type === dataset_type){
+          node.drive.splice(node.drive.indexOf(dataset_id), 1)
+          return true
+        }
+      })
+      node.inputs && node.inputs.some(dataset_id => {
+        const dataset = db.read(['state', dataset_id])
+        if(dataset.name === dataset_name && dataset.type === dataset_type){
+          node.inputs.splice(node.inputs.indexOf(dataset_id), 1)
+          swtch(dataset_type)
+          return true
+        }
+      })
+      db.add(['state', node_id], node)
+      node.subs.forEach(sub_id => recurse(sub_id))
+    }
+  }
+  function swtch ({ type: dataset_type, name: dataset_name = 'default'}) {
+    recurse(dataset_type, dataset_name, status.ROOT_ID)
+
+    async function recurse (target_type, target_name, id) {
+      const node = db.read(['state', id])
+      
+      let target_dataset
+      node.drive && node.drive.forEach(dataset_id => {
+        const dataset = db.read(['state', dataset_id])
+        if(target_name === dataset.name && target_type === dataset.type){
+          target_dataset = dataset
+          return
+        }
+      })
+      if(target_dataset){
+        node.inputs.forEach((dataset_id, i) => {
+          const dataset = db.read(['state', dataset_id])
+          if(target_type === dataset.type){
+            node.inputs.splice(i, 1)
+            return
+          }
+        })
+        node.inputs.push(target_dataset.id)
+      }
+      db.add(['state', id], node)
+      const input_map = await make_input_map(node.inputs)
+      status.listeners[id] && status.listeners[id].forEach(async listener => {
+        await listener(input_map)
+      })
+      node.subs && node.subs.forEach(sub_id => {
+        const subdataset_id = target_dataset?.mapping?.[sub_id] 
+        recurse(target_type, db.read(['state', subdataset_id])?.name || target_name, sub_id)
+      })
+    }
+  }
+  function get_drive (sid){
+    const id = status.s2i[sid]
+    if(!id)
+      throw new Error(`No drive found for symbol "${sid}"`)
+    return {
+      list: (path) => list(path, id),
+      get: (path) => get(path, id),
+      has: (path) => has(path, id),
+      on
+    }
+    function on (listener) {
+      (status.listeners[id] = status.listeners[id] || []).push(listener)
+    }
+  }
+  //Node specific functions
+  function list (path, id = node_id) {
+    const node = db.read(['state', id])
+    if(!node.drive)
+      throw new Error(`Node "${id}" has no drive`)
+    const dataset_names = node.drive.map(dataset_id => {
+      return dataset_id.split('.').at(-2) + '/'
+    })
+    if (path) {
+      let index
+      dataset_names.some((dataset_name, i) => {
+        if (path.includes(dataset_name)) {
+          index = i
+          return true
+        }
+      })
+      if (index === undefined)
+        throw new Error(`Dataset "${path}" not found in node "${node.name}"`) 
+      const dataset = db.read(['state', node.drive[index]])
+      return dataset.files.map(fileId => {
+        const file = db.read(['state', fileId])
+        return file.name
+      })
+    }
+    return dataset_names
+  }
+  async function get (path, id = node_id) {
+    const [dataset_name, file_name] = path.split('/')
+    const node = db.read(['state', id])
+    let dataset
+    if(!node.drive)
+      throw new Error(`Node ${node.id} has no drive defined in its fallback` + FALLBACK_POST_ERROR)
+    node.inputs.some(dataset_id => {
+      if (dataset_name === dataset_id.split('.').at(-2)) {
+        dataset = db.read(['state', dataset_id])
+        return true
+      }
+    })
+    if (!dataset) 
+      throw new Error(`Dataset "${dataset_name}" not found in node "${node.name}"`)
+    
+    let target_file
+    for (const file_id of dataset.files) {
+      const file = db.read(['state', file_id])
+      if (file.name === file_name) {
+        target_file =  { id: file.id, name: file.name, type: file.type, raw: await get_input(file)}
+        break
+      }
+    }
+    if (!target_file){
+      throw new Error(`File "${path}" not found in node "${node.id}"`)
+    }
+    return target_file
+  }
+  async function put (path, buffer, id = node_id) {
+    const [dataset_name, filename] = path.split('/')
+    let dataset
+    const node = db.read(['state', id])
+    node.drive.some(dataset_id => {
+      if (dataset_name === dataset_id.split('.').at(-2)) {
+        dataset = db.read(['state', dataset_id])
+        return true
+      }
+    })
+    if (!dataset) 
+      throw new Error(`Dataset "${dataset_name}" not found in node "${node.name}"`)
+    const type = filename.split('.').pop()
+    const raw_id = node.name + '.' + type
+    const file = {
+      id: raw_id,
+      name: filename,
+      type,
+      raw: buffer
+    }
+    for (const file_id of dataset.files) {
+      const temp_file = db.read(['state', file_id])
+      if(temp_file.name === filename){
+        file.id = file_id
+        break
+      }
+    }
+    if(!dataset.files.includes(file.id)){
+      file.id = db.gen_id(file.id)
+      dataset.files.push(file.id)
+      db.add(['state', dataset.id], dataset)
+    }
+    db.add(['state', file.id], file)
+    const input_map = await make_input_map(node.inputs)
+    status.listeners[node.id].forEach(async listener => {
+      await listener(input_map)
+    })
+    status.callback && status.callback({ type: 'put', data: id })
+
+    return { id: file.id, name: filename, type, raw: buffer }
+  }
+  function has (path, id = node_id) {
+    const [dataset_name, filename] = path.split('/')
+    let dataset
+    const node = db.read(['state', id])
+    node.drive.some(dataset_id => {
+      if (dataset_name === dataset_id.split('.').at(-2)) {
+        dataset = db.read(['state', dataset_id])
+        return true
+      }
+    })
+    if (!dataset) 
+      throw new Error(`Dataset "${dataset_name}" not found in node "${node.name}"`)
+    return dataset.files.some(file_id => {
+      const file = db.read(['state', file_id])
+      return file && file.name === filename
+    })
+  }
+}
+async function make_input_map (inputs) {
+  const input_map = []   
+  if (inputs) {
+    await Promise.all(inputs.map(async input => {
+      let files = []
+      const dataset = db.read(['state', input])
+      await Promise.all(dataset.files.map(async file_id => {
+        const input_state = db.read(['state', file_id])
+        files.push(dataset.id.split('.').at(-2) + '/' + input_state.name)
+      }))
+      input_map.push({ type: dataset.xtype, paths: files })
+    }))
+  }
+  return input_map
 }
 
-let styles = csjs`
-.footer {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: 1fr;
-    color: var(--footerTextColor);
-    padding-top: 4vw;
-    padding-bottom: 0.5%;
-    background-color: var(--footerBg);
-}
-.copyright {
-    text-align: center;
-    align-self: center;
-}
-.scene {
-    position: relative;
-    width: 60%;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(4, 25%);
-}
-.contacts {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    grid-row-start: 2;
-    grid-column-start: 2;
-    grid-column-end: 4;
-    margin-top: -2%;
-}
-.contacts a {
-    margin: 0 2rem;
-}
-.icon {
-    width: 6vw;
-}
-.island {
-    grid-row-start: 1;
-    grid-row-end: 6;
-    grid-column-start: 1;
-    grid-column-end: 5;
-}
-@media only screen and (min-width: 1440px) {
-    .icon {
-        max-width: 10rem;
-    }
-}
-@media only screen and (max-width: 1200px) {
-    .contacts a {
-        margin: 0 1.5vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .scene {
-        width: 80%;
-    }
-    .icon {
-        width: 8vw;
-    }
-}
-`
 
+module.exports = STATE
+},{"io":10,"localdb":12}],4:[function(require,module,exports){
+(function (__filename){(function (){
+const graphic = require('graphic')
+const IO = require('io')
+const STATE = require('STATE')
+const name = 'footer'
+const statedb = STATE(__filename)
+// ----------------------------------------
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+function fallback_module () { 
+	return {}
+}
+function fallback_instance () { 
+	const data = require('./instance.json')
+	data.inputs['footer.css'] = {
+		$ref: new URL('src/node_modules/css/default/footer.css', location).href
+	}
+	return data 
+}
+/******************************************************************************
+  APP FOOTER COMPONENT
+******************************************************************************/
+// ----------------------------------------
+const shopts = { mode: 'closed' }
+// ----------------------------------------
 module.exports = footer
-},{"bel":4,"csjs-inject":7,"graphic":37}],37:[function(require,module,exports){
+
+async function footer (opts) {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const { id, sdb } = await get(opts.sid) 
+  const on = {
+		css: inject,
+		scroll,
+		json: fill
+	}
+	
+  const send = await IO(id, name, on)
+  // ----------------------------------------
+  // OPTS
+  // ----------------------------------------
+  let island = await graphic('island', './src/node_modules/assets/svg/deco-island.svg')
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.createElement('div')
+  const shadow = el.attachShadow(shopts)
+  shadow.innerHTML = `
+      <footer class='footer'>
+      </footer>
+    <style></style>`
+  // ----------------------------------------
+  const style = shadow.querySelector('style')
+  const footer = shadow.querySelector('footer')
+
+	sdb.watch(onbatch)
+  return el
+
+  function onbatch(batch){
+		for (const {type, data} of batch) {
+      on[type](data)
+    }  
+	}
+	async function inject (data){
+		style.innerHTML = data.join('\n')
+	}
+  async function fill ([ opts ]) {
+    const graphics = opts.icons.map(icon => graphic('icon', icon.imgURL))
+    const icons = await Promise.all(graphics)
+    footer.innerHTML = `
+          <div class='scene'>
+              ${island.outerHTML}
+              <nav class='contacts'>
+                  ${opts.icons.map((icon, i) => 
+                      `<a href=${icon.url} 
+                      title=${icon.name} 
+                      target="${icon.url.includes('http') ? "_blank" : null}"
+                      >${icons[i].outerHTML}</a>`
+                  )}
+              </nav>
+          </div>
+          <p class='copyright'>${new Date().getFullYear()+' '+opts.copyright}</p>
+      `
+  }
+  async function scroll () {
+    el.scrollIntoView({behavior: 'smooth'})
+    el.tabIndex = '0'
+    el.focus()
+    el.onblur = () => {
+      el.tabIndex = '-1'
+      el.onblur = null
+    }
+  }
+}
+
+}).call(this)}).call(this,"/src/node_modules/footer/footer.js")
+},{"./instance.json":5,"STATE":3,"graphic":8,"io":10}],5:[function(require,module,exports){
+module.exports={
+  "inputs": {
+    "footer.json": {
+      "data": {
+        "copyright": " PlayProject",
+        "icons": [
+          {
+            "id": "1",
+            "name": "email",
+            "imgURL": "./src/node_modules/assets/svg/email.svg",
+            "url": "mailto:ninabreznik@gmail.com"
+          },
+          {
+            "id": "2",
+            "name": "twitter",
+            "imgURL": "./src/node_modules/assets/svg/twitter.svg",
+            "url": "https://twitter.com/playproject_io"
+          },
+          {
+            "id": "3",
+            "name": "Github",
+            "imgURL": "./src/node_modules/assets/svg/github.svg",
+            "url": "https://github.com/playproject-io"
+          },
+          {
+            "id": "4",
+            "name": "Gitter",
+            "imgURL": "./src/node_modules/assets/svg/gitter.svg",
+            "url": "https://gitter.im/playproject-io/community"
+          }
+        ]
+      }
+    }
+  }
+}
+},{}],6:[function(require,module,exports){
+(function (__filename){(function (){
+/******************************************************************************
+  STATE
+******************************************************************************/
+const STATE = require('STATE')
+const localdb = require('localdb')
+const name = 'graph_explorer'
+const statedb = STATE(__filename)
+const default_slots = [['hubs', 'subs'], ['inputs', 'outputs']]
+// ----------------------------------------
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+function fallback_module () { 
+  return {}
+}
+function fallback_instance () {
+  return {
+    inputs: {
+      'graph_explorer.css': {
+        $ref: new URL('src/node_modules/css/default/graph_explorer.css', location).href
+      }
+    }
+  }
+}
+
+const IO = require('io')
+const {copy, get_color, download_json} = require('helper')
+/******************************************************************************
+  GRAPH COMPONENT
+******************************************************************************/
+// ----------------------------------------
+const shopts = { mode: 'closed' }
+// ----------------------------------------
+
+module.exports = graph_explorer
+
+async function graph_explorer (opts) {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const db = localdb()
+  const { id, sdb } = await get(opts.sid)
+  const hub_id = opts.hub[0]
+  const status = { tab_id: 0, count: 0, entry_types: {}, menu_ids: [] }
+  const on = {
+    init,
+    css: inject,
+    scroll
+  }
+
+  const on_add = {
+    entry: add_entry,
+    entry_compact: add_entry_compact,
+    menu: add_action
+  }
+  const admin = sdb.req_access(opts.sid)
+  const send = await IO(id, name, on)
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.createElement('div')
+  const shadow = el.attachShadow(shopts)
+  const style = document.createElement('style')
+  await sdb.watch(onbatch)
+  shadow.innerHTML = `
+  <div>
+    <button class="export">
+      Export
+    </button>
+    <button class="import">
+      Import
+    </button>
+    <input style="display: none;" class="upload" type='file' />
+  </div>
+  <span>Compact mode</span>
+  <label class="toggle_switch">
+    <input type="checkbox">
+    <span class="slider"></span>
+  </label>
+  <main>
+
+  </main>`
+  const main = shadow.querySelector('main')
+  const compact_switch = shadow.querySelector('.toggle_switch > input')
+  const upload = shadow.querySelector('.upload')
+  const import_btn = shadow.querySelector('.import')
+  const export_btn = shadow.querySelector('.export')
+  shadow.append(style)
+  shadow.addEventListener('copy', oncopy)
+  /************************************
+   Listeners
+  *************************************/
+  compact_switch.onchange = e => add_root(e.target.checked)
+  export_btn.onclick = export_fn
+  import_btn.onclick = () => upload.click()
+  upload.onchange = import_fn
+  return el
+
+  /******************************************
+   Mix
+  ******************************************/
+  function onbatch (batch) {
+    for (const {type, data} of batch) {
+      on[type](data)
+    }  
+  }
+  async function oncopy (e) {
+    const selection = shadow.getSelection()
+    e.clipboardData.setData('text/plain', copy(selection))
+    e.preventDefault()
+  }
+  function export_fn () {
+    const blob = new Blob([JSON.stringify(localStorage, null, 2)], { type: "application/json" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = 'snapshot.json'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+  function import_fn () {
+    const file = upload.files[0]
+    const reader = new FileReader()
+    reader.onload = e => {
+      const blob = JSON.parse(e.target.result)
+      admin.load(blob)
+    }
+    reader.readAsText(file)
+  }
+  async function init ({ data }) {
+    let id = Object.keys(data).length + 1
+
+    add({ id, name: 'edit', type: 'action', hubs: [] })
+    add({ id, name: 'link', type: 'action', hubs: [] })
+    add({ id, name: 'unlink', type: 'action', hubs: [] })
+    add({ id, name: 'drop', type: 'action', hubs: [] })
+
+    status.graph = data
+    add_root(false)
+
+    function add (args){
+      status.menu_ids.push(args.id)
+      data[id++] = args
+    }
+  }
+  async function add_root(compact) {
+    status.xentry = null
+    status.entry_types = {}
+    status.count = 0
+    status.tab_id = 0
+    main.innerHTML = ''
+    const root_entries = Object.values(status.graph).filter(entry => !entry.hubs)
+    if(compact)
+      root_entries.forEach((data, i) => add_entry_compact({hub_el: main, data, last: i === root_entries.length - 1, ancestry:[] }))
+    else  
+      root_entries.forEach((data, i) => add_entry({hub_el: main, data, last: i === root_entries.length - 1, ancestry:[] }))
+  }
+  function html_template (data, space, pos){
+    const element = document.createElement('div')
+    element.classList.add(data.type, 'entry', 'a'+data.id)
+    element.tabIndex = '0'
+    element.dataset.space = space
+    element.dataset.pos = pos
+    return element
+  }
+  /******************************************
+   Addition Operation
+  ******************************************/
+  // function add_el ({ data, parent, space, grand_last, type }){
+  //   const is_single = parent.children.length ? false : true
+  //   if(data.root){
+  //     parent.prepend(add_root({ data, last: false}))
+  //     return
+  //   }
+  //   //hub or sub node check
+  //   if(type === 'inputs')
+  //     parent.append(on_add[type]({ data, space, grand_last, first: is_single}))
+  //   else
+  //     parent.prepend(on_add[type]({ data, space, grand_last, last: is_single}))
+  // }
+
+  function add_action ({ hub_el, data, last, space = '' }) {
+    const element = html_template(data, last, space)
+    hub_el.append(element)
+    !status.entry_types[data.type] && (status.entry_types[data.type] = Object.keys(status.entry_types).length)
+
+    element.innerHTML = `
+    <div class="slot_list">
+      <span class="odd">${space}</span>
+      <span class="type_emo odd"></span>
+      <span class="name odd">${data.name}</span>
+    </div>`
+    const name = element.querySelector('.slot_list > .name')
+    name.onclick = () => send({ type: 'click', to: hub_id, data })
+
+  }
+  function add_entry_compact ({ hub_el, data, first, last, space = '', pos, ancestry }) {
+    //Init
+    const element = html_template(data, last, space, pos)
+    !status.entry_types[data.type] && (status.entry_types[data.type] = Object.keys(status.entry_types).length)
+    ancestry = [...ancestry]
+    let lo_space = space + (last ? '&nbsp;' : '│')
+    let hi_space = space + (first ? '&nbsp;' : '│')
+    const space_handle = [], els = []
+    let slot_no = 0, slot_on
+
+    //HTML
+    element.innerHTML = `
+      <div class="slot_list">
+        <span class="space odd"><!--
+        -->${space}<span>${last ? '└' : first ? "┌" : '├'}</span><!--
+        --><span class='on'>${last ? '┗' : first ? "┏" : '┠'}</span>
+        </span><!--
+        --><span class="menu_emo"></span><!--
+        --><span class="type_emo odd"></span><!--
+        --><span class="name odd">${data.name}</span>
+      </div>
+      <div class="menu entries"></div>
+    `
+
+    //Unavoidable mix
+    const slot_list = element.querySelector('.slot_list')
+    const name = element.querySelector('.slot_list > .name')
+    hub_el.append(element)
+    const copies = main.querySelectorAll('.a'+data.id + '> .slot_list')
+    if(copies.length > 1){
+      copies.forEach(copy => !copy.previousElementSibling && (copy.style.color = '#000000'))
+    }
+    if(ancestry.includes(data.id)){
+      name.onclick = () => {
+        const copies = main.querySelectorAll('.a'+data.id + '> .slot_list')
+        copies.forEach((copy, i) => {
+          if(copy === slot_list)
+            return
+          const temp1 = copy.style.color
+          const temp2 = copy.style.backgroundColor
+          copy.style.color = '#fff'
+          copy.style.backgroundColor = '#000000'
+          setTimeout(() => {
+            copy.style.color = temp1
+            copy.style.backgroundColor = temp2
+          }, 1000)
+        })
+      }
+      return
+    }
+    ancestry.push(data.id)
+
+    //Elements
+    const menu_emo = element.querySelector('.slot_list > .menu_emo')
+    const type_emo = element.querySelector('.slot_list > .type_emo')
+    const menu = element.querySelector('.menu')
+
+    //Listeners
+    type_emo.onclick = type_click
+    name.onclick = () => send({ type: 'click', to: hub_id, data })
+    const slotmap = []
+    const data_keys = Object.keys(data)
+    const new_pair = [[], []]
+    const slot_handle = []
+    let check = false
+    default_slots.forEach(pair => {
+      pair.forEach((slot, i) => {
+        if(data_keys.includes(slot)){
+          new_pair[i].push(slot)
+          check = true
+        }
+      })
+    })
+    check && slotmap.push(new_pair)
+    slotmap.forEach(handle_slot)
+    menu_click({el: menu, emo: menu_emo, data: status.menu_ids, pos: 0, type: 'menu'})
+    if(getComputedStyle(type_emo, '::before').content === 'none')
+      type_emo.innerHTML = `[${status.entry_types[data.type]}]`
+
+    //Procedures
+    async function handle_slot (pair, i) {
+      const slot_check = [false, false]
+      const slot_emo = document.createElement('span')
+      slot_emo.innerHTML = '<span>─</span><span></span>'
+      menu_emo.before(slot_emo)
+      slot_no++
+
+      pair.forEach((x, j) => {
+        let gap, mode, emo_on
+        const pos = !j
+        const count = status.count++
+        const style = document.createElement('style')
+        const entries = document.createElement('div')
+        entries.classList.add('entries')
+
+        element.append(style)
+        if(pos){
+          slot_list.before(entries)
+          mode= 'hi'
+          gap = hi_space
+          hi_space += `<span class="space${count}"><span class="hi">&nbsp;</span>${x.length ? '<span class="xhi">│</span>' : ''}&nbsp;&nbsp;</span>`
+        }
+        else{
+          menu.after(entries)
+          mode = 'lo'
+          gap = lo_space
+          lo_space += `<span class="space${count}"><span class="lo">&nbsp;</span>${x.length ? '<span class="xlo">│</span>' : ''}&nbsp;&nbsp;</span>`
+        }
+        style.innerHTML = `.space${count} > .x${mode}{display: none;}`
+        els.push(slot_emo)
+        space_handle.push(() => style.innerHTML = `.space${count}${slot_on ? ` > .x${mode}` : ''}{display: none;}`)
+        if(!x.length){
+          const space = document.createElement('span')
+          space.innerHTML = '&nbsp;&nbsp;&nbsp;'
+          return
+        }
+        slot_emo.classList.add('compact')
+
+        slot_handle.push(() => {
+          slot_emo.classList.add('on')
+          style.innerHTML = `.space${count} > .${emo_on ? 'x' : ''}${mode}{display: none;}`
+          // emo_on && space_handle[i]()
+          slot_check[j] = emo_on = !emo_on
+          if(slot_check[0] && slot_check[1])
+            slot_emo.children[0].innerHTML = '┼'
+          else if(slot_check[0] && !slot_check[1])
+            slot_emo.children[0].innerHTML = '┴'
+          else if(!slot_check[0] && slot_check[1])
+            slot_emo.children[0].innerHTML = '┬'
+          else{
+            slot_emo.children[0].innerHTML = '─'
+            slot_emo.classList.remove('on')
+          }
+          const ids = []
+          x.forEach(slot => ids.push(...data[slot]))
+          handle_click({space: gap, pos, el: entries, data: ids, ancestry, type: 'entry_compact' })
+        })
+      })
+      if(getComputedStyle(slot_emo, '::before').content === 'none')
+        slot_emo.innerHTML = `<span>─</span><span>${slot_no}─</span>`
+    }
+    async function type_click() {
+      slot_on = !slot_on
+      // if(status.xentry === type_emo)
+      //   status.xentry = null
+      // else{
+      //   status.xentry?.click()
+      //   status.xentry = type_emo
+      // }
+      slot_list.classList.toggle('on')
+      let temp = element
+      //Find path to root
+      while(temp.tagName !== 'MAIN'){
+        if(temp.classList.contains('entry')){
+          slot_on ? temp.classList.add('on') : temp.classList.remove('on')
+          while(temp.previousElementSibling){
+            temp = temp.previousElementSibling
+            slot_on ? temp.classList.add('on') : temp.classList.remove('on')
+          }
+        }
+        temp = temp.parentElement
+      }
+      els.forEach((emo, i) => {
+        if(!emo.classList.contains('on')){
+          space_handle[i]()
+        }
+      })
+      slot_handle[0] && slot_handle[0]()
+      slot_handle[1] && slot_handle[1]()
+    }
+    async function menu_click({ emo, emo_on, ...rest }, i) {
+      emo.onclick = () => {
+        emo.classList.toggle('on')
+        emo_on = !emo_on
+        handle_click({space: lo_space, ...rest })
+      }
+    }
+  }
+  function add_entry ({ hub_el, data, first, last, space = '', pos, ancestry }) {
+    //Init
+    const element = html_template(data, last, space, pos)
+    !status.entry_types[data.type] && (status.entry_types[data.type] = Object.keys(status.entry_types).length)
+    ancestry = [...ancestry]
+    let lo_space = space + (last ? '&nbsp;&nbsp;&nbsp;' : '│&nbsp;&nbsp;')
+    let hi_space = space + (first ? '&nbsp;&nbsp;&nbsp;' : '│&nbsp;&nbsp;')
+    const space_handle = [], els = []
+    let slot_no = 0, slot_on
+
+    //HTML
+    element.innerHTML = `
+      <div class="slot_list">
+        <span class="space odd"><!--
+        -->${space}<span>${last ? '└' : first ? "┌" : '├'}</span><!--
+        --><span class='on'>${last ? '┗' : first ? "┏" : '┠'}</span>
+        </span><!--
+        --><span class="menu_emo"></span><!--
+        --><span class="type_emo odd"></span><!--
+        --><span class="name odd">${data.name}</span>
+      </div>
+      <div class="menu entries"></div>
+    `
+
+    //Unavoidable mix
+    const slot_list = element.querySelector('.slot_list')
+    const name = element.querySelector('.slot_list > .name')
+    hub_el.append(element)
+    const copies = main.querySelectorAll('.a'+data.id + '> .slot_list')
+    if(copies.length > 1){
+      copies.forEach(copy => !copy.previousElementSibling && (copy.style.color = '#000000'))
+    }
+    if(ancestry.includes(data.id)){
+      name.onclick = () => {
+        const copies = main.querySelectorAll('.a'+data.id + '> .slot_list')
+        copies.forEach((copy, i) => {
+          if(copy === slot_list)
+            return
+          const temp1 = copy.style.color
+          const temp2 = copy.style.backgroundColor
+          copy.style.color = '#fff'
+          copy.style.backgroundColor = '#000000'
+          setTimeout(() => {
+            copy.style.color = temp1
+            copy.style.backgroundColor = temp2
+          }, 1000)
+        })
+      }
+      return
+    }
+    ancestry.push(data.id)
+
+    //Elements
+    const menu_emo = element.querySelector('.slot_list > .menu_emo')
+    const type_emo = element.querySelector('.slot_list > .type_emo')
+    const space_emo = element.querySelector('.slot_list > .space')
+    const menu = element.querySelector('.menu')
+
+    //Listeners
+    space_emo.onclick = () => type_click(0)
+    type_emo.onclick = () => type_click(1)
+    name.onclick = () => send({ type: 'click', to: hub_id, data })
+    const slotmap = []
+    const data_keys = Object.keys(data)
+    const new_pair = [[], []]
+    const slot_handle = []
+    let check = false
+    default_slots.forEach(pair => {
+      pair.forEach((slot, i) => {
+        if(data_keys.includes(slot)){
+          new_pair[i].push(slot)
+          check = true
+        }
+      })
+    })
+    check && slotmap.push(new_pair)
+    slotmap.forEach(handle_slot)
+    menu_click({el: menu, emo: menu_emo, data: status.menu_ids, pos: 0, type: 'menu'})
+    if(getComputedStyle(type_emo, '::before').content === 'none')
+      type_emo.innerHTML = `[${status.entry_types[data.type]}]`
+
+    //Procedures
+    async function handle_slot (pair, i) {
+      const slot_check = [false, false]
+      const slot_emo = document.createElement('span')
+      slot_emo.innerHTML = '<span></span><span>─</span>'
+      menu_emo.before(slot_emo)
+      slot_no++
+
+      pair.forEach((x, j) => {
+        let gap, mode, emo_on
+        const pos = !j
+        const count = status.count++
+        const style = document.createElement('style')
+        const entries = document.createElement('div')
+        entries.classList.add('entries')
+
+        element.append(style)
+        if(pos){
+          slot_list.before(entries)
+          mode= 'hi'
+          gap = hi_space
+          hi_space += `<span class="space${count}"><span class="hi">&nbsp;</span>${x.length ? '<span class="xhi">│</span>' : ''}&nbsp;&nbsp;</span>`
+        }
+        else{
+          menu.after(entries)
+          mode = 'lo'
+          gap = lo_space
+          lo_space += `<span class="space${count}"><span class="lo">&nbsp;</span>${x.length ? '<span class="xlo">│</span>' : ''}&nbsp;&nbsp;</span>`
+        }
+        style.innerHTML = `.space${count} > .x${mode}{display: none;}`
+        els.push(slot_emo)
+        space_handle.push(() => style.innerHTML = `.space${count}${slot_on ? ` > .x${mode}` : ''}{display: none;}`)
+        if(!x.length){
+          const space = document.createElement('span')
+          space.innerHTML = '&nbsp;&nbsp;&nbsp;'
+          return
+        }
+        slot_emo.classList.add('compact')
+
+        slot_handle.push(() => {
+          slot_emo.classList.add('on')
+          style.innerHTML = `.space${count} > .${emo_on ? 'x' : ''}${mode}{display: none;}`
+          // emo_on && space_handle[i]()
+          slot_check[j] = emo_on = !emo_on
+          if(slot_check[0] && slot_check[1])
+            slot_emo.children[1].innerHTML = '┼'
+          else if(slot_check[0] && !slot_check[1])
+            slot_emo.children[1].innerHTML = '┴'
+          else if(!slot_check[0] && slot_check[1])
+            slot_emo.children[1].innerHTML = '┬'
+          else{
+            slot_emo.children[1].innerHTML = '─'
+            slot_emo.classList.remove('on')
+          }
+          const ids = []
+          x.forEach(slot => ids.push(...data[slot]))
+          handle_click({space: gap, pos, el: entries, data: ids, ancestry })
+        })
+      })
+      if(getComputedStyle(slot_emo, '::before').content === 'none')
+        slot_emo.innerHTML = `<span>${slot_no}─</span><span>─</span>`
+    }
+    async function type_click(i) {
+      slot_on = !slot_on
+      // if(status.xentry === type_emo)
+      //   status.xentry = null
+      // else{
+      //   status.xentry?.click()
+      //   status.xentry = type_emo
+      // }
+      slot_list.classList.toggle('on')
+      let temp = element
+      //Find path to root
+      while(temp.tagName !== 'MAIN'){
+        if(temp.classList.contains('entry')){
+          slot_on ? temp.classList.add('on') : temp.classList.remove('on')
+          while(temp.previousElementSibling){
+            temp = temp.previousElementSibling
+            slot_on ? temp.classList.add('on') : temp.classList.remove('on')
+          }
+        }
+        temp = temp.parentElement
+      }
+      els.forEach((emo, i) => {
+        if(!emo.classList.contains('on')){
+          space_handle[i]()
+        }
+      })
+      // slot_handle[0] && slot_handle[0]()
+      slot_handle[i] && slot_handle[i]()
+    }
+
+    async function menu_click({ emo, emo_on, ...rest }, i) {
+      emo.onclick = () => {
+        emo.classList.toggle('on')
+        emo_on = !emo_on
+        handle_click({space: lo_space, ...rest })
+      }
+    }
+  }
+  // async function add_node_data (name, type, parent_id, users, author){
+  //   const node_id = status.graph.length
+  //   status.graph.push({ id: node_id, name, type: state.code_words[type], room: {}, users })
+  //   if(parent_id){
+  //     save_msg({
+  //         head: [id],
+  //         type: 'save_msg',
+  //         data: {username: 'system', content: author + ' added ' + type.slice(0,-1)+': '+name, chat_id: parent_id}
+  //       })
+  //     //Add a message in the chat
+  //     if(state.chat_task && parent_id === state.chat_task.id.slice(1))
+  //       channel_up.send({
+  //         head: [id, channel_up.send.id, channel_up.mid++],
+  //         type: 'render_msg',
+  //         data: {username: 'system', content: author+' added '+type.slice(0,-1)+': '+name}
+  //       })
+  //     const sub_nodes = graph[parent_id][state.add_words[type]]
+  //     sub_nodes ? sub_nodes.push(node_id) : graph[parent_id][state.add_words[type]] = [node_id]
+  //   }
+  //   else{
+  //     graph[node_id].root = true
+  //     graph[node_id].users = [opts.host]
+  //   }
+  //   save_msg({
+  //     head: [id],
+  //     type: 'save_msg',
+  //     data: {username: 'system', content: author + ' created ' + type.slice(0,-1)+': '+name, chat_id: node_id}
+  //   })
+  //   const channel = state.net[state.aka.taskdb]
+  //   channel.send({
+  //     head: [id, channel.send.id, channel.mid++],
+  //     type: 'set',
+  //     data: graph
+  //   })
+    
+  // }
+  // async function on_add_node (data) {
+  //   const node = data.id ? shadow.querySelector('#a' + data.id + ' > .'+data.type) : main
+  //   node && node.children.length && add_el({ data: { name: data.name, id: status.graph.length, type: state.code_words[data.type] }, parent: node, grand_last: data.grand_last, type: data.type, space: data.space })
+  //   add_node_data(data.name, data.type, data.id, data.users, data.user)
+  // }
+  /******************************************
+   Event handlers
+  ******************************************/
+  function handle_focus (e) {
+    state.xtask = e.target
+    state.xtask.classList.add('focus')
+    state.xtask.addEventListener('blur', e => {
+      if(e.relatedTarget && e.relatedTarget.classList.contains('noblur'))
+        return
+      state.xtask.classList.remove('focus')
+      state.xtask = undefined
+    }, { once: true })
+  }
+  function handle_popup (e) {
+    const el = e.target
+    el.classList.add('show')
+    popup.style.top = el.offsetTop - 20 + 'px'
+    popup.style.left = el.offsetLeft - 56 + 'px'
+    popup.focus()
+    popup.addEventListener('blur', () => {
+      el.classList.remove('show')
+    }, { once: true })
+  }
+  function handle_click ({ el, data, pos, hub_id, type = 'entry', ...rest }) {
+    el.classList.toggle('show')
+    if(data && el.children.length < 1){
+      length = data.length - 1
+      data.forEach((value, i) => on_add[type]({ hub_el: el, data: {...status.graph[value], hub_id}, first: pos ? 0 === i : false, last: pos ? false : length === i, pos, ...rest }))
+    }
+  }
+  async function handle_export () {
+    const data = await traverse( state.xtask.id.slice(1) )
+    download_json(data)
+  }
+  async function handle_add (data) {
+    data = data.slice(2).trim().toLowerCase() + 's'
+    const input = document.createElement('input')
+    let node, task_id, space = '', grand_last = true, root = true
+    //expand other siblings
+    if(state.xtask){
+      node = state.xtask.querySelector('.' + data)
+      task_id = state.xtask.id.slice(1)
+      const before = state.xtask.querySelector('.' + data.slice(0,3))
+      before.dispatchEvent(new MouseEvent('click', {bubbles:true, cancelable: true, view: window}))
+      node.classList.add('show')
+      grand_last = state.xtask.dataset.grand_last
+      space = state.xtask.dataset.space
+      state.xtask.classList.remove('focus')
+      state.xtask = undefined
+      root = false
+    }
+    else{
+      node = main
+      task_id = ''
+    }
+    node.prepend(input)
+    input.onkeydown = async (event) => {
+      if (event.key === 'Enter') {
+        input.blur()
+        add_el({ data : { name: input.value, id: status.graph.length, type: state.code_words[data], root }, space, grand_last, type: data, parent: node })
+        const users = task_id ? graph[task_id].users : [host]
+        add_node_data(input.value, data, task_id, users, host)
+        //sync with other users
+        if(users.length > 1)
+          channel_up.send({
+            head: [id, channel_up.send.id, channel_up.mid++],
+            type: 'send',
+            data: {to: 'task_explorer', route: ['up', 'task_explorer'], users: graph[task_id].users.filter(user => user !== host), type: 'on_add_node', data: {name: input.value, id: task_id, type: data, users, grand_last, space, user: host} }
+          })
+      }
+    }
+    input.focus()
+    input.onblur = () => input.remove()
+  }
+  /******************************************
+   Tree traversal
+  ******************************************/
+  async function jump (e){
+    let target_id = e.currentTarget.dataset.id
+    const el = main.querySelector('#a'+target_id)
+    if(el)
+      el.focus()
+    else{
+      const path = []
+      let temp
+      for(temp = status.graph[target_id]; temp.hub; temp = status.graph[temp.hub[0]])
+        path.push(temp.id)
+      temp = main.querySelector('#a'+temp.id)
+      target_id = 'a'+target_id
+      while(temp.id !== target_id){
+        const sub_emo = temp.querySelector('.sub_emo')
+        sub_emo.dispatchEvent(new MouseEvent('click', {bubbles:true, cancelable: true, view: window}))
+        temp.classList.add('show')
+        temp = temp.querySelector('#a'+path.pop())
+      }
+      temp.focus()
+    }
+      
+  }
+  async function traverse (id) {
+    state.result = []
+    state.track = []
+    recurse(id)
+    return state.result
+  }
+  function recurse (id){
+    if(state.track.includes(id))
+      return
+    state.result.push(graph[id])
+    state.track.push(id)
+    for(temp = 0; graph[id].sub && temp < graph[id].sub.length; temp++)
+      recurse(graph[id].sub[temp])
+    for(temp = 0; graph[id].inputs && temp < graph[id].inputs.length; temp++)
+      recurse(graph[id].inputs[temp])
+    for(temp = 0; graph[id].outputs && temp < graph[id].outputs.length; temp++)
+      recurse(graph[id].outputs[temp])
+  }
+  /******************************************
+   Communication
+  ******************************************/
+  async function scroll () {
+    el.scrollIntoView({behavior: 'smooth'})
+    el.tabIndex = '0'
+    el.focus()
+    el.onblur = () => {
+      el.tabIndex = '-1'
+      el.onblur = null
+    }
+  }
+  async function inject (data){
+    style.innerHTML = data.join('\n')
+  }
+}
+}).call(this)}).call(this,"/src/node_modules/graph_explorer/graph_explorer.js")
+},{"STATE":3,"helper":7,"io":10,"localdb":12}],7:[function(require,module,exports){
+function copy (selection) {
+  const range = selection.getRangeAt(0)
+  const selectedElements = []
+  const walker = document.createTreeWalker(
+    range.commonAncestorContainer,
+    NodeFilter.SHOW_ELEMENT,
+    {
+        acceptNode: function(node) {
+            return range.intersectsNode(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+        }
+    },
+    false
+  )
+
+  while (walker.nextNode()) {
+      walker.currentNode.tagName === 'SPAN' && selectedElements.push(walker.currentNode)
+  }
+  let text = ''
+  selectedElements.forEach(el => {
+    const before = getComputedStyle(el, '::before').content
+    text += (before === 'none' ? '' : before.slice(1, -1)) + el.textContent
+    text += el.classList.contains('name') ? '\n' : ''
+  })
+  return text
+}
+function get_color () {
+  const letters = 'CDEF89'
+  let color = '#'
+  for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * letters.length)]
+  }
+  return color;
+}
+function download_json (data) {
+  const json_string = JSON.stringify(data, null, 2);
+  const blob = new Blob([json_string], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'data.json';
+  link.click();
+}
+module.exports = {copy, get_color, download_json}
+},{}],8:[function(require,module,exports){
 const loadSVG = require('loadSVG')
 
 function graphic(className, url) {
   
   return new Promise((resolve, reject) => {
-    let el = document.createElement('div')
+    const el = document.createElement('div')
     el.classList.add(className)
     loadSVG(url, (err, svg) => {
       if (err) return console.error(err)
@@ -2955,244 +2827,175 @@ function graphic(className, url) {
 }   
 
 module.exports = graphic
-},{"loadSVG":39}],38:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
+},{"loadSVG":11}],9:[function(require,module,exports){
+(function (__filename){(function (){
 const graphic = require('graphic')
 const Rellax = require('rellax')
+const IO = require('io')
+const STATE = require('STATE')
+const name = 'header'
+const statedb = STATE(__filename)
+const shopts = { mode: 'closed' }
+/******************************************************************************
+  HEADER COMPONENT
+******************************************************************************/
 
+// ----------------------------------------
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+function fallback_module () { 
+  return {}
+}
+function fallback_instance () {
+  return {
+    inputs: {
+      'header.css': {
+        $ref: new URL('src/node_modules/css/default/header.css', location).href
+      },
+      "header.json": {
+        data: {
+          "title": "Infrastructure for the next-generation Internet"
+        }
+      }
+    }
+  }
+}
 module.exports = header
 
-async function header(data) {
-		const css = styles
-    var graphics = [
-      graphic(css.playIsland, './src/node_modules/assets/svg/play-island.svg'),
-      graphic(css.sun, './src/node_modules/assets/svg/sun.svg'),
-      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg'),
-    ]
+async function header (opts) {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const { id, sdb } = await get(opts.sid)
+  const on = {
+    css: inject,
+    json: fill,
+    scroll
+  }
+  const send = await IO(id, name, on)
+  // ----------------------------------------
+  // OPTS
+  // ----------------------------------------
+  var graphics = [
+    graphic('playIsland', './src/node_modules/assets/svg/play-island.svg'),
+    graphic('sun', './src/node_modules/assets/svg/sun.svg'),
+    graphic('cloud1', './src/node_modules/assets/svg/cloud.svg'),
+    graphic('cloud2', './src/node_modules/assets/svg/cloud.svg'),
+    graphic('cloud3', './src/node_modules/assets/svg/cloud.svg'),
+    graphic('cloud4', './src/node_modules/assets/svg/cloud.svg'),
+    graphic('cloud5', './src/node_modules/assets/svg/cloud.svg'),
+    graphic('cloud6', './src/node_modules/assets/svg/cloud.svg'),
+    graphic('cloud7', './src/node_modules/assets/svg/cloud.svg'),
+  ]
 
-    const [playIsland, sun, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6, cloud7] = await Promise.all(graphics)
+  const [playIsland, sun, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6, cloud7] = await Promise.all(graphics)
 
-		// Parallax effects
-		// let playRellax = new Rellax(playIsland, { speed: 2 })
-		let sunRellax = new Rellax(sun, { speed: 2 })
-		let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
-		let cloud2Rellax = new Rellax(cloud2, { speed: 2 })
-		let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
-		let cloud4Rellax = new Rellax(cloud4, { speed: 2 })
-		let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
-		let cloud6Rellax = new Rellax(cloud6, { speed: 3 })
-		let cloud7Rellax = new Rellax(cloud7, { speed: 3 })
-		
-		let el = bel`
-		<div class=${css.header}">
-				<h1 class=${css.title}>${data.title}</h1>
-				<section class=${css.scene}>
-						<div class=${css.sunCloud}>
-								${cloud1}
-								${sun}
-								${cloud2}
-						</div>
-						${cloud3}
-						${cloud4}
-						${cloud5}
-						${cloud6}
-						${cloud7}
-						${playIsland}
-				</section>
-		</div>
-		`
-		return el
+  // Parallax effects
+  // let playRellax = new Rellax(playIsland, { speed: 2 })
+  let sunRellax = new Rellax(sun, { speed: 2 })
+  let cloud1Rellax = new Rellax(cloud1, { speed: 4 })
+  let cloud2Rellax = new Rellax(cloud2, { speed: 2 })
+  let cloud3Rellax = new Rellax(cloud3, { speed: 4 })
+  let cloud4Rellax = new Rellax(cloud4, { speed: 2 })
+  let cloud5Rellax = new Rellax(cloud5, { speed: 4 })
+  let cloud6Rellax = new Rellax(cloud6, { speed: 3 })
+  let cloud7Rellax = new Rellax(cloud7, { speed: 3 })
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.createElement('div')
+  const shadow = el.attachShadow(shopts)
+  shadow.innerHTML = `
+  <div class='header'>
+      <h1 class='title'></h1>
+      <section class='scene'>
+          <div class='sunCloud'>
+          </div>
+      </section>
+  </div>
+  <style></style>`
+  // ----------------------------------------
+  const style = shadow.querySelector('style')
+  const scene = shadow.querySelector('.scene')
+  const sunCloud = shadow.querySelector('.sunCloud')
+  const title = shadow.querySelector('.title')
+  await sdb.watch(onbatch)
+  scene.append(cloud3, cloud4, cloud5, cloud6, cloud7, playIsland)
+  sunCloud.append(cloud1, sun, cloud2)
+  
+  return el
+
+  function onbatch(batch) {
+    for (const {type, data} of batch) {
+      on[type](data)
+    }  
+  }
+  async function inject (data){
+    style.innerHTML = data.join('\n')
+  }
+  async function fill ([ opts ]) {
+    title.innerHTML = opts.title
+  }
+  async function scroll () {
+    el.scrollIntoView({behavior: 'smooth'})
+    el.tabIndex = '0'
+    el.focus()
+    el.onblur = () => {
+      el.tabIndex = '-1'
+      el.onblur = null
+    }
+  }
 }
 
-let styles = csjs`
-.header {
-		position: relative;
-		padding-top: 0vw;
-		background-image: linear-gradient(0deg, var(--playBgGEnd), var(--playBgGStart));
-		overflow: hidden;
-}
-.scene {
-		position: relative;
-		margin-top: 5vw;
-}
-.playIsland {
-		position: relative;
-		width: 90%;
-		margin-top: 0;
-		margin-left: 5vw;
-		z-index: 2;
-}
-.sunCloud {
-		position: absolute;
-		top: -4%;
-		width: 12%;
-		margin-left: 8vw;
-		z-index: 1;
-}
-.sun {
-		width: 100%;
-}
-[class^="cloud"] {
-		transition: left 0.6s, bottom 0.5s, top 0.5s linear;
-}
-.cloud1 {
-		position: absolute;
-		z-index: 2;
-		width: 7vw;
-		left: -3vw;
-		bottom: 0;
-}
-.cloud2 {
-		position: absolute;
-		z-index: 1;
-		width: 7vw;
-		left: 10vw;
-		top: 25%;
-}
-.cloud3 {
-		position: absolute;
-		z-index: 2;
-		width: 7vw;
-		height: auto;
-		top: -2.5%;
-		right: 14vw;
-}
-.cloud4 {
-		position: absolute;
-		z-index: 1;
-		width: 5vw;
-		height: auto;
-		top: 8%;
-		right: 6vw;
-}
-.cloud5 {
-		position: absolute;
-		z-index: 1;
-		width: 12vw;
-		height: auto;
-		top: 50%;
-		left: 2vw;
-}
-.cloud6 {
-		position: absolute;
-		z-index: 3;
-		width: 12vw;
-		height: auto;
-		bottom: 15%;
-		left: 15vw;
-}
-.cloud7 {
-		position: absolute;
-		z-index: 4;
-		width: 18vw;
-		height: auto;
-		bottom: 25%;
-		right: 5vw;
-}
-.title {
-		position: relative;
-		z-index: 4;
-		font-size: var(--titleSize);
-		font-family: var(--titleFont);
-		color: var(--titleColor);
-		text-align: center;
-		margin: 0;
-		padding: 2% 2%;
-}
-.sun {
-		will-change: transform;
-}
-.cloud1, .cloud2, .cloud3, .cloud4, .cloud5, .cloud6, .cloud7 {
-		will-change: transform;
-}
-@media only screen and (min-width: 1680px) {
-		.scrollUp .header {
-				padding-top: 2.5%;
-		}
-}
-@media only screen and (min-width: 2561px) {
-		.scene {
-				max-width: 90%;
-				margin-left: auto;
-				margin-right: auto;
-		}
-		.title {
-				font-size: calc(var(--titleSize) * 1.5);
-				margin-bottom: 6vh;
-		}
-}
-@media only screen and (min-width: 4096px) {
-		.title {
-				font-size: calc(var(--titleSize) * 2.25);
-		}
-}
-@media only screen and (max-width: 1680px) {
-		.header {
-				padding-top: 2vw;
-		}
-}
-@media only screen and (max-width: 1280px) {
-		.header {
-				padding-top: 3vw;
-		}
-		.scrollUp .header {
-				padding-top: 6.5vh;
-		}
-}
-@media only screen and (max-width: 1024px) {
-		.header {
-				padding-top: 0%;
-		}
-}
-@media only screen and (max-width: 812px) {
-		.header {
-				padding-top: 5vh;
-		}
-		.title { 
-				padding: 0 5%;
-				font-size: var(--titleSizeM);
-		}
-}
-@media only screen and (max-width: 414px) {
-		.header {
-				padding-top: 8vh;
-		}
-		.title {
-				font-size: var(--titlesSizeS);
-		}
-		.playIsland {
-				width: 150%;
-				margin-left: -26vw;
-		}
-		.sunCloud {
-				top: -2vh;
-				left: -3vw;
-		}
-		.cloud5 {
-				width: 12vw;
-				left: -4vw;
-				top: 64%;
-		}
-		.cloud6 {
-				width: 15vw;
-				left: 5vw;
-		}
-		.cloud7 {
-				width: 20vw;
-				right: -5vw;
-		}
-}
-`
 
-},{"bel":4,"csjs-inject":7,"graphic":37,"rellax":27}],39:[function(require,module,exports){
+}).call(this)}).call(this,"/src/node_modules/header/header.js")
+},{"STATE":3,"graphic":8,"io":10,"rellax":1}],10:[function(require,module,exports){
+const taken = {}
+
+module.exports = io
+function io(seed, alias) {
+  if (taken[seed]) throw new Error(`seed "${seed}" already taken`)
+  // const pk = seed.slice(0, seed.length / 2)
+  // const sk = seed.slice(seed.length / 2, seed.length)
+  const self = taken[seed] = { id: seed, alias, peer: {} }
+  const io = { at, on }
+  return io
+
+  async function at (id, signal = AbortSignal.timeout(1000)) {
+    if (id === seed) throw new Error('cannot connect to loopback address')
+    if (!self.online) throw new Error('network must be online')
+    const peer = taken[id] || {}
+    // if (self.peer[id] && peer.peer[pk]) {
+    //   self.peer[id].close() || delete self.peer[id]
+    //   peer.peer[pk].close() || delete peer.peer[pk]
+    //   return console.log('disconnect')
+    // }
+    // self.peer[id] = peer
+    if (!peer.online) return wait() // peer with id is offline or doesnt exist
+    return connect()
+    function wait () {
+      const { resolve, reject, promise } = Promise.withResolvers()
+      signal.onabort = () => reject(`timeout connecting to "${id}"`)
+      peer.online = { resolve }
+      return promise.then(connect)
+    }
+    function connect () {
+      signal.onabort = null
+      const { port1, port2 } = new MessageChannel()
+      port2.by = port1.to = id
+      port2.to = port1.by = seed
+      self.online(self.peer[id] = port1)
+      peer.online(peer.peer[seed] = port2)
+      return port1
+    }
+  }
+  function on (online) { 
+    if (!online) return self.online = null
+    const resolve = self.online?.resolve
+    self.online = online
+    if (resolve) resolve(online)
+  }
+}
+},{}],11:[function(require,module,exports){
 async function loadSVG (url, done) { 
     const parser = document.createElement('div')
     let response = await fetch(url)
@@ -3205,1640 +3008,1013 @@ async function loadSVG (url, done) {
 }
 
 module.exports = loadSVG
-},{}],40:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const graphic = require('graphic')
-const Rellax = require('rellax')
-const Content = require('content')
-const Contributor = require('contributor')
+},{}],12:[function(require,module,exports){
+/******************************************************************************
+  LOCALDB COMPONENT
+******************************************************************************/
+module.exports = localdb
 
-async function our_contributors (data) {
-    const css = styles
-    const graphics = [
-      graphic(css.island,'./src/node_modules/assets/svg/waterfall-island.svg'),
-      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud7, './src/node_modules/assets/svg/cloud.svg'),
-    ]
+function localdb () {
+  const prefix = '153/'
+  return { add, read_all, read, drop, push, length, append, find, wash, gen_id }
 
-    const [island, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6, cloud7] = await Promise.all(graphics)
-    const contributors = await Promise.all(data.contributors.map(person => Contributor( person, css.group, css)))
-
-    let cloud1Rellax = new Rellax( cloud1, { speed: 0.3})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 0.4})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 0.3})
-
-    let el = bel`
-        <section id="ourContributors" class="${css.section}">
-            ${Content(data, css)}
-
-            <div class=${css.inner}>
-                ${island}
-                ${cloud1}
-                ${cloud2}
-                ${cloud3}
-            </div>
-
-            <div class=${css.groups}>
-                ${contributors}
-            </div>
-
-            ${cloud4}
-            ${cloud5}
-            ${cloud6}
-            ${cloud7}
-        </section>
-    `
-
-    return el
-
-    function spacing() {
-        let subTitle = content.querySelector(`.${css.subTitle}`)
-        let article = content.querySelector(`.${css.article}`)
-        let contentH = content.offsetTop + subTitle.clientHeight + article.clientHeight
-        let groups = document.querySelector(`.${css.groups}`)
-        let screen = window.innerWidth
-
-    }
-}
-
-let styles = csjs`
-.section {
-    position: relative;
-    background-image: linear-gradient(0deg, var(--section5BgGEnd), var(--section5BgGMiddle), var(--section5BgGStart));
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(3, 1fr);
-    padding: 5vw 2vw 10vw 2vw;
-}
-.content {
-    position: relative;
-    z-index: 9;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 3;
-    text-align: center;
-    padding: 0;
-}
-.subTitleColor {
-    color: var(--section5TitleColor);
-    margin: 0;
-    padding: 2.5rem 0;
-}
-.inner {
-    position: relative;
-    grid-row-start: 1;
-    grid-row-end: 3;
-    grid-column-start: 1;
-    grid-column-end: 4;
-}
-.island {
-    position: relative;
-    z-index: 7;
-    width: 62%;
-}
-.groups {
-    position: relative;
-    z-index: 9;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    grid-column-start: 2;
-    grid-column-end: 4;
-    width: 100%;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(12, 12.5%);
-    justify-self: end;
-}
-.group {
-    position: relative;
-    z-index: 4;
-    width: 100%;
-}
-.group:nth-child(1) {
-    grid-row-start: 1;
-    grid-column-start: 4;
-    grid-column-end: 7;
-}
-.group:nth-child(2) {
-    grid-row-start: 2;
-    grid-column-start: 2;
-    grid-column-end: 5;
-    margin-top: -10%;
-    margin-left: -5%;
-}
-.group:nth-child(3) {
-    grid-row-start: 2;
-    grid-column-start: 6;
-    grid-column-end: 9;
-    margin-left: 0vw;
-    margin-top: -10%;
-}
-.group:nth-child(4) {
-    grid-row-start: 3;
-    grid-column-start: 1;
-    grid-column-end: 4;
-    margin-left: -10%;
-}
-.group:nth-child(5) {
-    grid-row-start: 3;
-    grid-column-start: 5;
-    grid-column-end: 8;
-    margin-left: -20%;
-}
-.group:nth-child(6) {
-    grid-row-start: 4;
-    grid-column-start: 3;
-    grid-column-end: 6;
-}
-.group:nth-child(7) {
-    grid-row-start: 4;
-    grid-column-start: 8;
-    grid-column-end: 11;
-}
-.group:nth-child(8) {
-    grid-row-start: 5;
-    grid-column-start: 1;
-    grid-column-end: 4;
-}
-.group:nth-child(9) {
-    grid-row-start: 5;
-    grid-column-start: 5;
-    grid-column-end: 8;
-}
-.group:nth-child(10) {
-    grid-row-start: 5;
-    grid-column-start: 9;
-    grid-column-end: 12;
-}
-.group:nth-child(11) {
-    grid-row-start: 6;
-    grid-column-start: 2;
-    grid-column-end:5;
-}
-.group:nth-child(12) {
-    grid-row-start: 6;
-    grid-column-start: 7;
-    grid-column-end: 10;
-}
-.group:nth-child(13) {
-    grid-row-start: 7;
-    grid-column-start: 1;
-    grid-column-end: 4;
-}
-.group:nth-child(14) {
-    grid-row-start: 7;
-    grid-column-start: 5;
-    grid-column-end: 8;
-}
-.avatar {
-    position: relative;
-    z-index: 2;
-}
-.info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: var(--contributorsTextSize);
-    text-align: center;
-    background-color: var(--contributorsBg);
-    padding: 0% 2% 4% 20%;
-    margin-left: -20%;
-}
-.name {
-    color: var(--section5TitleColor);
-    margin-top: 0;
-    margin-bottom: 3%;
-}
-.career {
-    display: block;
-    color: var(--contributorsCareerColor);
-}
-.cloud1 {
-    position: absolute;
-    z-index: 2;
-    width: 8vw;
-    top: 10vw;
-    left: 5vw;
-}
-.cloud2 {
-    position: absolute;
-    z-index: 3;
-    width: 12vw;
-    top: 5vw;
-    left: 20vw;
-}
-.cloud3 {
-    position: absolute;
-    z-index: 4;
-    width: 6vw;
-    top: 15vw;
-    left: 50vw;
-}
-.cloud4 {
-    position: absolute;
-    z-index: 5;
-    width: 12vw;
-    bottom: 12vw;
-    left: 5vw;
-}
-.cloud5 {
-    position: absolute;
-    z-index: 5;
-    width: 8vw;
-    bottom: 5vw;
-    left: 30vw;
-}
-.cloud6 {
-    position: absolute;
-    z-index: 4;
-    width: 14vw;
-    bottom: 0;
-    right: 25vw;
-}
-.cloud7 {
-    position: absolute;
-    z-index: 3;
-    width: 6vw;
-    bottom: 5vw;
-    right: 10vw;
-}
-@media only screen and (min-width: 2561px) {
-    .info {
-        font-size: calc(var(--contributorsTextSize) * 1.35);
-    }
-}
-@media only screen and (min-width: 1920px) {
-    .groups {
-      grid-template-columns: repeat(12, 8.33%);
-      margin-top: 2vw;
-    }
-    .group:nth-child(1) {
-      grid-row-start: 1;
-      grid-column-start: 7;
-      grid-column-end: 11;
-      margin-left: 0;
-    }
-    .group:nth-child(2) {
-      grid-row-start: 2;
-      grid-column-start: 4;
-      grid-column-end: 8;
-    }
-    .group:nth-child(3) {
-      grid-row-start: 2;
-      grid-column-start: 9;
-      grid-column-end: 13;
-    }
-    .group:nth-child(4) {
-      grid-row-start: 3;
-      grid-column-start: 3;
-      grid-column-end: 7;
-      margin-left: 0;
-    }
-    .group:nth-child(5) {
-      grid-row-start: 3;
-      grid-column-start: 8;
-      grid-column-end: 12;
-      margin-left: 0;
-    }
-    .group:nth-child(6) {
-      grid-row-start: 4;
-      grid-column-start: 4;
-      grid-column-end: 8;
-      margin-left: 0;
-    }
-    .group:nth-child(7) {
-      grid-row-start: 4;
-      grid-column-start: 9;
-      grid-column-end: 13;
-      margin-left: 0;
-    }
-    .group:nth-child(8) {
-      grid-row-start: 5;
-      grid-column-start: 3;
-      grid-column-end: 7;
-      margin-left: 0;
-    }
-    .group:nth-child(9) {
-      grid-row-start: 5;
-      grid-column-start: 8;
-      grid-column-end: 12;
-      margin-left: 0;
-    }
-    .group:nth-child(8) {
-      grid-row-start: 5;
-      grid-column-start: 3;
-      grid-column-end: 7;
-      margin-left: 0;
-    }
-    .group:nth-child(9) {
-      grid-row-start: 5;
-      grid-column-start: 8;
-      grid-column-end: 12;
-      margin-left: 0;
-    }
-    .group:nth-child(10) {
-      grid-row-start: 6;
-      grid-column-start: 4;
-      grid-column-end: 8;
-      margin-left: 0;
-    }
-    .group:nth-child(11) {
-      grid-row-start: 6;
-      grid-column-start: 9;
-      grid-column-end: 13;
-      margin-left: 0;
-    }
-    .group:nth-child(12) {
-      grid-row-start: 7;
-      grid-column-start: 3;
-      grid-column-end: 7;
-      margin-left: 0;
-    }
-    .group:nth-child(13) {
-      grid-row-start: 7;
-      grid-column-start: 8;
-      grid-column-end: 12;
-      margin-left: 0;
-    }
-    .group:nth-child(14) {
-      grid-row-start: 8;
-      grid-column-start: 4;
-      grid-column-end: 8;
-    }
-    .group:nth-child(15) {
-      grid-row-start: 8;
-      grid-column-start: 9;
-      grid-column-end: 13;
-    }
-}
-@media only screen and (max-width: 1900px) {
-  .group:nth-child(1) {
-    margin-left: 15%;
+  function length (keys) {
+    const address = prefix + keys.join('/')
+    return Object.keys(localStorage).filter(key => key.includes(address)).length
   }
-  .group:nth-child(2) {
-    grid-column-start: 2;
-    grid-column-end: 5;
+  /**
+   * Assigns value to the key of an object already present in the DB
+   * 
+   * @param {String[]} keys 
+   * @param {any} value 
+   */
+  function add (keys, value, precheck) {
+    localStorage[(precheck ? '' : prefix) + keys.join('/')] = JSON.stringify(value)
   }
-  .group:nth-child(3) {
-    grid-column-start: 6;
-    grid-column-end: 9;
+  /**
+   * Appends values into an object already present in the DB
+   * 
+   * @param {String[]} keys 
+   * @param {any} value 
+   */
+  function append (keys, data) {
+    const pre = keys.join('/')
+    Object.entries(data).forEach(([key, value]) => {
+      localStorage[prefix + pre+'/'+key] = JSON.stringify(value)
+    })
   }
-  .group:nth-child(4) {
-    grid-column-start: 1;
-    grid-column-end: 4;
+  /**
+   * Pushes value to an array already present in the DB
+   * 
+   * @param {String[]} keys
+   * @param {any} value 
+   */
+  function push (keys, value) {
+    const independent_key = keys.slice(0, -1)
+    const data = JSON.parse(localStorage[prefix + independent_key.join('/')])
+    data[keys.at(-1)].push(value)
+    localStorage[prefix + independent_key.join('/')] = JSON.stringify(data)
   }
-  .group:nth-child(5) {
-    grid-column-start: 5;
-    grid-column-end: 8;
+  function read (keys) {
+    const result = localStorage[prefix + keys.join('/')]
+    return result && JSON.parse(result)
   }
-  .group:nth-child(6) {
-    grid-row-start: 4;
-    grid-column-start: 3;
-    grid-column-end: 6;
+  function read_all (addresses) {
+    let result = localStorage
+    addresses.forEach(address => {
+      const temp = {}
+      Object.entries(result).forEach(([key, value]) => {
+        if(key.includes(address))
+          temp[key] = value
+      })
+      result = temp
+    })
+    const temp = {}
+    Object.entries(result).forEach(([key, value]) => {
+      temp[key.replace(/^([^/]+\/){2}/, '')] = JSON.parse(value)
+    })
+    return temp
   }
-  .group:nth-child(7) {
-      grid-row-start: 5;
-      grid-column-start: 1;
-      grid-column-end: 4;
+  function drop (keys) {
+    if(keys.length > 1){
+      const data = JSON.parse(localStorage[keys[0]])
+      let temp = data
+      keys.slice(1, -1).forEach(key => {
+        temp = temp[key]
+      })
+      if(Array.isArray(temp))
+        temp.splice(keys[keys.length - 1], 1)
+      else
+        delete(temp[keys[keys.length - 1]])
+      localStorage[keys[0]] = JSON.stringify(data)
+    }
+    else
+      delete(localStorage[keys[0]])
   }
-  .group:nth-child(8) {
-      grid-row-start: 5;
-      grid-column-start: 5;
-      grid-column-end: 8;
+  function find (keys, filters, index = 0) {
+    let index_count = 0
+    const address = prefix + keys.join('/')
+    const target_key = Object.keys(localStorage).find(key => {
+      if(key.includes(address)){
+        const entry = JSON.parse(localStorage[key])
+        let count = 0
+        Object.entries(filters).some(([search_key, value]) => {
+          if(entry[search_key] !== value)
+            return
+          count++
+        })
+        if(count === Object.keys(filters).length){
+          if(index_count === index)
+            return key
+          index_count++
+        }
+      }
+    }, undefined)
+    return target_key && JSON.parse(localStorage[target_key])
+  } 
+  function wash () {
+    localStorage.clear()
   }
-  .group:nth-child(9) {
-      grid-row-start: 6;
-      grid-column-start: 2;
-      grid-column-end: 5;
-  }
-  .group:nth-child(10) {
-    grid-row-start: 6;
-    grid-column-start: 6;
-    grid-column-end: 9;
-  }
-  .group:nth-child(11) {
-    grid-row-start: 7;
-    grid-column-start: 3;
-    grid-column-end: 6;
-  }
-  .group:nth-child(12) {
-    grid-row-start: 8;
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-  .group:nth-child(13) {
-    grid-row-start: 8;
-    grid-column-start: 5;
-    grid-column-end: 8;
-  }
-  .group:nth-child(14) {
-    grid-row-start: 9;
-    grid-column-start: 2;
-    grid-column-end: 5;
-  }
-  .group:nth-child(15) {
-    grid-row-start: 9;
-    grid-column-start: 6;
-    grid-column-end: 9;
+  function gen_id (raw_id) {
+    const seed = raw_id.replace(/:0$/, "")
+    const copies = Object.keys(read_all(['state', seed]))
+    if (copies.length) {
+      const id = copies.sort().at(-1).split(':')[1]
+      raw_id = seed + ':' + (Number(id || 0) + 1)
+    }
+    return raw_id
   }
 }
-@media only screen and (max-width: 1024px) {
-    .section {
-        grid-template-columns: 1fr;
-    }
-    .content {
-        grid-row-start: 1;
-        grid-row-end: 2;
-        grid-column-start: 1;
-        padding: 0 5vw;
-    }
-    .inner {
-        justify-content: center;
-        grid-row-start: 2;
-        grid-row-end: 3;
-        padding-top: 10%;
-    }
-    .island {
-        width: 90%;
-    }
-    .groups {
-        grid-row-start: 3;
-        grid-row-end: 4;
-        grid-column-start: 1;
-        width: 90%;
-        grid-template-columns: 1fr 1fr;
-        margin: 0 auto;
-    }
-    .group:nth-child(1) {
-        grid-column-start: 1;
-        grid-column-end: 1;
-        margin-left: 0;
-    }
-    .group:nth-child(2) {
-        grid-row-start: 2;
-        grid-column-start: 2;
-        margin-top: -30%;
-    }
-    .group:nth-child(3) {
-        grid-row-start: 3;
-        grid-column-start: 1;
-        grid-column-end: 1;
-        margin-top: -30%;
-        margin-left: 0;
-    }
-    .group:nth-child(4) {
-        grid-row-start: 4;
-        grid-column-start: 2;
-        margin-top: -30%;
-    }
-    .group:nth-child(5) {
-        grid-row-start: 5;
-        grid-column-start: 1;
-        grid-column-end: 1;
-        margin-top: -30%;
-        margin-left: 0;
-    }
-    .group:nth-child(6) {
-        grid-row-start: 6;
-        grid-column-start: 2;
-        margin-top: -30%;
-    }
-    .group:nth-child(7) {
-      grid-row-start: 7;
-      grid-column-start: 1;
-      grid-column-end: 1;
-      margin-top: -30%;
-      margin-left: 0;
-    }
-    .group:nth-child(8) {
-      grid-row-start: 8;
-      grid-column-start: 2;
-      margin-top: -30%;
-    }
-    .group:nth-child(9) {
-      grid-row-start: 9;
-      grid-column-start: 1;
-      grid-column-end: 1;
-      margin-top: -30%;
-      margin-left: 0;
-    }
-    .group:nth-child(10) {
-      grid-row-start: 10;
-      grid-column-start: 2;
-      margin-top: -30%;
-    }
-    .group:nth-child(11) {
-      grid-row-start: 11;
-      grid-column-start: 1;
-      grid-column-end: 1;
-      margin-top: -30%;
-      margin-left: 0;
-    }
-    .group:nth-child(12) {
-      grid-row-start: 12;
-      grid-column-start: 2;
-      margin-top: -30%;
-    }
-    .group:nth-child(13) {
-      grid-row-start: 13;
-      grid-column-start: 1;
-      grid-column-end: 1;
-      margin-top: -30%;
-      margin-left: 0;
-    }
-    .group:nth-child(14) {
-      grid-row-start: 14;
-      grid-column-start: 2;
-      margin-top: -30%;
-    }
-    .group:nth-child(15) {
-      grid-row-start: 15;
-      grid-column-start: 1;
-      grid-column-end: 1;
-      margin-top: -30%;
-      margin-left: 0;
-    }
-    .cloud1 {
-        width: 10vw;
-        top: 35vw;
-        left: 8vw;
-    }
-    .cloud2 {
-        width: 20vw;
-        top : 22vw;
-        left: 30vw;
-    }
-    .cloud3 {
-        width: 10vw;
-        top: 38vw;
-        left: 70vw;
-    }
+},{}],13:[function(require,module,exports){
+(function (__filename){(function (){
+/******************************************************************************
+  STATE
+******************************************************************************/
+const STATE = require('STATE')
+const name = 'theme_editor'
+const statedb = STATE(__filename)
+// ----------------------------------------
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+function fallback_module () { 
+  return {}
 }
-
-@media only screen and (max-width: 960px) {
-    .cloud1 {
-        top: 22vw;
+function fallback_instance () {
+  return {
+    inputs: {
+      'theme_editor.css': {
+        $ref: new URL('src/node_modules/css/default/theme_editor.css', location).href
+      }
     }
-    .cloud2 {
-        top: 12vw;
-    }
-    .cloud3 {
-        top: 30vw;
-    }
+  }
 }
-@media only screen and (max-width: 640px) {
-    .groups {
-        position: relative;
-        z-index: 3;
-        grid-template-columns: 1fr;
-    }
-    .groups > div {
-        width: 80%;
-        margin-bottom: 5vw;
-    }
-    .group:nth-child(1) {
-        margin-left: 8vw;
-    }
-    .group:nth-child(2) {
-        grid-column-end: 1;
-        margin-left: 20vw;
-        margin-top: -10vw;
-    }
-    .group:nth-child(3) {
-        grid-column-end: 1;
-        margin-left: 8vw;
-        margin-top: -3vw;
-    }
-    .group:nth-child(4) {
-        grid-column-end: 1;
-        margin-left: 20vw;
-        margin-top: -5vw;
-    }
-    .group:nth-child(5) {
-        grid-column-end: 1;
-        margin-left: 8vw;
-        margin-top: -5vw;
-    }
-    .group:nth-child(6) {
-      grid-column-end: 1;
-      margin-left: 20vw;
-      margin-top: -10vw;
-    }
-    .group:nth-child(7) {
-      grid-column-end: 1;
-      margin-left: 8vw;
-      margin-top: -3vw;
-    }
-    .group:nth-child(8) {
-      grid-column-end: 1;
-      margin-left: 20vw;
-      margin-top: -5vw;
-    }
-    .group:nth-child(9) {
-      grid-column-end: 1;
-      margin-left: 8vw;
-      margin-top: -5vw;
-    }
-    .group:nth-child(10) {
-      grid-column-end: 1;
-      margin-left: 20vw;
-      margin-top: -10vw;
-    }
-    .group:nth-child(11) {
-      grid-column-end: 1;
-      margin-left: 8vw;
-      margin-top: -3vw;
-    }
-    .group:nth-child(12) {
-      grid-column-end: 1;
-      margin-left: 20vw;
-      margin-top: -5vw;
-    }
-    .group:nth-child(13) {
-      grid-column-end: 1;
-      margin-left: 8vw;
-      margin-top: -5vw;
-    }
-    .group:nth-child(14) {
-      grid-column-end: 1;
-      margin-left: 20vw;
-      margin-top: -10vw;
-    }
-    .group:nth-child(15) {
-      grid-column-end: 1;
-      margin-left: 8vw;
-      margin-top: -10vw;
-    }
-    .group:nth-child(16) {
-      grid-column-end: 1;
-      margin-left: 20vw;
-      margin-top: -5vw;
-    }
-    .info {
-        font-size: var(--contributorsTextSizeS);
-    }
-    .island {
-        width: 98%;
-    }
-    .cloud1 {
-        width: 12vw;
-        top: 30vw;
-    }
-    .cloud2 {
-        top: 22vw;
-    }
-    .cloud3 {
-        width: 12vw;
-        top: 35vw;
-        left: 75vw;
-    }
-    .cloud4 {
-        z-index: 1;
-        width: 20vw;
-        bottom: 40vw;
-    }
-    .cloud5 {
-        width: 15vw;
-        left: 10vw;
-        bottom: 20vw;
-    }
-    .cloud6 {
-        width: 30vw;
-        bottom: 5vw;
-        right: 35vw;
-    }
-    .cloud7 {
-        width: 15vw;
-        bottom: 20vw;
-    }
-}
-@media only screen and (max-width: 414px) {
-    .groups {
-        width: 100%;
-    }
-    .cloud1 {
-        top: 63vw;
-    }
-    .cloud2 {
-        top: 56vw;
-    }
-    .cloud3 {
-        top: 65vw;
-    }
-    .cloud4 {
-        bottom: 30vw;
-    }
-    .cloud5 {
-        bottom: 10vw;
-    }
-    .cloud6 {
-        bottom: 5vw;
-    }
-    .cloud7 {
-        bottom: 8vw;
-    }
-}
-@media only screen and (min-width: 414px)
-and (max-width: 736px) and (orientation: landscape) {
-    .section {
-        margin-top: -1px;
-    }
-    .cloud1 {
-        top: 50vw;
-    }
-    .cloud2 {
-        top: 48vw;
-    }
-    .cloud3 {
-        top: 55vw;
-    }
-}
-`
+/******************************************************************************
+  THEME_EDITOR COMPONENT
+******************************************************************************/
+const DB = require('localdb')
+const IO = require('io')
+// ----------------------------------------
+const shopts = { mode: 'closed' }
+// ----------------------------------------
+module.exports = theme_editor
+async function theme_editor (opts) {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const { id, sdb } = await get(opts.sid) // hub is "parent's" io "id" to send/receive messages
+  const status = { tab_id: 0 }
+  const db = DB()
+  const on = {
+    init,
+    hide,
+    css: inject
+  }
+  const {xget} = sdb.req_access(opts.sid)
+  const send = await IO(id, name, on)
+  
+  status.themes = {
+    builtin: Object.keys(opts.paths),
+    saved: Object.keys(JSON.parse(localStorage.index || (localStorage.index = '{}')))
+  }
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.createElement('div')
+  const shadow = el.attachShadow(shopts)
+  const style = document.createElement('style')
+  await sdb.watch(onbatch)
 
-module.exports = our_contributors
+  shadow.innerHTML = `
+  <main>
+    <div class="content">
+    </div>
+    <div class="relative">
+      <input list="themes" class="theme" placeholder='Enter theme' />
+      <div id="themes" class="theme"></div>
+    </div>
+    <button class="load single">
+      Load
+    </button>
+    <button class="inject">
+      Inject
+    </button>
+    <button class="save_file single">
+      Save file
+    </button>
+    <button class="save_pref">
+      Save pref
+    </button>
+    <button class="drop_theme single">
+      Drop theme
+    </button>
+    <button class="drop_file single">
+      Drop file
+    </button>
+    <button class="reset single">
+      Reset
+    </button>
+    <button class="export single">
+      Export
+    </button>
+    <button class="import single">
+      Import
+    </button>
+    <input style="display: none;" class="upload" type='file' />
+    <button class="add">
+      Add
+    </button>
+    <h3>
+    </h3>
+    <div class="tabs">
+      <div class="box"></div>
+      <span class="plus">+</span>
+    </div>
+  </main>`
+  const main = shadow.querySelector('main')
+  const inject_btn = shadow.querySelector('.inject')
+  const load_btn = shadow.querySelector('.load')
+  const save_file_btn = shadow.querySelector('.save_file')
+  const save_pref_btn = shadow.querySelector('.save_pref')
+  const add_btn = shadow.querySelector('.add')
+  const drop_theme_btn = shadow.querySelector('.drop_theme')
+  const drop_file_btn = shadow.querySelector('.drop_file')
+  const reset_btn = shadow.querySelector('.reset')
+  const upload = shadow.querySelector('.upload')
+  const import_btn = shadow.querySelector('.import')
+  const export_btn = shadow.querySelector('.export')
+  const title = shadow.querySelector('h3')
+  const content = shadow.querySelector('.content')
+  const tabs = shadow.querySelector('.tabs > .box')
+  const plus = shadow.querySelector('.plus')
+  const select_theme = shadow.querySelector('div.theme')
+  const input = shadow.querySelector('input.theme')
 
-},{"bel":4,"content":30,"contributor":31,"csjs-inject":7,"graphic":37,"rellax":27}],41:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// Widgets
-const graphic = require('graphic')
-const Content = require('content')
-
-module.exports = smartcontract_codes
-
-async function smartcontract_codes (data) {
-  const css = styles
-  const graphics = [
-    graphic(css.island, './src/node_modules/assets/svg/floating-island1.svg'),
-    graphic(css.islandMiddle, './src/node_modules/assets/svg/floating-island2.svg'),
-    graphic(css.islandRight, './src/node_modules/assets/svg/floating-island2.svg'),
-    graphic(css.blossom, './src/node_modules/assets/svg/blossom-tree.svg'),
-    graphic(css.tree, './src/node_modules/assets/svg/single-tree.svg'),
-    graphic(css.trees, './src/node_modules/assets/svg/two-trees.svg'),
-    graphic(css.stone, './src/node_modules/assets/svg/stone.svg'),
-    graphic(css.smallStone, './src/node_modules/assets/svg/small-stone.svg'),
-  ]
-
-  const [island, islandMiddle, islandRight, blossom, tree, trees, stone, smallStone] = await Promise.all(graphics)
-
-  let el = bel`
-  <section id="smartcontractCodes" class="${css.section}">
-
-      ${Content(data, css)}
-
-      <div class=${css.scene}>
-          <div class=${css.deco}>
-              <img class=${css.logo} src=${data.logo} alt="${data.title} logo">
-              <img class=${css.screenshot} src=${data.image} alt=${data.title}>
-              ${trees}
-          </div>
-          ${island}
-      </div>
-      <div class=${css.sceneMedium}>
-          <div class=${css.deco}>
-              <div class=${css.container}>
-                  ${smallStone}
-                  ${stone}
-                  ${blossom}
-              </div>
-              ${islandMiddle}
-          </div>
-          <div class=${css.deco}>
-              ${tree}
-              ${islandRight}
-          </div>
-      </div>
-      
-  </section>
-  `
-
+  input.onfocus = () => select_theme.classList.add('active')
+  input.onblur = () => setTimeout(() => select_theme.classList.remove('active'), 200)
+  input.oninput = update_select_theme
+  inject_btn.onclick = on_inject
+  load_btn.onclick = () => load(input.value, false)
+  save_file_btn.onclick = save_file
+  save_pref_btn.onclick = save_pref
+  add_btn.onclick = () => add(input.value)
+  drop_theme_btn.onclick = drop_theme
+  drop_file_btn.onclick = drop_file
+  export_btn.onclick = export_fn
+  import_btn.onclick = () => upload.click()
+  upload.onchange = import_fn
+  reset_btn.onclick = () => {localStorage.clear(), location.reload()}
+  plus.onclick = () => add_tab('New')
+  shadow.append(style)
+  update_select_theme()
+  
   return el
+
+  function onbatch(batch){
+    for (const {type, data} of batch) {
+      on[type](data)
+    }  
+  }
+  async function hide () {
+    main.classList.toggle('select')
+    status.select = !status.select
+  }
+  async function export_fn () {
+    const theme = db.read([ input.value ])
+    const index = db.read([ 'index', input.value ])
+    const blob = new Blob([JSON.stringify({theme, index}, null, 2)], { type: "application/json" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = input.value
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+  async function import_fn () {
+    const file = upload.files[0]
+    const name = file.name.split('.')[0]
+    await add(name)
+    const reader = new FileReader()
+    reader.onload = e => {
+      const blob = JSON.parse(e.target.result)
+      db.add([name], blob.theme)
+      db.add(['index', name], blob.index)
+      load(name)
+    }
+    reader.readAsText(file)
+  }
+  async function add (theme) {
+    db.add([theme], [])
+    status.themes.saved.push(theme)
+    db.add(['index', theme], [])
+    update_select_theme()
+  }
+  async function drop_theme () {
+    db.drop([input.value])
+    db.drop(['index', input.value])
+    status.themes.saved = status.themes.saved.filter(v => v != input.value)
+    update_select_theme()
+    input.value = 'default'
+    load('default')
+  }
+  async function drop_file () {
+    db.drop([status.active_tab.dataset.theme, status.active_tab.dataset.id])
+    db.drop(['index', status.active_tab.dataset.theme, status.active_tab.dataset.id])
+    close_tab(status.active_tab)
+  }
+  async function forget_changes () {
+    status.active_el.classList.remove('dirty')
+    const dirt = JSON.parse(localStorage.dirt)
+    delete(dirt[status.title])
+    localStorage.dirt = JSON.stringify(dirt)
+  }
+  async function save_file () {
+    // forget_changes()
+    if(db.read([input.value])){
+      db.push(['index', input.value], status.active_tab.dataset.name)
+      db.push([input.value], status.textarea.value)
+    }
+  }
+  async function save_pref () {
+    const pref = db.read(['pref'])
+    if(status.select){
+      var ids = await get_select()
+      ids.forEach(id => pref[id] = [])
+    }
+    pref[status.instance_id] = []
+    pref[status.title] = []
+    Array.from(tabs.children).forEach(tab => {
+      if(tab.dataset.access === "uniq"){
+        if(ids)
+          ids.forEach(id => 
+          pref[id].push({theme: tab.dataset.theme, id: tab.dataset.id, local: status.themes.builtin.includes(tab.dataset.theme)})
+        )
+        else
+          pref[status.instance_id].push({theme: tab.dataset.theme, id: tab.dataset.id, local: status.themes.builtin.includes(tab.dataset.theme)})
+      }
+      else
+        pref[status.title].push({theme: tab.dataset.theme, id: tab.dataset.id, local: status.themes.builtin.includes(tab.dataset.theme) })
+    })
+    db.add(['pref'], pref)
+  }
+  async function unsave () {
+    status.active_el.classList.add('dirty')
+    let theme = localStorage[input.value] && JSON.parse(localStorage[input.value])
+    if(theme){
+      theme.css[status.title] = textarea.value
+      localStorage[input.value] = JSON.stringify(theme)
+      const dirt = JSON.parse(localStorage.dirt)
+      dirt[status.title] = input.value
+      localStorage.dirt = JSON.stringify(dirt)
+    }
+    else{
+      const name = input.value + '*'
+      theme = localStorage[name] && JSON.parse(localStorage[name])
+      if(theme){
+        theme.css[status.title] = textarea.value
+        localStorage[name] = JSON.stringify(theme)
+        const dirt = JSON.parse(localStorage.dirt)
+        dirt[status.title] = name
+        localStorage.dirt = JSON.stringify(dirt)
+      }
+      else{
+        theme = { theme: true, css: {} }
+        theme.css[status.title] = textarea.value
+        localStorage[name] = JSON.stringify(theme)
+        status.themes.saved.push(name)
+        const dirt = JSON.parse(localStorage.dirt)
+        dirt[status.title] = name
+        localStorage.dirt = JSON.stringify(dirt)
+        update_select_theme()
+        input.value = name
+      }
+    }
+  }
+  async function on_inject () {
+    if(status.active_tab.dataset.type === 'json'){
+      const id = add_data(status.textarea.value)
+      const hub = xget(xget(id).hub).id
+      send({type: 'refresh', to: hub})
+    }
+    else{
+      if(status.select){
+        const ids = await get_select()
+        ids.forEach(id => {
+          send({ type: 'inject', to: id, data: status.textarea.value })
+        })
+      }
+      else
+        send({ type: 'inject', to: status.node_data.hub_id, data: status.textarea.value })
+    }
+  }
+  async function get_select () {
+    return await send({ type: 'get_select', to: 'theme_widget'})
+  }
+  async function load (theme, clear = true) {
+    if(clear){
+      content.innerHTML = ''
+      tabs.innerHTML = ''
+    }
+    if(status.themes.builtin.includes(theme)){
+      const index = opts.paths[theme].length
+      for(let i = 0; i < index; i++){
+        const temp = await fetch(`./src/node_modules/css/${theme}/${i}.css`)
+        add_tab(i, await temp.text(), '', theme, status.title)
+      }
+    }
+    else{
+      const temp = db.read([theme])
+      temp.forEach((file, i) => {
+          add_tab(i, file, '', theme, status.title)
+      })
+    }
+    // forget_changes()
+  }
+  async function init ({ data }) {
+    title.innerHTML = data.id
+    status.title = data.type
+    status.instance_id = data.id
+    let value = data.file ? db.read([data.xtype, data.id]) : data
+    if(data.type === 'json' || !data.file)
+      value = JSON.stringify(value, null, 2)
+    add_tab(data.name, value)
+  }
+  async function add_tab (id, value = '', access = 'uniq', theme = 'default') {
+    if(id === 'New' && status.themes.builtin.includes(theme)){
+      theme += '*'
+      add(theme)
+    }
+    const tab = document.createElement('span')
+    const tab_id = '_' + status.tab_id++
+    tab.id = tab_id
+    const index = opts.paths[theme] || db.read(['index', theme])
+    tabs.append(tab)
+    const btn = document.createElement('span')
+    btn.innerHTML = index[id] || id
+    tab.dataset.id = id
+    tab.dataset.name = btn.innerHTML
+    tab.dataset.theme = theme
+    tab.dataset.access = access
+    btn.onclick = () => switch_tab(tab.id)
+    btn.ondblclick = rename
+    const btn_x = document.createElement('span')
+    btn_x.innerHTML = 'x'
+    tab.append(btn, btn_x)
+    tab.tabIndex = '0'
+    tab.onkeydown = e => {
+      if(e.key === 'ArrowRight' && tab.nextElementSibling)
+        tab.nextElementSibling.after(tab)
+      else if(e.key === 'ArrowLeft' && tab.previousElementSibling)
+        tab.previousElementSibling.before(tab)
+      tab.focus()
+    }
+    const textarea = document.createElement('textarea')
+    textarea.value = value
+    textarea.id = tab_id
+    content.append(textarea)
+    btn_x.onclick = () => close_tab(tab)
+    switch_tab(tab_id)
+  }
+  async function close_tab (tab) {
+    content.querySelector('#' + tab.id).remove()
+    tab.remove()
+    if(tabs.children.length)
+      switch_tab(tabs.children[tabs.children.length - 1].id)
+    else
+      add_tab('New')
+  }
+  async function switch_tab (tab_id) {
+    status.textarea && status.textarea.classList.remove('active')
+    status.textarea = content.querySelector('#' + tab_id)
+    status.textarea.classList.add('active')
+    status.active_tab && status.active_tab.classList.remove('active')
+    status.active_tab = tabs.querySelector('#' + tab_id)
+    status.active_tab.classList.add('active')
+    status.active_tab.focus()
+    input.value = status.active_tab.dataset.theme
+  }
+  async function rename (e) {
+    const btn = e.target
+    const hub = btn.parentElement
+    const input = document.createElement('input')
+    input.value = btn.innerHTML
+    btn.innerHTML = ''
+    btn.append(input)
+    input.onkeydown = e => {
+      if(e.key === 'Enter'){
+        btn.innerHTML = input.value
+        db.add([hub.dataset.theme, hub.dataset.id], input.value)
+      }
+    }
+    input.onblur = e => {
+      if(e.relatedTarget)
+        btn.innerHTML = hub.dataset.name
+    }
+    input.focus()
+  }
+  async function update_select_theme () {
+    const builtin = document.createElement('div')
+    builtin.classList.add('cat')
+    status.themes.builtin.forEach(theme => {
+      const el = document.createElement('div')
+      el.innerHTML = theme
+      el.onclick = () => input.value = theme
+      theme.includes(input.value) && builtin.append(el)
+    })
+    builtin.innerHTML && builtin.insertAdjacentHTML('afterbegin', '<b>builtin</b>')
+    const saved = document.createElement('div')
+    saved.classList.add('cat')
+    status.themes.saved.forEach(theme => {
+      const el = document.createElement('div')
+      el.innerHTML = theme
+      el.onclick = () => input.value = theme
+      theme.includes(input.value) && saved.append(el)
+    })
+    saved.innerHTML && saved.insertAdjacentHTML('afterbegin', '<b>saved</b>')
+    select_theme.innerHTML = ''
+    select_theme.append(builtin, saved)
+  }
+  async function inject (data){
+    style.innerHTML = data.join('\n')
+  }
 }
 
-const styles = csjs`
-.section {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 60% 40%;
-    background-image: linear-gradient(0deg, var(--section3BgGEnd), var(--section3BgGStart));
-    padding: 3vw 2vw 0 2vw;
+}).call(this)}).call(this,"/src/node_modules/theme_editor/theme_editor.js")
+},{"STATE":3,"io":10,"localdb":12}],14:[function(require,module,exports){
+(function (__filename){(function (){
+/******************************************************************************
+  STATE
+******************************************************************************/
+const STATE = require('STATE')
+const name = 'theme_widget'
+const statedb = STATE(__filename)
+const shopts = { mode: 'closed' }
+// ----------------------------------------
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+function fallback_module () { 
+  return {
+    _: {
+      'theme_editor': {},
+      'graph_explorer': {}
+    }
+  }
 }
-.content {
-    position: relative;
-    z-index: 9;
-    grid-row-start: 1;
-    grid-column-start: 2;
-    grid-column-end: 3;
-    text-align: center;
-    padding: 0 5%;
+function fallback_instance () {
+  return {
+    _: {
+      'theme_editor': {},
+      'graph_explorer': {}
+    },
+    inputs: {
+      'theme_widget.css': {
+        $ref: new URL('src/node_modules/css/default/theme_widget.css', location).href
+      }
+    }
+  }
 }
-.subTitleColor {
-    color: var(--section3TitleColor);
-    margin-top: 0;
+/******************************************************************************
+  THEME_WIDGET COMPONENT
+******************************************************************************/
+const theme_editor = require('theme_editor')
+const graph_explorer = require('graph_explorer')
+const IO = require('io')
+// ----------------------------------------
+module.exports = theme_widget
+
+async function theme_widget (opts) {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const { id, sdb } = await get(opts.sid) // hub is "parent's" io "id" to send/receive messages
+  const status = { tab_id: 0, init_check: true }
+  const on = {
+    refresh,
+    get_select,
+    css: inject,
+    scroll,
+    click
+  }
+  const {get_all} = sdb.req_access(opts.sid)
+  const send = await IO(id, name, on)
+
+  status.clickables = ['css', 'json', 'js']
+  status.dirts = JSON.parse(localStorage.dirt || (localStorage.dirt = '{}'))
+  localStorage.pref || (localStorage.pref = '{}')
+  const paths =  JSON.parse(await(await fetch('./src/node_modules/css/index.json')).text())
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.createElement('div')
+  const shadow = el.attachShadow(shopts)
+  shadow.innerHTML = `
+  <section>
+    <div class="btn">
+      ⚙️
+    </div>
+    <div class="popup">
+      <div class="box">
+        <span class="stats">
+          Entries: 
+        </span>
+        <button class="select">Select</button>
+        <input min="0" max="100" value="75" type="range"/>
+      </div>
+      <div class="editor">
+      </div>
+    </div>
+  </section>
+  <style></style>`
+  const style = shadow.querySelector('style')
+  const btn = shadow.querySelector('.btn')
+  const popup = shadow.querySelector('.popup')
+  const box = popup.querySelector('.box')
+  const list = box.querySelector('.list')
+  const editor = popup.querySelector('.editor')
+  const stats = box.querySelector('.stats')
+  const select = box.querySelector('.select')
+  const slider = box.querySelector('input')
+
+  const theme_editor_sub = sdb.get_sub('theme_editor')
+  const graph_explorer_sub = sdb.get_sub('graph_explorer')
+  await sdb.watch(onbatch)
+
+  editor.append(await theme_editor({ sid: theme_editor_sub[0].sid, hub: [id], paths }))
+  box.prepend(await graph_explorer({ sid: graph_explorer_sub[0].sid, hub: [id] }))
+  select.onclick = on_select
+  slider.oninput = blur
+  return el
+
+  function onbatch(batch){
+    for (const {type, data} of batch) {
+      on[type](data)
+    }  
+  }
+  async function blur(e) {
+    popup.style.opacity = e.target.value/100
+  }
+  async function on_select () {
+    list.classList.toggle('active')
+    send({to: 'theme_editor', type: 'hide'})
+  }
+  async function get_select () {
+    const inputs = list.querySelectorAll('input')
+    const output = []
+    inputs.forEach(el => el.checked && output.push(el.nextElementSibling.id))
+    send({type: 'send', to: 'theme_editor', data: output})
+  }
+  async function refresh () {
+    const data = get_all()
+    status.tree = data
+    stats.innerHTML = `Entries: ${Object.keys(data).length}`
+    btn.onclick = () => {
+      popup.classList.toggle('active')
+      status.init_check && send({type: 'init', to: 'graph_explorer' , data:status.tree})
+      status.init_check = false
+    }
+  }
+  async function click ({ data }) {
+    send({ to: 'theme_editor', type: 'init', data})
+    status.active_el && status.active_el.classList.remove('active')
+    if(status.instance_id === data.id)
+      editor.classList.toggle('active')
+    else{
+      editor.classList.add('active')
+      el.classList.add('active')
+    }
+    status.instance_id = data.id
+    status.active_el = el
+  }
+  async function scroll () {
+    el.scrollIntoView({behavior: 'smooth'})
+    el.tabIndex = '0'
+    el.focus()
+    el.onblur = () => {
+      el.tabIndex = '-1'
+      el.onblur = null
+    }
+  }
+  async function inject (data){
+    style.innerHTML = data.join('\n')
+  }
 }
-.buttonBg {
-    background-image: linear-gradient(0deg, #900df8, #ac1cf6);
-}
-.scene {
-    grid-row-start: span 2;
-    grid-column-start: 1;
-}
-.deco {
-    position: relative;
-}
-.screenshot {
-    width: 65%;
-    margin-left: 15%;
-    margin-bottom: -6%;
-}
-.trees {
-    position: absolute;
-    right: 10%;
-    bottom: -20%;
-    width: 15%;
-}
-.logo {
-    position: absolute;
-    left:6%;
-    bottom: -20%;
-    width: 15%;
-}
-.island {
-}
-.sceneMedium {
-    grid-row-start: 2;
-    grid-column-start: 2;
-    display: grid;
-    grid-template: 1fr / 65% 35%;
-    align-items: center;
-}
-.container {
-    position: relative;
-}
-.sceneMedium .deco:nth-child(1) {
-    width: 80%;
-    justify-self: center;
-}
-.sceneMedium .deco:nth-child(2) {
+
+}).call(this)}).call(this,"/src/node_modules/theme_widget/theme_widget.js")
+},{"STATE":3,"graph_explorer":6,"io":10,"theme_editor":13}],15:[function(require,module,exports){
+module.exports={
+  "inputs": {
+    "topnav.json": {
+      "type": "content",
+      "data": {
+        "links": [
+        {
+          "id": "datdot",
+          "text": "DatDot",
+          "url": "datdot"
+        },
+        {
+          "id": "editor",
+          "text": "Play Editor",
+          "url": "editor"
+        },
+        {
+          "id": "smartcontract_codes",
+          "text": "Smart Contract Codes",
+          "url": "smartcontract_codes"
+        },
+        {
+          "id": "supporters",
+          "text": "Supporters",
+          "url": "supporters"
+        },
+        {
+          "id": "our_contributors",
+          "text": "Contributors",
+          "url": "our_contributors"
+        }
+      ]
+      }
+    }
+  }
 
 }
-.blossom {
-    width: 55%;
-    margin: 0  0 -10% 12%;
+},{}],16:[function(require,module,exports){
+(function (__filename){(function (){
+/******************************************************************************
+  STATE
+******************************************************************************/
+const STATE = require('STATE')
+const name = 'topnav'
+const statedb = STATE(__filename)
+// ----------------------------------------
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+function fallback_module () { 
+	return {}
 }
-.islandMiddle {
+function fallback_instance () { 
+	const data = require('./instance.json')
+	data.inputs['topnav.css'] = {
+		$ref: new URL('src/node_modules/css/default/topnav.css', location).href
+	}
+	return data 
+}
 
-}
-.tree {
-    position: relative;
-    width: 50%;
-    margin: 0 auto;
-    margin-bottom: -11%;
-    z-index: 2;
-}
-.islandRight {
-    
-}
-.stone {
-    position: absolute;
-    right: 12%;
-    bottom: 3%;
-    width: 22%;
-}
-.smallStone {
-    position: absolute;
-    left: 7%;
-    bottom: 5%;
-    width: 14%;
-}
-@media screen and (min-width: 2561px) {
-    .tree {
-        margin-bottom: -10.5%;
-    }
-}
-@media screen and (min-width: 1025px) and (max-width: 1200px) {
-    .sceneMedium {
-        margin-top: 4.5rem;
-    }
-}
-@media screen and (max-width: 1024px) {
-    .content {
-        grid-column-start: 1;
-        margin-bottom: 60px;
-    }
-}
-@media screen and (max-width: 640px) {
-    .scene {
-        grid-row-start: 2;
-        grid-column-end: 3; 
-    }
-    .sceneMedium {
-        grid-row-start: 3;
-        grid-column-start: 1;
-        grid-column-end: 3;
-    }
-    .sceneMedium .deco:nth-child(1) {
-        width: 90%;
-    }
-    .sceneMedium .deco:nth-child(2) {
-        width: 80%;
-        justify-self: center;
-        align-self: center;
-    }
-    .tree {
-        bottom: -5.5%;
-    }
-}
-`
-},{"bel":4,"content":30,"csjs-inject":7,"graphic":37}],42:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
+/******************************************************************************
+  OUR CONTRIBUTORS COMPONENT
+******************************************************************************/
 const graphic = require('graphic')
-const Rellax = require('rellax')
-const crystalIsland = require('crystalIsland')
-
-async function supporters (data) {
-    const css = styles
-    let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
-    const graphics = [
-      // crystals
-      graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg'),
-      graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg'),
-      graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg'),
-      // stone
-      graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg'),
-      // trees
-      graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg'),
-      graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg'),
-      graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg'),
-      graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg'),
-      // islands
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      // clouds
-      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
-    ]
-
-    const [yellowCrystal, purpleCrystal, blueCrystal, stone, tree, tree1, tree2, tree3, 
-      island, island1, island2, island3, island4, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6] = await Promise.all(graphics)
-    
-    // Parallax effects
-    let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 1})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
-    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-    let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
-    let cloud6Rellax = new Rellax( cloud6, { speed: 3})
-
-    let el = bel`
-        <section id="supporters" class="${css.section}">
-
-            ${crystalIsland(data.supporters[0], [yellowCrystal, tree], island, css, pageTitle)}
-            ${crystalIsland(data.supporters[1], [stone, tree1], island1, css)}
-            ${crystalIsland(data.supporters[2], [purpleCrystal], island2, css)}
-            ${crystalIsland(data.supporters[3], [blueCrystal, tree2], island3, css)}
-            
-            <div class=${css.scene}>
-                ${tree3}
-                ${island4}
-            </div>
-
-            ${cloud1}
-            ${cloud2}
-            ${cloud3}
-            ${cloud4}
-            ${cloud5}
-            ${cloud6}
-            
-        </section>
-    `
-    return el
-}
-
-let styles = csjs`
-.section {
-    position: relative;
-    background-image: linear-gradient(0deg, var(--section4BgGEnd), var(--section4BgGStart));
-    display: grid;
-    grid-template-rows: repeat(2, auto);
-    grid-template-columns: 15% 35% 35% 15%;
-    padding-top: 10vw;
-}
-.scene {
-}
-.scene:nth-child(1) {
-    position: relative;
-    z-index: 3;
-    width: 50vw;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 1;
-    grid-column-end: 4;
-    margin-left: 30vw;
-}
-.scene:nth-child(2) {
-    position: relative;
-    z-index: 4;
-    width: 24vw;
-    grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
-    margin-top: -15vw;
-    margin-left: 5vw;
-}
-.scene:nth-child(3) {
-    position: relative;
-    z-index: 4;
-    width: 24vw;
-    grid-row-start: 2;
-    grid-column-start: 2;
-    margin-top: 3vw;
-    margin-left: 8vw;
-}
-.scene:nth-child(4) {
-    position: relative;
-    z-index: 4;
-    width: 30vw;
-    grid-row-start: 2;
-    grid-column-start: 3;
-    margin-top: 5vw;
-    margin-left: 7vw;
-}
-.scene:nth-child(5) {
-    position: relative;
-    z-index: 2;
-    grid-row-start: 1;
-    grid-column-start: 4;
-    width: 10vw;
-    align-self: end;
-    margin-bottom: 12vw;
-}
-.scene:nth-child(5) .tree {
-    width: 80%;
-    margin: 0 auto -1.5vw auto;
-}
-.deco {
-    position: relative;
-}
-.tree {
-    position: relative;
-    width: 50%;
-    margin: 0 0 -11% -9%;
-    z-index: 2;
-}
-.yellowCrystal {
-    position: absolute;
-    width: 25%;
-    left: 20%;
-    bottom: 1%;
-    z-index: 3;
-}
-.title {
-    position: absolute;
-    bottom: 35%;
-    right: 18%;
-    z-index: 5;
-    font-family: var(--titleFont);
-    font-size: var(--supportersHeadlline);
-    color: var(--section4TitleColor);
-}
-.island {
-    
-}
-.content {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center
-}
-.scene:nth-child(1) .content {
-    width: 35%;
-    left: 21vw;
-    bottom: 2%;
-    background: url('./src/node_modules/assets/svg/card1.svg') no-repeat;
-    background-size: cover;
-    padding: 8% 5% 8% 8%;
-}
-.content h3 {
-    font-family: var(--titleFont);
-    font-size: var(--supportersTitleSize);
-    text-align: center;
-    color: var(--supportersTitleColor);
-    margin-top: 0;
-}
-.content p {
-    font-size: var(--supportersTextSize);
-    text-align: center;
-    margin: 0;
-}
-.scene:nth-child(2) .content {
-    width: 45%;
-    left: 35%;
-    bottom: -2vw;
-    background: url('./src/node_modules/assets/svg/card2.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.scene:nth-child(2) .tree {
-    position: absolute;
-    width: 45%;
-    left: 2vw;
-    bottom: -0.5vw;
-}
-.scene:nth-child(2) .stone {
-    position: absolute;
-    width: 24%;
-    right: 5%;
-    bottom: -2.5vw;
-    z-index: 2;
-}
-.scene:nth-child(3) .content {
-    width: 60%;
-    left: 5vw;
-    bottom: -2.2vw;
-    background: url('./src/node_modules/assets/svg/card3.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.purpleCrystal {
-    position: absolute;
-    width: 40%;
-    left: -6%;
-    bottom: -2.5vw;
-    z-index: 3;
-}
-.scene:nth-child(4) .content {
-    width: 50%;
-    left: 6vw;
-    bottom: -2.5vw;
-    background: url('./src/node_modules/assets/svg/card4.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.scene:nth-child(4) h3 {
-    margin-bottom: 10px;
-}
-.scene:nth-child(4) h3:last-child {
-    margin-bottom: 0;
-}
-.scene:nth-child(4) .tree {
-    position: absolute;
-    width: 24%;
-    right: -0.5vw;
-    bottom: 0vw;
-}
-.blueCrystal {
-    position: absolute;
-    width: 22%;
-    left: 1vw;
-    bottom: -3vw;
-    z-index: 3;
-}
-.cloud1 {
-    position: absolute;
-    width: 8vw;
-    top: 25vw;
-    left: 8vw;
-    z-index: 5;
-}
-.cloud2 {
-    position: absolute;
-    width: 15vw;
-    top: 10vw;
-    left: 50vw;
-    z-index: 6;
-}
-.cloud3 {
-    position: absolute;
-    width: 15vw;
-    top: 30vw;
-    right: 10vw;
-    z-index: 5;
-}
-.cloud4 {
-    position: absolute;
-    width: 8vw;
-    bottom: 28vw;
-    right: 5vw;
-    z-index: 4;
-}
-.cloud5 {
-    position: absolute;
-    width: 12vw;
-    bottom: -3vw;
-    right: 6vw;
-    z-index: 5;
-}
-.cloud6 {
-    position: absolute;
-    width: 8vw;
-    bottom: -10vw;
-    right: 2vw;
-    z-index: 6;
-}
-@media only screen and (min-width: 3840px) {
-    .info h3 {
-        margin-bottom: 6px;
-        font-size: calc( var(--supportersTitleSizeM) * 2);
-    }
-    .info p {
-        font-size: calc( var(--supportersTextSizeM) * 2);
-    }
-}
-@media only screen and (max-width: 1366px) {
-    .title {
-        bottom: 17vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .section {
-        grid-template-columns: repeat(2, 50vw);
-    }
-    .scene:nth-child(1) {
-        grid-row-start: 1;
-        width: 70vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(1) .content {
-        width: 35%;
-        left: 28vw;
-    }
-    .scene:nth-child(2) {
-        grid-row-start: 2;
-        grid-column-start: 1;
-        width: 40vw;
-        margin-top: 15vw;
-        margin-left: 5vw;
-    }
-    .scene:nth-child(2) .content {
-        bottom: -3vw;
-        left: 28%;
-    }
-    .scene:nth-child(2) .stone {
-        bottom: -4vw;
-        right: 9%;
-    }
-    .scene:nth-child(3) {
-        grid-row-start: 2;
-        grid-column-start: 2;
-        width: 40vw;
-        margin-top: 20vw;
-        margin-left: 5vw;
-    }
-    .scene:nth-child(3) .content {
-        left: 8vw;
-        bottom: -3vw;
-    }
-    .purpleCrystal {
-        bottom: -3.5vw;
-    }
-    .scene:nth-child(4) {
-        grid-row-start: 3;
-        grid-column-start: 2;
-        width: 50vw;
-        margin: 10vw 0 0 -25vw;
-    }
-    .scene:nth-child(4) .content {
-        bottom: -4.5vw;
-        width: 50%;
-        left: 8vw;
-    }
-    .blueCrystal {
-        bottom: -5vw;
-    }
-    .scene:nth-child(5) {
-        grid-row-start: 1;
-        grid-column-start: 3;
-        width: 15vw;
-        align-self: start;
-        margin-top: 15vw;
-        margin-left: -20vw;     
-    }
-    .scene:nth-child(5) .tree {
-        width: 65%;
-        margin: 0 auto -2vw auto;
-    }
-    .title {
-        font-size: var(--supportersHeadllineM);
-        bottom: 25vw;
-        right: 11vw;
-    }
-    .cloud1 {
-        width: 15vw;
-        top: 30vw;
-    }
-    .cloud2 {
-        width: 25vw;
-    }
-    .cloud3 {
-        width: 18vw;
-        top: 40vw;
-        right: 5vw;
-    }
-    .cloud4 {
-        width: 15vw;
-        bottom: -10vw;
-    }
-    .cloud5 {
-        width: 15vw;
-        right: 15vw;
-        bottom: -30vw;
-    } 
-    .cloud6 {
-        width: 10vw;
-    } 
-}
-@media only screen and (max-width: 960px) { 
-    .scene:nth-child(2) .tree {
-        width: 30%;
-    }
-    .scene:nth-child(2) .content {
-        width: 60%;
-        left: 18%;
-    }
-    .scene:nth-child(5) .tree {
-        bottom: -0.5vw;
-    }
-}
-@media only screen and (max-width: 812px) {
-    .info h3 {
-        margin-bottom: 6px;
-        font-size: var(--supportersTitleSizeM);
-    }
-    .info p {
-        font-size: var(--supportersTextSizeM);
-    }
-}
-@media only screen and (max-width: 640px) {
-    .scene:nth-child(2) {
-        width: 50vw;
-        margin-top: 20vw;
-    }
-    .scene:nth-child(3) {
-        width: 50vw;
-        grid-row-start: 3;
-        grid-column-start: 2;
-        margin-left: 0;
-        margin-top: 5vw;
-    }
-    .scene:nth-child(4) {
-        width: 66vw;
-        grid-row-start: 4;
-        grid-column-start: 1;
-        grid-column-end: 2;
-        margin-left: 10vw;
-        margin-top: 20vw;
-    }
-    .scene:nth-child(5) {
-        margin-left: -18vw;
-    }
-    .title {
-        font-size: var(--supportersHeadllineS);
-        bottom: 25vw;
-        right: 12vw;
-    }
-}
-@media only screen and (max-width: 480px) {
-    .scene:nth-child(1) {
-        width: 90vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(1) .content {
-        width: 40%;
-        left: 36%;
-    }
-    .scene:nth-child(2) {
-        width: 70vw;
-        margin-top: 20vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(2) .content {
-        width: 60%;
-        padding: 10% 5% 10% 12%;
-        bottom: -6vw;
-    }
-    .scene:nth-child(2) .stone {
-        bottom: -8vw;
-        right: 0;
-    }
-    .scene:nth-child(2) .tree {
-        left: 5vw;
-    }
-    .scene:nth-child(3) {
-        width: 70vw;
-        margin-left: 20vw;
-        margin-top: 25vw;
-        grid-column-start: 1;
-    }
-    .scene:nth-child(3) .content {
-        left: 12vw;
-        bottom: -6vw;
-    }
-    .purpleCrystal {
-        bottom: -7vw;
-    }
-    .scene:nth-child(4) {
-        width: 66vw;
-        margin-left: 10vw;
-        margin-top: 30vw;
-    }
-    .scene:nth-child(4) .content {
-        width: 56%;
-    }
-    .blueCrystal {
-        bottom: -6vw;
-    }
-    .scene:nth-child(5) {
-        grid-row-start: 4;
-        margin-top: -5vw;
-        margin-left: -22vw;
-    }
-    .scene:nth-child(5) .tree {
-        bottom: -1vw;
-    }
-    .title {
-        bottom: 32vw;
-        right: 15vw;
-    }
-}
-`
-
-module.exports = supporters
-},{"bel":4,"crystalIsland":32,"csjs-inject":7,"graphic":37,"rellax":27}],43:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const graphic = require('graphic')
-// plugins
-const zenscroll = require('zenscroll')
-
+const IO = require('io')
+// ----------------------------------------
+const shopts = { mode: 'closed' }
+// ----------------------------------------
 module.exports = topnav
 
-async function topnav(data) {
-		const playLogo = await graphic(css.playLogo, './src/node_modules/assets/svg/logo.svg')
+async function topnav (opts) {
+	// ----------------------------------------
+	// ID + JSON STATE
+	// ----------------------------------------
+	const { id, sdb } = await get(opts.sid) 
+	const status = {}
+	const on = {
+		css: inject,
+		scroll,
+		content: fill
+	}
+	
+  const send = await IO(id, name, on)
+	// ----------------------------------------
+	// OPTS
+	// ----------------------------------------
 
-		function click(url) {
-				let id = document.querySelector(`#${url}`)
-				zenscroll.to(id, 20000)
+	const playLogo = await graphic('playLogo', './src/node_modules/assets/svg/logo.svg')
+	// ----------------------------------------
+	// TEMPLATE
+	// ----------------------------------------
+	const el = document.createElement('div')
+	const shadow = el.attachShadow(shopts)
+	shadow.innerHTML = `
+		<section class='topnav'>
+				<a href="#top">${playLogo.outerHTML}</a>
+				<nav class='menu'>
+				</nav>
+		</section>
+	<style></style>`
+  const style = shadow.querySelector('style')
+	const menu = shadow.querySelector('.menu')
+	const body = shadow.querySelector('section')
+	const scrollUp = 'scrollUp'
+	const scrollDown = 'scrollDown'
+	let lastScroll = 0
+	
+	window.addEventListener('scroll', ()=> {
+		if (window.innerWidth >= 1024) {
+			let currentScroll = window.pageYOffset
+			if (currentScroll < 1) {
+					body.classList.remove(scrollUp)
+					body.classList.remove(scrollDown)
+					return
+			}
+			if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
+					body.classList.add(scrollDown)
+					body.classList.remove(scrollUp)
+			} else if (currentScroll < lastScroll) {
+					body.classList.add(scrollUp)
+					body.classList.remove(scrollDown)
+			}
+			lastScroll = currentScroll
 		}
+	})
 
-		const body = document.body
-		const scrollUp = css.scrollUp
-		const scrollDown = css.scrollDown
-		let lastScroll = 0
-		
-		window.addEventListener('scroll', ()=> {
-				if (window.innerWidth >= 1024) {
-						let currentScroll = window.pageYOffset
-						if (currentScroll < 1) {
-								body.classList.remove(scrollUp)
-								body.classList.remove(scrollDown)
-								return
-						}
-						if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
-								body.classList.add(scrollDown)
-								body.classList.remove(scrollUp)
-						} else if (currentScroll < lastScroll) {
-								body.classList.add(scrollUp)
-								body.classList.remove(scrollDown)
-						}
-						lastScroll = currentScroll
-				}
-		})
+	window.addEventListener('resize', ()=> {
+		if (window.innerWidth <= 1024) {
+			body.classList.remove(scrollUp)
+			body.classList.remove(scrollDown)
+		}
+	})
+	sdb.watch(onbatch)
+  
+	return el
 
-		window.addEventListener('resize', ()=> {
-				if (window.innerWidth <= 1024) {
-						body.classList.remove(scrollUp)
-						body.classList.remove(scrollDown)
-				}
-		})
-		
-		return bel`
-						<div class=${css.topnav}>
-								<a href="#top">${playLogo}</a>
-								<nav class=${css.menu}>
-										${ data.map(menu =>  
-												{ 
-														if (menu.url.includes('http')) {
-																return bel`<a href="${menu.url}" target="_blank">${menu.text}</a>` 
-														} else {
-																return bel`<a href="#${menu.url}" onclick=${() => click(menu.url)}>${menu.text}</a>` 
-														}
-														
-												}
-										)}
-								</nav>
-						</div>
-		`
+	function onbatch(batch){
+		for (const {type, data} of batch) {
+      on[type](data)
+    }  
+	}
+	async function inject (data){
+		style.innerHTML = data.join('\n')
+	}
+	function fill ([ opts ]) { 
+		menu.replaceChildren(...opts.links.map(make_link))
+	}
+	function click(url) {
+		send({to:'index', type: 'jump', data: url })
+	}
+	function make_link(link){
+		const a = document.createElement('a')
+		a.href = `#${link.url}`
+		a.textContent = link.text
+		a.onclick = () => click(link.url)
+		return a
+	}
+	async function scroll () {
+		el.scrollIntoView({behavior: 'smooth'})
+		el.tabIndex = '0'
+		el.focus()
+		el.onblur = () => {
+			el.tabIndex = '-1'
+			el.onblur = null
+		}
+	}
 }
 
-let css = csjs`
-.topnav {
-		position: relative;
-		width: 100%;
-		z-index: 20;
-		display: grid;
-		grid-template: 1fr / auto;
-		background-color: var(--playBgGStart);
-		-webkit-transform: translate3d(0, 0, 0);
-		transform: translate3d(0, 0, 0);
-		opacity: 1;
-		transition: background-color .6s, -webkit-transform .4s, transform .4s, opacity .3s linear;
+}).call(this)}).call(this,"/src/node_modules/topnav/topnav.js")
+},{"./instance.json":15,"STATE":3,"graphic":8,"io":10}],17:[function(require,module,exports){
+patch_cache_in_browser(arguments[4], arguments[5])
+
+function patch_cache_in_browser (source_cache, module_cache) {
+  const meta = { modulepath: [], paths: {} }
+  for (const key of Object.keys(source_cache)) {
+    const [module, names] = source_cache[key]
+    const dependencies = names || {}
+    source_cache[key][0] = patch(module, dependencies, meta)
+  }
+  function patch (module, dependencies, meta) {
+    const MAP = {}
+    for (const [name, number] of Object.entries(dependencies)) MAP[name] = number
+    return (...args) => {
+      const original = args[0]
+      require.cache = module_cache
+      require.resolve = resolve
+      args[0] = require
+      return module(...args)
+      function require (name) {
+        const identifier = resolve(name)
+        if (name.endsWith('node_modules/STATE')) {
+          const modulepath = meta.modulepath.join('/')
+          const original_export = require.cache[identifier] || (require.cache[identifier] = original(name))
+          const exports = (...args) => original_export(...args, modulepath)
+          return exports
+        } else if (require.cache[identifier]) return require.cache[identifier]
+        else {
+          const counter = meta.modulepath.concat(name).join('/')
+          if (!meta.paths[counter]) meta.paths[counter] = 0
+          const localid = `${name}${meta.paths[counter] ? '#' + meta.paths[counter] : ''}`
+          meta.paths[counter]++
+          meta.modulepath.push(localid)
+        }
+        const exports = require.cache[identifier] = original(name)
+        if (!name.endsWith('node_modules/STATE')) meta.modulepath.pop(name)
+        return exports
+      }
+    }
+    function resolve (name) { return MAP[name] }
+  }
 }
-.playLogo {
-		position: absolute;
-		top: 10px;
-		left: 0;
-		width: 15rem;
-		z-index: 99;
-		transition: width .6s ease-in-out;
+require('./demo') // or whatever is otherwise the main entry of our project
+
+},{"./demo":18}],18:[function(require,module,exports){
+(function (__filename,__dirname){(function (){
+const STATE = require('../src/node_modules/STATE')
+/******************************************************************************
+  INITIALIZE PAGE
+******************************************************************************/
+const statedb = STATE(__filename)
+const { sdb, subs: [get] } = statedb(fallback_module, fallback_instance)
+
+const make_page = require('../src/app')
+
+function fallback_module () { // -> set database defaults or load from database
+  return {
+    admins: ['theme_editor', 'theme_widget', 'graph_explorer'],
+    _: {
+      app: {}
+    }
+  }
 }
-.menu {
-		padding: 2.5rem;
-		text-align: right;
+function fallback_instance () {
+  return {
+    _: {
+      app: {
+        0: override
+      }
+    },
+    inputs: {
+      'demo.css': {
+        $ref: new URL('src/node_modules/css/default/demo.css', location).href
+      }
+    }
+  }
 }
-.menu a {
-		font-size: var(--menuSize);
-		margin-left: 1.75%;
-		color: #575551;
-		text-transform: uppercase;
-		transition: color .6s linear;
+function override ([app], path) {
+  const data = app()
+  console.log(path._.app._.topnav)
+  return data
 }
-.menu a:hover {
-		color: #00acff;
+/******************************************************************************
+  CSS & HTML Defaults
+******************************************************************************/
+const sheet = new CSSStyleSheet()
+config().then(() => boot({ }))
+
+async function config () {
+  const path = path => new URL(`../src/node_modules/${path}`, `file://${__dirname}`).href.slice(8)
+  const html = document.documentElement
+  const meta = document.createElement('meta')
+  const appleTouch = '<link rel="apple-touch-icon" sizes="180x180" href="./src/node_modules/assets/images/favicon/apple-touch-icon.png">'
+  const icon32 = '<link rel="icon" type="image/png" sizes="32x32" href="./src/node_modules/assets/images/favicon/favicon-32x32.png">'
+  const icon16 = '<link rel="icon" type="image/png" sizes="16x16" href="./src/node_modules/assets/images/favicon/favicon-16x16.png">'
+  const webmanifest = '<link rel="manifest" href="./src/node_modules/assets/images/favicon/site.webmanifest"></link>'
+  const font = 'https://fonts.googleapis.com/css?family=Nunito:300,400,700,900|Slackey&display=swap'
+  const loadFont = `<link href=${font} rel='stylesheet' type='text/css'>`
+  html.setAttribute('lang', 'en')
+  meta.setAttribute('name', 'viewport')
+  meta.setAttribute('content', 'width=device-width,initial-scale=1.0')
+  // @TODO: use font api and cache to avoid re-downloading the font data every time
+  document.head.append(meta)
+  document.head.innerHTML += appleTouch + icon16 + icon32 + webmanifest + loadFont
+  document.adoptedStyleSheets = [sheet]
+  await document.fonts.ready // @TODO: investigate why there is a FOUC
 }
-.scrollUp .topnav {
-		position: fixed;
-		background-color: white;
-		-webkit-transform: none;
-		transform: none;
+/******************************************************************************
+  PAGE BOOT
+******************************************************************************/
+async function boot () {
+  // ----------------------------------------
+  // ID + JSON STATE
+  // ----------------------------------------
+  const { id, sdb } = await get('') // hub is "parent's" io "id" to send/receive messages
+  const [opts] = sdb.get_sub('app')
+  const on = {
+    css: inject
+  }
+  sdb.watch(onbatch)
+  const status = {}
+  // ----------------------------------------
+  // TEMPLATE
+  // ----------------------------------------
+  const el = document.body
+  const shopts = { mode: 'closed' }
+  const shadow = el.attachShadow(shopts)
+  shadow.adoptedStyleSheets = [sheet]
+  // ----------------------------------------
+  // ELEMENTS
+  // ----------------------------------------
+  { // desktop
+    const element = await make_page(opts)
+    shadow.append(element)
+  }
+  // ----------------------------------------
+  // INIT
+  // ----------------------------------------
+
+  function onbatch (batch) {
+    for (const { type, data } of batch) {
+      on[type](data)
+    }
+  }
 }
-.scrollDown .topnav {
-		position: fixed;
-		-webkit-transform: translate3d(0, -100%, 0);
-		transform: translate3d(0, -100%, 0);
-		opacity: 0;
+async function inject (data) {
+  sheet.replaceSync(data.join('\n'))
 }
-.scrollUp .playLogo {
-		width: 10rem;
-}
- .scrollDown .playLogo {
-		width: 10rem;
-		top: 0;
-}
-@media only screen and (min-width: 4096px) {
-		.menu a {
-				font-size: calc(var(--menuSize) * 1.5);
-		}
-}
-@media only screen and (max-width: 1024px) {
-		.playLogo  {
-				width: 9vw;
-				min-width: 100px;
-		}
-}
-@media only screen and (max-width: 960px) {
-		.topnav {
-				position: relative;
-		}
-		.menu {
-				padding-top: 3%;
-				padding-right: 2.5vw;
-		}
-		.menu a {
-				margin-left: 1.5%;
-		}
-}
-@media only screen and (max-width: 812px) {
-		.menu {
-				display: none;
-		}
-		.playLogo  {
-				top: 20px;
-				min-width: 12vw;
-		}
-}
-@media only screen and (max-width: 414px) {
-		.playLogo  {
-				min-width: 20vw;
-		}
-}
-`
-},{"bel":4,"csjs-inject":7,"graphic":37,"zenscroll":28}]},{},[1]);
+
+}).call(this)}).call(this,"/web/demo.js","/web")
+},{"../src/app":2,"../src/node_modules/STATE":3}]},{},[17]);

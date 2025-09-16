@@ -1,0 +1,29 @@
+{
+  "links": [
+  {
+    "id": "datdot",
+    "text": "DatDot",
+    "url": "datdot"
+  },
+  {
+    "id": "editor",
+    "text": "Play Editor",
+    "url": "editor"
+  },
+  {
+    "id": "smartcontract_files",
+    "text": "Smart Contract files",
+    "url": "smartcontract_files"
+  },
+  {
+    "id": "supporters",
+    "text": "Supporters",
+    "url": "supporters"
+  },
+  {
+    "id": "our_contributors",
+    "text": "Contributors",
+    "url": "our_contributors"
+  }
+  ]
+}
