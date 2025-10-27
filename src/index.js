@@ -7,7 +7,7 @@ const Header = require('header')
 const datdot = require('datdot')
 const editor = require('editor')
 const smartcontract_codes = require('smartcontract-codes')
-const supporters = require('supporters')
+const current_work = require('current_work')
 const our_contributors = require('our-contributors')
 const Footer = require('footer')
 const fetch_data = require('fetch-data')
@@ -36,7 +36,7 @@ function make_page(opts, done, lang) {
         ${await datdot(section1)}
         ${await editor(section2)}
         ${await smartcontract_codes(section3)}
-        ${await supporters(section4)}
+        ${await current_work(section4)}
         ${await our_contributors(section5)}
         ${await Footer(footer)}
       </div>`

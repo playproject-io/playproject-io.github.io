@@ -2130,7 +2130,7 @@ const Header = require('header')
 const datdot = require('datdot')
 const editor = require('editor')
 const smartcontract_codes = require('smartcontract-codes')
-const supporters = require('supporters')
+const current_work = require('current_work')
 const our_contributors = require('our-contributors')
 const Footer = require('footer')
 const fetch_data = require('fetch-data')
@@ -2159,7 +2159,7 @@ function make_page(opts, done, lang) {
         ${await datdot(section1)}
         ${await editor(section2)}
         ${await smartcontract_codes(section3)}
-        ${await supporters(section4)}
+        ${await current_work(section4)}
         ${await our_contributors(section5)}
         ${await Footer(footer)}
       </div>`
@@ -2178,7 +2178,7 @@ const styles = csjs`
     transition: left 0.6s, bottom 0.5s, top 0.5s linear;
 }`
 
-},{"bel":4,"csjs-inject":7,"datdot":33,"editor":34,"fetch-data":35,"footer":36,"header":38,"our-contributors":40,"smartcontract-codes":41,"supporters":42,"topnav":43}],30:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7,"current_work":33,"datdot":34,"editor":35,"fetch-data":36,"footer":37,"header":39,"our-contributors":41,"smartcontract-codes":42,"topnav":43}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -2366,7 +2366,7 @@ const styles = csjs`
 
 
 
-},{"bel":4,"csjs-inject":7,"graphic":37}],32:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7,"graphic":38}],32:[function(require,module,exports){
 const bel = require('bel')
 
 function crystalIsland({date, info}, deco, island, css, title) {
@@ -2388,6 +2388,529 @@ function crystalIsland({date, info}, deco, island, css, title) {
 
 module.exports = crystalIsland
 },{"bel":4}],33:[function(require,module,exports){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+// widgets
+const graphic = require('graphic')
+const Rellax = require('rellax')
+const crystalIsland = require('crystalIsland')
+
+async function current_work (data) {
+    const css = styles
+    let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
+    const graphics = [
+      // crystals
+      graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg'),
+      graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg'),
+      graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg'),
+      // stone
+      graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg'),
+      // trees
+      graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg'),
+      graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg'),
+      graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg'),
+      graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg'),
+      // islands
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
+      // clouds
+      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
+      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
+    ]
+
+    const [yellowCrystal, purpleCrystal, blueCrystal, stone, tree, tree1, tree2, tree3, 
+      island, island1, island2, island3, island4, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6] = await Promise.all(graphics)
+    
+    // Parallax effects
+    let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
+    let cloud2Rellax = new Rellax( cloud2, { speed: 1})
+    let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
+    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
+    let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
+    let cloud6Rellax = new Rellax( cloud6, { speed: 3})
+
+    let el = bel`
+        <section id="currentwork" class="${css.section}">
+
+            ${crystalIsland(data.current_work[0], [yellowCrystal, tree], island, css, pageTitle)}
+            ${crystalIsland(data.current_work[1], [stone, tree1], island1, css)}
+            ${crystalIsland(data.current_work[2], [purpleCrystal], island2, css)}
+            ${crystalIsland(data.current_work[3], [blueCrystal, tree2], island3, css)}
+            
+            <div class=${css.scene}>
+                ${tree3}
+                ${island4}
+            </div>
+
+            ${cloud1}
+            ${cloud2}
+            ${cloud3}
+            ${cloud4}
+            ${cloud5}
+            ${cloud6}
+            
+        </section>
+    `
+    return el
+}
+
+let styles = csjs`
+.section {
+    position: relative;
+    background-image: linear-gradient(0deg, var(--section4BgGEnd), var(--section4BgGStart));
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: 15% 35% 35% 15%;
+    padding-top: 10vw;
+}
+.scene {
+}
+.scene:nth-child(1) {
+    position: relative;
+    z-index: 3;
+    width: 50vw;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    margin-left: 30vw;
+}
+.scene:nth-child(2) {
+    position: relative;
+    z-index: 4;
+    width: 24vw;
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    margin-top: -15vw;
+    margin-left: 5vw;
+}
+.scene:nth-child(3) {
+    position: relative;
+    z-index: 4;
+    width: 24vw;
+    grid-row-start: 2;
+    grid-column-start: 2;
+    margin-top: 3vw;
+    margin-left: 8vw;
+}
+.scene:nth-child(4) {
+    position: relative;
+    z-index: 4;
+    width: 30vw;
+    grid-row-start: 2;
+    grid-column-start: 3;
+    margin-top: 5vw;
+    margin-left: 7vw;
+}
+.scene:nth-child(5) {
+    position: relative;
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 4;
+    width: 10vw;
+    align-self: end;
+    margin-bottom: 12vw;
+}
+.scene:nth-child(5) .tree {
+    width: 80%;
+    margin: 0 auto -1.5vw auto;
+}
+.deco {
+    position: relative;
+}
+.tree {
+    position: relative;
+    width: 50%;
+    margin: 0 0 -11% -9%;
+    z-index: 2;
+}
+.yellowCrystal {
+    position: absolute;
+    width: 25%;
+    left: 20%;
+    bottom: 1%;
+    z-index: 3;
+}
+.title {
+    position: absolute;
+    bottom: 35%;
+    right: 18%;
+    z-index: 5;
+    font-family: var(--titleFont);
+    font-size: var(--current_workHeadlline);
+    color: var(--section4TitleColor);
+}
+.island {
+    
+}
+.content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
+.scene:nth-child(1) .content {
+    width: 35%;
+    left: 21vw;
+    bottom: 2%;
+    background: url('./src/node_modules/assets/svg/card1.svg') no-repeat;
+    background-size: cover;
+    padding: 8% 5% 8% 8%;
+}
+.content h3 {
+    font-family: var(--titleFont);
+    font-size: var(--current_workTitleSize);
+    text-align: center;
+    color: var(--current_workTitleColor);
+    margin-top: 0;
+}
+.content p {
+    font-size: var(--current_workTextSize);
+    text-align: center;
+    margin: 0;
+}
+.scene:nth-child(2) .content {
+    width: 45%;
+    left: 35%;
+    bottom: -2vw;
+    background: url('./src/node_modules/assets/svg/card2.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.scene:nth-child(2) .tree {
+    position: absolute;
+    width: 45%;
+    left: 2vw;
+    bottom: -0.5vw;
+}
+.scene:nth-child(2) .stone {
+    position: absolute;
+    width: 24%;
+    right: 5%;
+    bottom: -2.5vw;
+    z-index: 2;
+}
+.scene:nth-child(3) .content {
+    width: 60%;
+    left: 5vw;
+    bottom: -2.2vw;
+    background: url('./src/node_modules/assets/svg/card3.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.purpleCrystal {
+    position: absolute;
+    width: 40%;
+    left: -6%;
+    bottom: -2.5vw;
+    z-index: 3;
+}
+.scene:nth-child(4) .content {
+    width: 50%;
+    left: 6vw;
+    bottom: -2.5vw;
+    background: url('./src/node_modules/assets/svg/card4.svg') no-repeat;
+    background-size: cover;
+    padding: 10% 5% 10% 8%;
+}
+.scene:nth-child(4) h3 {
+    margin-bottom: 10px;
+}
+.scene:nth-child(4) h3:last-child {
+    margin-bottom: 0;
+}
+.scene:nth-child(4) .tree {
+    position: absolute;
+    width: 24%;
+    right: -0.5vw;
+    bottom: 0vw;
+}
+.blueCrystal {
+    position: absolute;
+    width: 22%;
+    left: 1vw;
+    bottom: -3vw;
+    z-index: 3;
+}
+.cloud1 {
+    position: absolute;
+    width: 8vw;
+    top: 25vw;
+    left: 8vw;
+    z-index: 5;
+}
+.cloud2 {
+    position: absolute;
+    width: 15vw;
+    top: 10vw;
+    left: 50vw;
+    z-index: 6;
+}
+.cloud3 {
+    position: absolute;
+    width: 15vw;
+    top: 30vw;
+    right: 10vw;
+    z-index: 5;
+}
+.cloud4 {
+    position: absolute;
+    width: 8vw;
+    bottom: 28vw;
+    right: 5vw;
+    z-index: 4;
+}
+.cloud5 {
+    position: absolute;
+    width: 12vw;
+    bottom: -3vw;
+    right: 6vw;
+    z-index: 5;
+}
+.cloud6 {
+    position: absolute;
+    width: 8vw;
+    bottom: -10vw;
+    right: 2vw;
+    z-index: 6;
+}
+@media only screen and (min-width: 3840px) {
+    .info h3 {
+        margin-bottom: 6px;
+        font-size: calc( var(--current_workTitleSizeM) * 2);
+    }
+    .info p {
+        font-size: calc( var(--current_workTextSizeM) * 2);
+    }
+}
+@media only screen and (max-width: 1366px) {
+    .title {
+        bottom: 17vw;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .section {
+        grid-template-columns: repeat(2, 50vw);
+    }
+    .scene:nth-child(1) {
+        grid-row-start: 1;
+        width: 70vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(1) .content {
+        width: 35%;
+        left: 28vw;
+    }
+    .scene:nth-child(2) {
+        grid-row-start: 2;
+        grid-column-start: 1;
+        width: 40vw;
+        margin-top: 15vw;
+        margin-left: 5vw;
+    }
+    .scene:nth-child(2) .content {
+        bottom: -3vw;
+        left: 28%;
+    }
+    .scene:nth-child(2) .stone {
+        bottom: -4vw;
+        right: 9%;
+    }
+    .scene:nth-child(3) {
+        grid-row-start: 2;
+        grid-column-start: 2;
+        width: 40vw;
+        margin-top: 20vw;
+        margin-left: 5vw;
+    }
+    .scene:nth-child(3) .content {
+        left: 8vw;
+        bottom: -3vw;
+    }
+    .purpleCrystal {
+        bottom: -3.5vw;
+    }
+    .scene:nth-child(4) {
+        grid-row-start: 3;
+        grid-column-start: 2;
+        width: 50vw;
+        margin: 10vw 0 0 -25vw;
+    }
+    .scene:nth-child(4) .content {
+        bottom: -4.5vw;
+        width: 50%;
+        left: 8vw;
+    }
+    .blueCrystal {
+        bottom: -5vw;
+    }
+    .scene:nth-child(5) {
+        grid-row-start: 1;
+        grid-column-start: 3;
+        width: 15vw;
+        align-self: start;
+        margin-top: 15vw;
+        margin-left: -20vw;     
+    }
+    .scene:nth-child(5) .tree {
+        width: 65%;
+        margin: 0 auto -2vw auto;
+    }
+    .title {
+        font-size: var(--current_workHeadllineM);
+        bottom: 25vw;
+        right: 11vw;
+    }
+    .cloud1 {
+        width: 15vw;
+        top: 30vw;
+    }
+    .cloud2 {
+        width: 25vw;
+    }
+    .cloud3 {
+        width: 18vw;
+        top: 40vw;
+        right: 5vw;
+    }
+    .cloud4 {
+        width: 15vw;
+        bottom: -10vw;
+    }
+    .cloud5 {
+        width: 15vw;
+        right: 15vw;
+        bottom: -30vw;
+    } 
+    .cloud6 {
+        width: 10vw;
+    } 
+}
+@media only screen and (max-width: 960px) { 
+    .scene:nth-child(2) .tree {
+        width: 30%;
+    }
+    .scene:nth-child(2) .content {
+        width: 60%;
+        left: 18%;
+    }
+    .scene:nth-child(5) .tree {
+        bottom: -0.5vw;
+    }
+}
+@media only screen and (max-width: 812px) {
+    .info h3 {
+        margin-bottom: 6px;
+        font-size: var(--current_workTitleSizeM);
+    }
+    .info p {
+        font-size: var(--current_workTextSizeM);
+    }
+}
+@media only screen and (max-width: 640px) {
+    .scene:nth-child(2) {
+        width: 50vw;
+        margin-top: 20vw;
+    }
+    .scene:nth-child(3) {
+        width: 50vw;
+        grid-row-start: 3;
+        grid-column-start: 2;
+        margin-left: 0;
+        margin-top: 5vw;
+    }
+    .scene:nth-child(4) {
+        width: 66vw;
+        grid-row-start: 4;
+        grid-column-start: 1;
+        grid-column-end: 2;
+        margin-left: 10vw;
+        margin-top: 20vw;
+    }
+    .scene:nth-child(5) {
+        margin-left: -18vw;
+    }
+    .title {
+        font-size: var(--current_workHeadllineS);
+        bottom: 25vw;
+        right: 12vw;
+    }
+}
+@media only screen and (max-width: 480px) {
+    .scene:nth-child(1) {
+        width: 90vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(1) .content {
+        width: 40%;
+        left: 36%;
+    }
+    .scene:nth-child(2) {
+        width: 70vw;
+        margin-top: 20vw;
+        margin-left: 10vw;
+    }
+    .scene:nth-child(2) .content {
+        width: 60%;
+        padding: 10% 5% 10% 12%;
+        bottom: -6vw;
+    }
+    .scene:nth-child(2) .stone {
+        bottom: -8vw;
+        right: 0;
+    }
+    .scene:nth-child(2) .tree {
+        left: 5vw;
+    }
+    .scene:nth-child(3) {
+        width: 70vw;
+        margin-left: 20vw;
+        margin-top: 25vw;
+        grid-column-start: 1;
+    }
+    .scene:nth-child(3) .content {
+        left: 12vw;
+        bottom: -6vw;
+    }
+    .purpleCrystal {
+        bottom: -7vw;
+    }
+    .scene:nth-child(4) {
+        width: 66vw;
+        margin-left: 10vw;
+        margin-top: 30vw;
+    }
+    .scene:nth-child(4) .content {
+        width: 56%;
+    }
+    .blueCrystal {
+        bottom: -6vw;
+    }
+    .scene:nth-child(5) {
+        grid-row-start: 4;
+        margin-top: -5vw;
+        margin-left: -22vw;
+    }
+    .scene:nth-child(5) .tree {
+        bottom: -1vw;
+    }
+    .title {
+        bottom: 32vw;
+        right: 15vw;
+    }
+}
+`
+
+module.exports = current_work
+},{"bel":4,"crystalIsland":32,"csjs-inject":7,"graphic":38,"rellax":27}],34:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2618,7 +3141,7 @@ const styles = csjs`
 `
 
 module.exports = datdot
-},{"bel":4,"content":30,"csjs-inject":7,"graphic":37,"rellax":27}],34:[function(require,module,exports){
+},{"bel":4,"content":30,"csjs-inject":7,"graphic":38,"rellax":27}],35:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -2829,7 +3352,7 @@ const styles = csjs`
 `
 
 module.exports = editor
-},{"bel":4,"content":30,"csjs-inject":7,"graphic":37,"rellax":27}],35:[function(require,module,exports){
+},{"bel":4,"content":30,"csjs-inject":7,"graphic":38,"rellax":27}],36:[function(require,module,exports){
 module.exports = fetch_data
 
 async function fetch_data(path) {
@@ -2840,7 +3363,7 @@ async function fetch_data(path) {
     }
     throw new Error(response.status)
 }
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -2938,7 +3461,7 @@ let styles = csjs`
 `
 
 module.exports = footer
-},{"bel":4,"csjs-inject":7,"graphic":37}],37:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7,"graphic":38}],38:[function(require,module,exports){
 const loadSVG = require('loadSVG')
 
 function graphic(className, url) {
@@ -2955,7 +3478,7 @@ function graphic(className, url) {
 }   
 
 module.exports = graphic
-},{"loadSVG":39}],38:[function(require,module,exports){
+},{"loadSVG":40}],39:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -3192,7 +3715,7 @@ let styles = csjs`
 }
 `
 
-},{"bel":4,"csjs-inject":7,"graphic":37,"rellax":27}],39:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7,"graphic":38,"rellax":27}],40:[function(require,module,exports){
 async function loadSVG (url, done) { 
     const parser = document.createElement('div')
     let response = await fetch(url)
@@ -3205,7 +3728,7 @@ async function loadSVG (url, done) {
 }
 
 module.exports = loadSVG
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -3964,7 +4487,7 @@ and (max-width: 736px) and (orientation: landscape) {
 
 module.exports = our_contributors
 
-},{"bel":4,"content":30,"contributor":31,"csjs-inject":7,"graphic":37,"rellax":27}],41:[function(require,module,exports){
+},{"bel":4,"content":30,"contributor":31,"csjs-inject":7,"graphic":38,"rellax":27}],42:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // Widgets
@@ -4158,530 +4681,7 @@ const styles = csjs`
     }
 }
 `
-},{"bel":4,"content":30,"csjs-inject":7,"graphic":37}],42:[function(require,module,exports){
-const bel = require('bel')
-const csjs = require('csjs-inject')
-// widgets
-const graphic = require('graphic')
-const Rellax = require('rellax')
-const crystalIsland = require('crystalIsland')
-
-async function supporters (data) {
-    const css = styles
-    let pageTitle = bel`<div class=${css.title}>${data.title}</div>`
-    const graphics = [
-      // crystals
-      graphic(css.yellowCrystal,'./src/node_modules/assets/svg/crystal-yellow.svg'),
-      graphic(css.purpleCrystal,'./src/node_modules/assets/svg/crystal-purple.svg'),
-      graphic(css.blueCrystal,'./src/node_modules/assets/svg/crystal-blue.svg'),
-      // stone
-      graphic(css.stone,'./src/node_modules/assets/svg/stone1.svg'),
-      // trees
-      graphic(css.tree,'./src/node_modules/assets/svg/big-tree.svg'),
-      graphic(css.tree,'./src/node_modules/assets/svg/single-tree1.svg'),
-      graphic(css.tree,'./src/node_modules/assets/svg/single-tree3.svg'),
-      graphic(css.tree,'./src/node_modules/assets/svg/single-tree2.svg'),
-      // islands
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      graphic(css.island,'./src/node_modules/assets/svg/floating-island3.svg'),
-      // clouds
-      graphic(css.cloud1, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud2, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud3, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud4, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud5, './src/node_modules/assets/svg/cloud.svg'),
-      graphic(css.cloud6, './src/node_modules/assets/svg/cloud.svg'),
-    ]
-
-    const [yellowCrystal, purpleCrystal, blueCrystal, stone, tree, tree1, tree2, tree3, 
-      island, island1, island2, island3, island4, cloud1, cloud2, cloud3, cloud4, cloud5, cloud6] = await Promise.all(graphics)
-    
-    // Parallax effects
-    let cloud1Rellax = new Rellax( cloud1, { speed: 1.5})
-    let cloud2Rellax = new Rellax( cloud2, { speed: 1})
-    let cloud3Rellax = new Rellax( cloud3, { speed: 1.5})
-    let cloud4Rellax = new Rellax( cloud4, { speed: 4})
-    let cloud5Rellax = new Rellax( cloud5, { speed: 1.5})
-    let cloud6Rellax = new Rellax( cloud6, { speed: 3})
-
-    let el = bel`
-        <section id="supporters" class="${css.section}">
-
-            ${crystalIsland(data.supporters[0], [yellowCrystal, tree], island, css, pageTitle)}
-            ${crystalIsland(data.supporters[1], [stone, tree1], island1, css)}
-            ${crystalIsland(data.supporters[2], [purpleCrystal], island2, css)}
-            ${crystalIsland(data.supporters[3], [blueCrystal, tree2], island3, css)}
-            
-            <div class=${css.scene}>
-                ${tree3}
-                ${island4}
-            </div>
-
-            ${cloud1}
-            ${cloud2}
-            ${cloud3}
-            ${cloud4}
-            ${cloud5}
-            ${cloud6}
-            
-        </section>
-    `
-    return el
-}
-
-let styles = csjs`
-.section {
-    position: relative;
-    background-image: linear-gradient(0deg, var(--section4BgGEnd), var(--section4BgGStart));
-    display: grid;
-    grid-template-rows: repeat(2, auto);
-    grid-template-columns: 15% 35% 35% 15%;
-    padding-top: 10vw;
-}
-.scene {
-}
-.scene:nth-child(1) {
-    position: relative;
-    z-index: 3;
-    width: 50vw;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 1;
-    grid-column-end: 4;
-    margin-left: 30vw;
-}
-.scene:nth-child(2) {
-    position: relative;
-    z-index: 4;
-    width: 24vw;
-    grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
-    margin-top: -15vw;
-    margin-left: 5vw;
-}
-.scene:nth-child(3) {
-    position: relative;
-    z-index: 4;
-    width: 24vw;
-    grid-row-start: 2;
-    grid-column-start: 2;
-    margin-top: 3vw;
-    margin-left: 8vw;
-}
-.scene:nth-child(4) {
-    position: relative;
-    z-index: 4;
-    width: 30vw;
-    grid-row-start: 2;
-    grid-column-start: 3;
-    margin-top: 5vw;
-    margin-left: 7vw;
-}
-.scene:nth-child(5) {
-    position: relative;
-    z-index: 2;
-    grid-row-start: 1;
-    grid-column-start: 4;
-    width: 10vw;
-    align-self: end;
-    margin-bottom: 12vw;
-}
-.scene:nth-child(5) .tree {
-    width: 80%;
-    margin: 0 auto -1.5vw auto;
-}
-.deco {
-    position: relative;
-}
-.tree {
-    position: relative;
-    width: 50%;
-    margin: 0 0 -11% -9%;
-    z-index: 2;
-}
-.yellowCrystal {
-    position: absolute;
-    width: 25%;
-    left: 20%;
-    bottom: 1%;
-    z-index: 3;
-}
-.title {
-    position: absolute;
-    bottom: 35%;
-    right: 18%;
-    z-index: 5;
-    font-family: var(--titleFont);
-    font-size: var(--supportersHeadlline);
-    color: var(--section4TitleColor);
-}
-.island {
-    
-}
-.content {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center
-}
-.scene:nth-child(1) .content {
-    width: 35%;
-    left: 21vw;
-    bottom: 2%;
-    background: url('./src/node_modules/assets/svg/card1.svg') no-repeat;
-    background-size: cover;
-    padding: 8% 5% 8% 8%;
-}
-.content h3 {
-    font-family: var(--titleFont);
-    font-size: var(--supportersTitleSize);
-    text-align: center;
-    color: var(--supportersTitleColor);
-    margin-top: 0;
-}
-.content p {
-    font-size: var(--supportersTextSize);
-    text-align: center;
-    margin: 0;
-}
-.scene:nth-child(2) .content {
-    width: 45%;
-    left: 35%;
-    bottom: -2vw;
-    background: url('./src/node_modules/assets/svg/card2.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.scene:nth-child(2) .tree {
-    position: absolute;
-    width: 45%;
-    left: 2vw;
-    bottom: -0.5vw;
-}
-.scene:nth-child(2) .stone {
-    position: absolute;
-    width: 24%;
-    right: 5%;
-    bottom: -2.5vw;
-    z-index: 2;
-}
-.scene:nth-child(3) .content {
-    width: 60%;
-    left: 5vw;
-    bottom: -2.2vw;
-    background: url('./src/node_modules/assets/svg/card3.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.purpleCrystal {
-    position: absolute;
-    width: 40%;
-    left: -6%;
-    bottom: -2.5vw;
-    z-index: 3;
-}
-.scene:nth-child(4) .content {
-    width: 50%;
-    left: 6vw;
-    bottom: -2.5vw;
-    background: url('./src/node_modules/assets/svg/card4.svg') no-repeat;
-    background-size: cover;
-    padding: 10% 5% 10% 8%;
-}
-.scene:nth-child(4) h3 {
-    margin-bottom: 10px;
-}
-.scene:nth-child(4) h3:last-child {
-    margin-bottom: 0;
-}
-.scene:nth-child(4) .tree {
-    position: absolute;
-    width: 24%;
-    right: -0.5vw;
-    bottom: 0vw;
-}
-.blueCrystal {
-    position: absolute;
-    width: 22%;
-    left: 1vw;
-    bottom: -3vw;
-    z-index: 3;
-}
-.cloud1 {
-    position: absolute;
-    width: 8vw;
-    top: 25vw;
-    left: 8vw;
-    z-index: 5;
-}
-.cloud2 {
-    position: absolute;
-    width: 15vw;
-    top: 10vw;
-    left: 50vw;
-    z-index: 6;
-}
-.cloud3 {
-    position: absolute;
-    width: 15vw;
-    top: 30vw;
-    right: 10vw;
-    z-index: 5;
-}
-.cloud4 {
-    position: absolute;
-    width: 8vw;
-    bottom: 28vw;
-    right: 5vw;
-    z-index: 4;
-}
-.cloud5 {
-    position: absolute;
-    width: 12vw;
-    bottom: -3vw;
-    right: 6vw;
-    z-index: 5;
-}
-.cloud6 {
-    position: absolute;
-    width: 8vw;
-    bottom: -10vw;
-    right: 2vw;
-    z-index: 6;
-}
-@media only screen and (min-width: 3840px) {
-    .info h3 {
-        margin-bottom: 6px;
-        font-size: calc( var(--supportersTitleSizeM) * 2);
-    }
-    .info p {
-        font-size: calc( var(--supportersTextSizeM) * 2);
-    }
-}
-@media only screen and (max-width: 1366px) {
-    .title {
-        bottom: 17vw;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .section {
-        grid-template-columns: repeat(2, 50vw);
-    }
-    .scene:nth-child(1) {
-        grid-row-start: 1;
-        width: 70vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(1) .content {
-        width: 35%;
-        left: 28vw;
-    }
-    .scene:nth-child(2) {
-        grid-row-start: 2;
-        grid-column-start: 1;
-        width: 40vw;
-        margin-top: 15vw;
-        margin-left: 5vw;
-    }
-    .scene:nth-child(2) .content {
-        bottom: -3vw;
-        left: 28%;
-    }
-    .scene:nth-child(2) .stone {
-        bottom: -4vw;
-        right: 9%;
-    }
-    .scene:nth-child(3) {
-        grid-row-start: 2;
-        grid-column-start: 2;
-        width: 40vw;
-        margin-top: 20vw;
-        margin-left: 5vw;
-    }
-    .scene:nth-child(3) .content {
-        left: 8vw;
-        bottom: -3vw;
-    }
-    .purpleCrystal {
-        bottom: -3.5vw;
-    }
-    .scene:nth-child(4) {
-        grid-row-start: 3;
-        grid-column-start: 2;
-        width: 50vw;
-        margin: 10vw 0 0 -25vw;
-    }
-    .scene:nth-child(4) .content {
-        bottom: -4.5vw;
-        width: 50%;
-        left: 8vw;
-    }
-    .blueCrystal {
-        bottom: -5vw;
-    }
-    .scene:nth-child(5) {
-        grid-row-start: 1;
-        grid-column-start: 3;
-        width: 15vw;
-        align-self: start;
-        margin-top: 15vw;
-        margin-left: -20vw;     
-    }
-    .scene:nth-child(5) .tree {
-        width: 65%;
-        margin: 0 auto -2vw auto;
-    }
-    .title {
-        font-size: var(--supportersHeadllineM);
-        bottom: 25vw;
-        right: 11vw;
-    }
-    .cloud1 {
-        width: 15vw;
-        top: 30vw;
-    }
-    .cloud2 {
-        width: 25vw;
-    }
-    .cloud3 {
-        width: 18vw;
-        top: 40vw;
-        right: 5vw;
-    }
-    .cloud4 {
-        width: 15vw;
-        bottom: -10vw;
-    }
-    .cloud5 {
-        width: 15vw;
-        right: 15vw;
-        bottom: -30vw;
-    } 
-    .cloud6 {
-        width: 10vw;
-    } 
-}
-@media only screen and (max-width: 960px) { 
-    .scene:nth-child(2) .tree {
-        width: 30%;
-    }
-    .scene:nth-child(2) .content {
-        width: 60%;
-        left: 18%;
-    }
-    .scene:nth-child(5) .tree {
-        bottom: -0.5vw;
-    }
-}
-@media only screen and (max-width: 812px) {
-    .info h3 {
-        margin-bottom: 6px;
-        font-size: var(--supportersTitleSizeM);
-    }
-    .info p {
-        font-size: var(--supportersTextSizeM);
-    }
-}
-@media only screen and (max-width: 640px) {
-    .scene:nth-child(2) {
-        width: 50vw;
-        margin-top: 20vw;
-    }
-    .scene:nth-child(3) {
-        width: 50vw;
-        grid-row-start: 3;
-        grid-column-start: 2;
-        margin-left: 0;
-        margin-top: 5vw;
-    }
-    .scene:nth-child(4) {
-        width: 66vw;
-        grid-row-start: 4;
-        grid-column-start: 1;
-        grid-column-end: 2;
-        margin-left: 10vw;
-        margin-top: 20vw;
-    }
-    .scene:nth-child(5) {
-        margin-left: -18vw;
-    }
-    .title {
-        font-size: var(--supportersHeadllineS);
-        bottom: 25vw;
-        right: 12vw;
-    }
-}
-@media only screen and (max-width: 480px) {
-    .scene:nth-child(1) {
-        width: 90vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(1) .content {
-        width: 40%;
-        left: 36%;
-    }
-    .scene:nth-child(2) {
-        width: 70vw;
-        margin-top: 20vw;
-        margin-left: 10vw;
-    }
-    .scene:nth-child(2) .content {
-        width: 60%;
-        padding: 10% 5% 10% 12%;
-        bottom: -6vw;
-    }
-    .scene:nth-child(2) .stone {
-        bottom: -8vw;
-        right: 0;
-    }
-    .scene:nth-child(2) .tree {
-        left: 5vw;
-    }
-    .scene:nth-child(3) {
-        width: 70vw;
-        margin-left: 20vw;
-        margin-top: 25vw;
-        grid-column-start: 1;
-    }
-    .scene:nth-child(3) .content {
-        left: 12vw;
-        bottom: -6vw;
-    }
-    .purpleCrystal {
-        bottom: -7vw;
-    }
-    .scene:nth-child(4) {
-        width: 66vw;
-        margin-left: 10vw;
-        margin-top: 30vw;
-    }
-    .scene:nth-child(4) .content {
-        width: 56%;
-    }
-    .blueCrystal {
-        bottom: -6vw;
-    }
-    .scene:nth-child(5) {
-        grid-row-start: 4;
-        margin-top: -5vw;
-        margin-left: -22vw;
-    }
-    .scene:nth-child(5) .tree {
-        bottom: -1vw;
-    }
-    .title {
-        bottom: 32vw;
-        right: 15vw;
-    }
-}
-`
-
-module.exports = supporters
-},{"bel":4,"crystalIsland":32,"csjs-inject":7,"graphic":37,"rellax":27}],43:[function(require,module,exports){
+},{"bel":4,"content":30,"csjs-inject":7,"graphic":38}],43:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 // widgets
@@ -4841,4 +4841,4 @@ let css = csjs`
 		}
 }
 `
-},{"bel":4,"csjs-inject":7,"graphic":37,"zenscroll":28}]},{},[1]);
+},{"bel":4,"csjs-inject":7,"graphic":38,"zenscroll":28}]},{},[1]);
